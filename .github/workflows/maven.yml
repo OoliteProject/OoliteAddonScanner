@@ -35,4 +35,4 @@ jobs:
         title: "Development Build"
         files: |
           LICENSE.md
-          target/*.jar
+          target/*.zip
