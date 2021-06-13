@@ -5,6 +5,7 @@ package com.chaudhuri.ooliteaddonscanner2;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
+import freemarker.template.utility.StringUtil;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +17,20 @@ import org.slf4j.LoggerFactory;
 public class Verifier {
     private static final Logger log = LoggerFactory.getLogger(Verifier.class);
     
+    public static String describeCodePoint(int codepoint) {
+        String s = Character.getName(codepoint);
+        if (s != null) {
+            return s;
+        }
+        return String.format("\\\\u%04X", codepoint);
+    }
+    
     public static String findDiffereringPosition(String s1, String s2) {
         
         // compare the common string length
         for (int i=0; i<Math.min(s1.length(), s2.length()); i++) {
             if (s1.codePointAt(i) != s2.codePointAt(i)) {
-                return String.format("at character position %04d (\\u%04X vs \\u%04X)", i+1, s1.codePointAt(i), s2.codePointAt(i));
+                return String.format("at character position %04d (%s vs %s)", i+1, describeCodePoint(s1.codePointAt(i)), describeCodePoint(s2.codePointAt(i)));
             }
         }
         
@@ -43,7 +52,11 @@ public class Verifier {
             String l1 = String.valueOf(expansion.getDescription());
             String l2 = String.valueOf(expansion.getManifest().getDescription());
 
-            if (!l1.contentEquals(l2)) {
+            // strip off whitespace
+            String s1 = l1.trim().replace('\t', ' ').replace('\r', ' ').replace('\n', ' ').replace("  ", " ");
+            String s2 = l2.trim().replace('\t', ' ').replace('\r', ' ').replace('\n', ' ').replace("  ", " ");
+            
+            if (!s1.contentEquals(s2)) {
                 expansion.addWarning("Description mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
             }
         }
