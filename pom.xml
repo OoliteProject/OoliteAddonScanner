@@ -9,6 +9,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <buildNumber>nb</buildNumber>
         <versionName>${project.version} (${maven.build.timestamp}, branch ${scmBranch}, commit ${buildNumber})</versionName>
     </properties>
 
@@ -151,7 +152,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+            <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
@@ -169,6 +170,7 @@
                     <doUpdate>true</doUpdate>
                 </configuration>
             </plugin>
+                        -->
             
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
