@@ -48,7 +48,7 @@ public class VerifierTest {
             String l2 = "thirty";
             String result = Verifier.findDiffereringPosition(l1, l2);
 
-            assertEquals("at character position 0006 (\\u0065 vs \\u0079)", result);
+            assertEquals("at character position 0006 (LATIN SMALL LETTER E vs LATIN SMALL LETTER Y)", result);
         }
 
         {
