@@ -23,7 +23,7 @@ jobs:
         distribution: 'adopt'
         
     - name: Build with Maven
-      run: set; mvn -Dbuild.number=${{GITHUB_RUN_NUMBER}} -B package --file pom.xml
+      run: "set; mvn -Dbuild.number=$GITHUB_RUN_NUMBER -B package --file pom.xml"
       
     - name: Create Release
       id: create_release
