@@ -23,7 +23,7 @@ jobs:
         distribution: 'adopt'
         
     - name: Build with Maven
-      run: mvn -B package --file pom.xml
+      run: mvn -Dbuild.number=${BUILD_NUMBER} -B package --file pom.xml
       
     - name: Create Release
       id: create_release
