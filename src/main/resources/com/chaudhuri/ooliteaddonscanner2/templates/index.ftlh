@@ -15,11 +15,11 @@
 
         <h1>Oolite Known Universe</h1>
         <ul>
-            <li><a href="indexExpansionsByName.html">Expansions by Name</a></li>
-            <li><a href="indexEquipmentByName.html">Equipment by Name</a></li>
-            <li><a href="indexShipsByName.html">Ships by Name</a></li>
+            <li><a href="indexExpansionsByName.html">${ expansions?size } Expansions by Name</a></li>
+            <li><a href="indexEquipmentByName.html">${ equipment?size } Equipment by Name</a></li>
+            <li><a href="indexShipsByName.html">${ ships?size } Ships by Name</a></li>
             <li><a href="indexAllByIdentifier.html">All by Identifier</a></li>
-            <li><a href="warnings.html">Warnings</a></li>
+            <li><a href="warnings.html">${ warnings?size } Warnings</a></li>
         </ul>
     </body>
 </html>

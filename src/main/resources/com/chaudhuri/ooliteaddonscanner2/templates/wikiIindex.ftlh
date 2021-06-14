@@ -14,18 +14,18 @@ only visible equipment is listed here
 
 <#list equipment><#items as equipment><#if equipment.visible>[[${ equipment.name }]] </#if></#items></#list>
 
-== ${ ships?size }Ships ==
+== ${ ships?size } Ships ==
 
 <#list ships><#items as ship><#if !ship.template>[[${ ship.name }]] </#if></#items></#list>
 
-== Warnings ==
+== ${ warnings?size } Warnings ==
 While going through the list of expansions registered for the Expansion Manager,
 some discrepancies were noted. These may have an effect on the completeness of 
 the above list.
 
 <#if warnings?has_content>
 
-* Global<#list warnings as w>
+* Global<#list globalWarnings as w>
 ** ${ w }</#list></#if>
 <#list expansions><#items as expansion><#if expansion.warnings?has_content>
 

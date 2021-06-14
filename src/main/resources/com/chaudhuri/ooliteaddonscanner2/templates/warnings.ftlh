@@ -15,7 +15,7 @@
         <#if warnings?has_content>
             <h3>Global</h3>
             <ul>
-                <#list warnings as w>
+                <#list globalWarnings as w>
                     <li> ${ w } </li>
                 </#list>
             </ul>

@@ -450,8 +450,24 @@ public class Registry {
     public void addWarning(String warning) {
         warnings.add(warning);
     }
-    
+
+    /** Returns global warnings and all the others.
+     * 
+     * @return 
+     */
     public List<String> getWarnings() {
+        ArrayList<String> result = new ArrayList<String>(warnings);
+        for (Expansion e: expansions.values()) {
+            result.addAll(e.getWarnings());
+        }
+        return result;
+    }
+    
+    /** Returns global warnings only.
+     * 
+     * @return 
+     */
+    public List<String> getGlobalWarnings() {
         return new ArrayList<String>(warnings);
     }
     
