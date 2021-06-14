@@ -30,7 +30,7 @@ import org.xml.sax.SAXException;
 public class ExpansionCache {
     private static final Logger log = LoggerFactory.getLogger(ExpansionCache.class);
     
-    private static final File CACHE_DIR = new File("/home/hiran/.Oolite/expansion_cache");
+    protected static File CACHE_DIR = new File("/home/hiran/.Oolite/expansion_cache");
     private static final long MAX_AGE = 30L * 86400L * 1000L; // 7 days ago
     
     public ExpansionCache() {

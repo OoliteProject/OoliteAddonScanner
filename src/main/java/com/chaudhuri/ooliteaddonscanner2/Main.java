@@ -41,6 +41,9 @@ import javax.xml.transform.TransformerException;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
@@ -366,9 +369,21 @@ public class Main {
     public static void main(String[] args) throws Exception {
         log.info("Starting {} {} {}", Main.class.getPackage().getImplementationVendor(), Main.class.getPackage().getImplementationTitle(),  Main.class.getPackage().getImplementationVersion());
 
+        Options options = new Options();
+        options.addOption("c", "cache", true, "Path where to cache the expansions so they do not have to be downloaded for every run");
+        options.addOption("o", "output", true, "Path where to write result files");
+        options.addOption("u", "url", true, "URL for downloading the expansions list");
+        CommandLine commandline = new DefaultParser().parse(options, args);
+        
+        String cachePath = commandline.getOptionValue("c", ExpansionCache.CACHE_DIR.getAbsolutePath());
+        ExpansionCache.CACHE_DIR = new File(cachePath);
+        
+        String urlStr = commandline.getOptionValue("u", "http://addons.oolite.org/api/1.0/overview");
+        String outputDirStr = commandline.getOptionValue("o", "target/outputdir");
+        
         // try to download from http://addons.oolite.org/api/1.0/overview
         File data = File.createTempFile("OoliteAddonScanner2", ".nsdata");
-        URL u = new URL("http://addons.oolite.org/api/1.0/overview");
+        URL u = new URL(urlStr);
         try (InputStream in = u.openStream(); OutputStream out = new FileOutputStream(data)) {
             in.transferTo(out);
         } catch (Exception e) {
@@ -399,7 +414,7 @@ public class Main {
             // scanning finished. Now verify...
             Verifier.verify(registry);
             
-            File outputdir = new File("target/outputdir");
+            File outputdir = new File(outputDirStr);
             outputdir.mkdirs();
             new File(outputdir, "equipment").mkdirs();
             new File(outputdir, "expansions").mkdirs();
