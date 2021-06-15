@@ -17,12 +17,16 @@
             <tr>
                 <th>Equipment</th>
                 <th>Expansion</th>
+                <th>Cost [deci-credits]</th>
+                <th>Tech-Level</th>
                 <th>Remarks</th>
             </tr>
             <#list equipmentByName as equipment>
                 <tr>
                     <td><a href="equipment/${ equipment.identifier }.html">${ equipment.name }</a></td>
                     <td><a href="expansions/${ equipment.expansion.identifier }.html">${ equipment.expansion.name }</a></td>
+                    <td align="right">${ equipment.cost }</td>
+                    <td align="center">${ equipment.techlevel?number + 1 }+</td>
                     <td>
                         <#if equipment.visible>
                             <#if equipment.asWikipage??><a target="_blank" href="${ equipment.asWikipage }">Wiki Page</a><#else><font color="red">No Wiki</font></#if>
