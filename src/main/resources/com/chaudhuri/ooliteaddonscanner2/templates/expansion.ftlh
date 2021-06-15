@@ -160,11 +160,20 @@
         <a name="equipment">          
         <h2>Equipment</h2>
         <#if equipment?has_content>
-            <ul>
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Cost [deci-credits]</th>
+                    <th>Tech-Level</th>
+                </tr>
             <#list equipment as e>
-                <li><a href="../equipment/${ e.identifier }.html">${ e.name }</a></li>
+                <tr>
+                    <td><a href="../equipment/${ e.identifier }.html">${ e.name }</a></td>
+                    <td align="right">${ e.cost }</td>
+                    <td align="center">${ e.techlevel?number + 1 }+</td>
+                </tr>
             </#list>
-            </ul>
+            </table>
         <#else>
             This expansion declares no equipment. <#if warnings?has_content>This may be related to warnings.</#if>
         </#if>
@@ -173,11 +182,16 @@
         <a name="ships">    
         <h2>Ships</h2>
         <#if ships?has_content>
-            <ul>
+            <table>
+                <tr>
+                    <th>Name</th>
+                </tr>
             <#list ships as ship>
-                <li><a href="../ships/${ ship.identifier }.html">${ ship.name }</a></li>
+                <tr>
+                    <td><a href="../ships/${ ship.identifier }.html">${ ship.name }</a></td>
+                </tr>
             </#list>
-            </ul>
+            </table>
         <#else>
             This expansion declares no ships. <#if warnings?has_content>This may be related to warnings.</#if>
         </#if>
