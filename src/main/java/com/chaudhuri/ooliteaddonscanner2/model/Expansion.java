@@ -31,9 +31,10 @@ public class Expansion implements Wikiworthy {
     private String conflict_oxps;
     private String maximum_oolite_version;
     private ExpansionManifest manifest;
-    private TreeMap<String, Equipment> equipment;
-    private TreeMap<String, Ship> ships;
-    private TreeMap<String, String> readmes;
+    private final TreeMap<String, Equipment> equipment;
+    private final TreeMap<String, Ship> ships;
+    private final TreeMap<String, String> readmes;
+    private final List<String> scripts;
     
     private String asWikipage;
     
@@ -46,6 +47,7 @@ public class Expansion implements Wikiworthy {
         this.ships = new TreeMap<>();
         this.manifest = new ExpansionManifest();
         this.readmes = new TreeMap<>();
+        this.scripts = new ArrayList<>();
     }
     
     public Expansion getExpansion() {
@@ -246,6 +248,16 @@ public class Expansion implements Wikiworthy {
     
     public String getType() {
         return "Expansion";
+    }
+    
+    public void addScript(String script) {
+        if (!scripts.contains(script)) {
+            scripts.add(script);
+        }
+    }
+    
+    public List<String> getScripts() {
+        return new ArrayList<>(scripts);
     }
     
     public void addWarning(String warning) {

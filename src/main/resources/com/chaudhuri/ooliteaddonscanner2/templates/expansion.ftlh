@@ -20,6 +20,7 @@
           <li><a href="#documentation">Documentation</a></li>
           <li><a href="#equipment">${ equipment?size } Equipment</a></li>
           <li><a href="#ships">${ ships?size } Ships</a></li>
+          <#if scripts?has_content><li><a href="#scripts">${ scripts?size } Scripts</a></li></#if>
         </ul>
 
         <#if warnings?has_content>
@@ -194,6 +195,24 @@
             </table>
         <#else>
             This expansion declares no ships. <#if warnings?has_content>This may be related to warnings.</#if>
+        </#if>
+        </a>
+
+        <a name="scripts">    
+        <h2>Scripts</h2>
+        <#if scripts?has_content>
+            <table>
+                <tr>
+                    <th>Path</th>
+                </tr>
+            <#list scripts as script>
+                <tr>
+                    <td>${ script }</td>
+                </tr>
+            </#list>
+            </table>
+        <#else>
+            This expansion declares no scripts.
         </#if>
         </a>
     </body>

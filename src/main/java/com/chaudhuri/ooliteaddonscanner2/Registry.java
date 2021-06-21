@@ -36,7 +36,8 @@ public class Registry {
         warnings = new ArrayList<>();
     }
 
-    /** Adds a list of expansions.
+    /** Adds a list of expansions. This list of expansions is the
+     * parsed plist from the ExpansionManager.
      * 
      * @param lc the list of expansions
      */
@@ -50,7 +51,12 @@ public class Registry {
             addExpansion(dc);
         }
     }
-    
+
+    /** Adds a sinble expansion. The Expansion is parsed from the
+     * plist from the Expansion Manager.
+     * 
+     * @param dc 
+     */
     public void addExpansion(PlistParser.DictionaryContext dc) {
         log.debug("addExpansion({})", dc);
         
@@ -106,6 +112,10 @@ public class Registry {
         }
     }
     
+    /** Adds an expansion to the list of expansions.
+     * 
+     * @param oxp 
+     */
     public void addExpansion(Expansion oxp) {
         expansions.put(oxp.getIdentifier(), oxp);
     }

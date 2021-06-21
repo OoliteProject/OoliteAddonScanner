@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -266,6 +267,30 @@ public class Main {
                             in.reset();
                             PlistParser.DictionaryContext dc = parsePlistDictionary(in, oxp.getDownload_url()+"!"+zentry.getName());
                             oxp.setManifest(registry.toManifest(dc));
+                        }
+                    } else if ("Config/script.js".equals(zentry.getName())) {
+                        oxp.addScript(zentry.getName());
+                    } else if (zentry.getName().startsWith("Scripts/") && zentry.getName().length()>"Scripts/".length()) {
+                        oxp.addScript(zentry.getName());
+                    } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
+                        InputStream in = getZipEntryStream(zin, zentry);
+                        in.mark(10);
+
+                        Scanner sc = new Scanner(in);
+                        if ("<?xml".equals(sc.next())) {
+                            log.trace("XML content found in {}!{}", oxp.getDownload_url(), zentry.getName());
+                            in.reset();
+                            List worldscripts = XMLPlistParser.parseList(in, null);
+                            List<Object> scriptlist = (List)worldscripts.get(0);
+                            for (Object worldscript: scriptlist) {
+                                oxp.addScript(String.valueOf("Scripts/" + worldscript));
+                            }
+                        } else {
+                            in.reset();
+                            PlistParser.ListContext lc = parsePlistList(in, oxp.getDownload_url()+"!"+zentry.getName());
+                            for (PlistParser.ValueContext vc: lc.value()) {
+                                oxp.addScript("Scripts/" + vc.getText());
+                            }
                         }
                     } else {
                         String name = zentry.getName().toLowerCase();

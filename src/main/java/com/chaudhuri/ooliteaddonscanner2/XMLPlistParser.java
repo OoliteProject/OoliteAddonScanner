@@ -166,6 +166,17 @@ public class XMLPlistParser {
         return (Map<String, Object>)result.get(0);
     }
 
+    /** Parses an XML file, checks it is a plist and returns the list of values
+     * found.
+     * 
+     * @param in
+     * @param eh
+     * @return
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     * @throws TransformerException 
+     */
     public static List parseList(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
         log.debug("parseList({})", in);
         
