@@ -178,6 +178,20 @@ public class Verifier {
             }
         }
         
+        {
+            for (String rawscript: expansion.getScripts().values()) {
+                String script = rawscript.toLowerCase();
+                if (script.contains("fetch")) {
+                    expansion.addWarning("JavaScript with fetch");
+                }
+                if (script.contains("url")) {
+                    expansion.addWarning("JavaScript with url");
+                }
+                if (script.contains("xmlhttprequest")) {
+                    expansion.addWarning("JavaScript with xmlhttprequest");
+                }
+            }
+        }
     }
     
     public static void verify(Equipment equipment) {

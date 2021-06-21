@@ -205,9 +205,10 @@
                 <tr>
                     <th>Path</th>
                 </tr>
-            <#list scripts as script>
+            <#list scripts as script, content>
                 <tr>
-                    <td>${ script }</td>
+                    <td valign="top">${ script }</td>
+                    <td><pre>${ content }</pre></td>
                 </tr>
             </#list>
             </table>

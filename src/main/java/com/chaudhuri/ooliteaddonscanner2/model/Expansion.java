@@ -3,7 +3,6 @@
 package com.chaudhuri.ooliteaddonscanner2.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -34,7 +33,7 @@ public class Expansion implements Wikiworthy {
     private final TreeMap<String, Equipment> equipment;
     private final TreeMap<String, Ship> ships;
     private final TreeMap<String, String> readmes;
-    private final List<String> scripts;
+    private final TreeMap<String, String> scripts;
     
     private String asWikipage;
     
@@ -47,7 +46,7 @@ public class Expansion implements Wikiworthy {
         this.ships = new TreeMap<>();
         this.manifest = new ExpansionManifest();
         this.readmes = new TreeMap<>();
-        this.scripts = new ArrayList<>();
+        this.scripts = new TreeMap<>();
     }
     
     public Expansion getExpansion() {
@@ -250,14 +249,12 @@ public class Expansion implements Wikiworthy {
         return "Expansion";
     }
     
-    public void addScript(String script) {
-        if (!scripts.contains(script)) {
-            scripts.add(script);
-        }
+    public void addScript(String script, String content) {
+        scripts.put(script, content);
     }
     
-    public List<String> getScripts() {
-        return new ArrayList<>(scripts);
+    public Map<String, String> getScripts() {
+        return new TreeMap<>(scripts);
     }
     
     public void addWarning(String warning) {

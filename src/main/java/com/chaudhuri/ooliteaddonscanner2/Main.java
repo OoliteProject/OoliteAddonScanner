@@ -58,6 +58,24 @@ public class Main {
     
     public static final String OOLITE_CORE = "oolite.core";
 
+    /** Reads a file into a string, assuming UTF-8 encoding
+     * and fixing linefeeds
+     * 
+     * @param in
+     * @return 
+     */
+    private static String readToString(InputStream in) {
+        Scanner sc = new Scanner(in);
+        
+        StringBuilder sb = new StringBuilder();
+        while (sc.hasNext()) {
+            sb.append(sc.nextLine()).append("\n");
+        }
+        sc.close();
+        
+        return sb.toString();
+    }
+    
     private static void readExpansionsList(File data, Registry registry) throws IOException {
         ThrowingErrorListener errorListener = new ThrowingErrorListener();
 
@@ -269,9 +287,11 @@ public class Main {
                             oxp.setManifest(registry.toManifest(dc));
                         }
                     } else if ("Config/script.js".equals(zentry.getName())) {
-                        oxp.addScript(zentry.getName());
+                        String content = readToString(getZipEntryStream(zin, zentry));
+                        oxp.addScript(zentry.getName(), content);
                     } else if (zentry.getName().startsWith("Scripts/") && zentry.getName().length()>"Scripts/".length()) {
-                        oxp.addScript(zentry.getName());
+                        String content = readToString(getZipEntryStream(zin, zentry));
+                        oxp.addScript(zentry.getName(), content);
                     } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
                         InputStream in = getZipEntryStream(zin, zentry);
                         in.mark(10);
@@ -283,13 +303,13 @@ public class Main {
                             List worldscripts = XMLPlistParser.parseList(in, null);
                             List<Object> scriptlist = (List)worldscripts.get(0);
                             for (Object worldscript: scriptlist) {
-                                oxp.addScript(String.valueOf("Scripts/" + worldscript));
+                                oxp.addScript(String.valueOf("Scripts/" + worldscript), "notYetParsed");
                             }
                         } else {
                             in.reset();
                             PlistParser.ListContext lc = parsePlistList(in, oxp.getDownload_url()+"!"+zentry.getName());
                             for (PlistParser.ValueContext vc: lc.value()) {
-                                oxp.addScript("Scripts/" + vc.getText());
+                                oxp.addScript("Scripts/" + vc.getText(), "notYetParsed");
                             }
                         }
                     } else {
@@ -297,18 +317,13 @@ public class Main {
                         if(name.contains("read")) {
                             log.trace("README {}!{}", oxp.getDownload_url(), zentry.getName());
                             
-                            Scanner sc = new Scanner(getZipEntryStream(zin, zentry));
-                            StringBuilder sb = new StringBuilder();
-                            while (sc.hasNext()) {
-                                sb.append(sc.nextLine()).append("\n");
-                            }
-                            sc.close();
+                            String r = readToString(getZipEntryStream(zin, zentry));                            
+                            oxp.addReadme(zentry.getName(), r);
                             
-                            oxp.addReadme(zentry.getName(), sb.toString());
                         } else if (zentry.getName().startsWith("Config") || zentry.getName().startsWith("config")) {
-                            log.trace("{}!{}", oxp.getDownload_url(), zentry.getName());
+                            log.trace("skipping {}!{}", oxp.getDownload_url(), zentry.getName());
                         } else {
-                            log.trace("{}!{}", oxp.getDownload_url(), zentry.getName());
+                            log.trace("skipping {}!{}", oxp.getDownload_url(), zentry.getName());
                         }
                     }
                 }
