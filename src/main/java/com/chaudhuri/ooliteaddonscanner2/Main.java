@@ -2,6 +2,8 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
+import com.chaudhuri.ModelLexer;
+import com.chaudhuri.ModelParser;
 import com.chaudhuri.PlistLexer;
 import com.chaudhuri.PlistParser;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
@@ -42,6 +44,7 @@ import javax.xml.transform.TransformerException;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
@@ -125,6 +128,28 @@ public class Main {
         PlistParser.DictionaryContext dc = parser.dictionary();
         return dc;
     }
+    
+    private static void parseModel(InputStream data, String source) throws IOException {
+        log.debug("parseModel({}, {})", data, source);
+        try {
+            ThrowingErrorListener errorListener = new ThrowingErrorListener();
+
+            ReadableByteChannel channel = Channels.newChannel(data);
+            CharStream charStream = CharStreams.fromChannel(channel, StandardCharsets.UTF_8, 4096, CodingErrorAction.REPLACE, source, -1);
+
+            ModelLexer lexer = new ModelLexer(charStream);
+            lexer.removeErrorListeners();
+            lexer.addErrorListener(errorListener);
+            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+            ModelParser parser = new ModelParser(tokenStream);
+            parser.removeErrorListeners();
+            parser.addErrorListener(errorListener);
+
+            parser.model();
+        } catch (ParseCancellationException e) {
+            throw new IOException("Could not parse "+source, e);
+        }
+    }
 
     /**
      * 
@@ -205,7 +230,7 @@ public class Main {
             in.reset();
             //List equipmentList = XMLPlistParser.parseList(in, new XMLPlistParser.MySaxErrorHandler(oxp));
             List equipmentList = XMLPlistParser.parseList(in, null);
-            log.info("Parsed {} items of equipment", equipmentList.size());
+            log.info("Parsed {} ({} items of equipment)", oxp.getName(), equipmentList.size());
             registry.addEquipmentList(oxp, (List)equipmentList.get(0));
             //oxp.addWarning(String.format("XML content found in %s (see http://aegidian.org/bb/viewtopic.php?f=2&t=10039)", url));
         } else {
@@ -224,7 +249,7 @@ public class Main {
             in.reset();
             //Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(in, new XMLPlistParser.MySaxErrorHandler(oxp));
             Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(in, null);
-            log.info("Parsed {} ships", shipList.size());
+            log.info("Parsed {} ({} ships)", oxp.getName(), shipList.size());
             registry.addShipList(oxp, shipList);
             //oxp.addWarning(String.format("XML content found in %s (see http://aegidian.org/bb/viewtopic.php?f=2&t=10039)", url));
         } else {
@@ -232,6 +257,40 @@ public class Main {
             PlistParser.DictionaryContext dc = parsePlistDictionary(in, url);
             registry.addShipList(oxp, dc);
         }
+    }
+    
+    /** Traverse the registry, find the ship data files and read them from the cache.
+     * 
+     */
+    private static void readShipModels(ExpansionCache cache, Registry registry) throws IOException {
+        log.debug("readShipModels({}, {})", cache, registry);
+        int countSuccess = 0;
+        int countFailure = 0;
+        
+        for (Expansion expansion: registry.getExpansions()) {
+            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownload_url())));
+            
+            // parse all the models we can get, then distribute over ships
+            ZipEntry zentry = null;
+            while ((zentry = zin.getNextEntry()) != null) {
+                if (zentry.getName().startsWith("Models/") && zentry.getName().length() > "Models/.dat".length() && zentry.getName().endsWith(".dat")) {
+                    log.info("Found model {}!{}", expansion.getDownload_url(), zentry.getName());
+                    
+                    try {
+                        parseModel(getZipEntryStream(zin, zentry), expansion.getDownload_url() + "!" + zentry.getName());
+                        countSuccess++;
+                    } catch (Exception e) {
+                        expansion.addWarning("Could not parse model "+expansion.getDownload_url() + "!" + zentry.getName()+": "+e.getMessage());
+                        countFailure++;
+                    }
+                }
+            }
+            
+            for (Ship ship: expansion.getShips()) {
+            }
+        }
+        
+        log.info("Parsed {} models successfully and failed on {} models", countSuccess, countFailure);
     }
     
     /** reads all OXPs that the registry knows about. Which means it opens
@@ -443,6 +502,8 @@ public class Main {
             log.debug("Parsed {}", registry.getExpansions().size());
             
             readOxps(cache, registry);
+            
+            readShipModels(cache, registry);
             
             log.info("Parsed {} OXPs", registry.getExpansions().size());
             log.info("Parsed {} equipment", registry.getEquipment().size());

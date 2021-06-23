@@ -176,7 +176,7 @@ public class ExpansionCache {
             // then parse Last-Modified date
             return new Date(con.getLastModified());
         } else if (300 <= con.getResponseCode() && con.getResponseCode() < 400) {
-            log.info("Redirect {} with {}", u, headers);
+            log.debug("Redirect {} with {}", u, headers);
             if (followRedirectsCount == 0)
                 throw new IllegalStateException("Received redirect but cannot follow");
             return doCheckLastModified(new URL(headers.get("Location").get(0)), followRedirectsCount - 1);

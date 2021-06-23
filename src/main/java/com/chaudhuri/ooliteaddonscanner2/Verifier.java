@@ -7,6 +7,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import freemarker.template.utility.StringUtil;
 import java.util.Map;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -179,15 +180,19 @@ public class Verifier {
         }
         
         {
+            Pattern pFetch = Pattern.compile(".*\\sfetch.*");
+            Pattern purl = Pattern.compile(".*\\surl.*");
+            Pattern pxmlhttprequest = Pattern.compile(".*\\sxmlhttprequest.*");
+
             for (String rawscript: expansion.getScripts().values()) {
                 String script = rawscript.toLowerCase();
-                if (script.contains("fetch")) {
+                if (pFetch.matcher(script).matches()) {
                     expansion.addWarning("JavaScript with fetch");
                 }
-                if (script.contains("url")) {
+                if (purl.matcher(script).matches()) {
                     expansion.addWarning("JavaScript with url");
                 }
-                if (script.contains("xmlhttprequest")) {
+                if (pxmlhttprequest.matcher(script).matches()) {
                     expansion.addWarning("JavaScript with xmlhttprequest");
                 }
             }
