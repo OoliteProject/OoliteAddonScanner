@@ -5,17 +5,48 @@
 
 = ${ expansions?size } Expansions =
 
-<#list expansions><#items as expansion>[[${ expansion.title }]] </#items></#list>
+{| class="wikitable sortable"
+|+ 
+! Expansion
+! Equipment
+! Ships
+<#list expansions><#items as expansion>
+|-
+| [[${ expansion.title }]] 
+</#items></#list>
+|}
 
 = ${ equipment?size } Equipment =
 
 only visible equipment is listed here
 
-<#list equipment><#items as equipment><#if equipment.visible>[[${ equipment.name }]] </#if></#items></#list>
+{| class="wikitable sortable"
+|+ 
+! Equipment 
+! Expansion 
+! Cost [deci-credits] 
+! Techlevel
+<#list equipment><#items as equipment><#if equipment.visible>
+|- 
+| [[${ equipment.name }]] 
+| [[${ equipment.expansion.name }]] 
+| style="text-align:right;" | ${ equipment.cost } 
+| style="text-align:right;" | ${ equipment.techlevel?number + 1 }+
+</#if></#items></#list>
+|}
 
 = ${ ships?size } Ships =
 
-<#list ships><#items as ship><#if !ship.template>[[${ ship.name }]] </#if></#items></#list>
+{| class="wikitable sortable"
+|+ 
+! Ship
+! Expansion 
+<#list ships><#items as ship><#if !ship.template>
+|-
+| [[${ ship.name }]]
+| [[${ ship.expansion.name }]]
+</#if></#items></#list>
+|}
 
 = ${ warnings?size } Warnings =
 While going through the list of expansions registered for the Expansion Manager,
