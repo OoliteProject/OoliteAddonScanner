@@ -117,6 +117,10 @@ public class Registry {
      * @param oxp 
      */
     public void addExpansion(Expansion oxp) {
+        if (expansions.containsKey(oxp.getIdentifier())) {
+            Expansion oldOxp = expansions.get(oxp.getIdentifier());
+            addWarning(String.format("OXP Overwrite! %s (%s) and %s (%s) share same id %s", oxp.getName(), oxp.getDownload_url(), oldOxp.getName(), oldOxp.getDownload_url(), oxp.getIdentifier()));
+        }
         expansions.put(oxp.getIdentifier(), oxp);
     }
     
