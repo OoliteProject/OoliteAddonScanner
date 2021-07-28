@@ -21,6 +21,7 @@
             <tr><td>Cost</td><td>${ cost } deci-credits (divide by 10 to get credits)</td></tr>
             <tr><td>Tech Level</td><td>${ techlevel } (available on ${ techlevel?number + 1 }+)</td></tr>
             <tr><td>Expansion</td><td><a href='../expansions/${ expansion }.html'>${ expansion.title }</a></td></tr>
+            <tr><td>Primeable</td><td><#if primeable>Yes<#else>No</#if></td></tr>
         </table>
             
         <h2>Features</h2>

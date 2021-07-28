@@ -123,4 +123,8 @@ public class Equipment implements Wikiworthy {
         
         return !("false".equals(s) || "no".equals(s));
     }
+    
+    public boolean isPrimeable() {
+        return features.containsKey("script");
+    }
 }
