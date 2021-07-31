@@ -22,17 +22,21 @@ only visible equipment is listed here
 
 {| class="wikitable sortable"
 |+ 
-! Equipment 
+! Equipment Name
+! Equipment Id
+| Visible
 ! Expansion 
 ! Cost [deci-credits] 
 ! Techlevel
-<#list equipment><#items as equipment><#if equipment.visible>
+<#list equipmentByName as equipment>
 |- 
 | [[${ equipment.name }]] 
+| ${ equipment.identifier }
+| ${ equipment.visible?string('yes', 'no') }
 | [[${ equipment.expansion.name }]] 
 | style="text-align:right;" | ${ equipment.cost } 
 | style="text-align:right;" | ${ equipment.techlevel?number + 1 }+
-</#if></#items></#list>
+</#list>
 |}
 
 = ${ ships?size } Ships =
