@@ -47,7 +47,11 @@ public class ExpansionCache {
         }
         
         // on startup clean too old files
-        cleanCache(CACHE_DIR);
+        try {
+            cleanCache(CACHE_DIR);
+        } catch (IOException e) {
+            log.warn("Could not cleanup cache.", e);
+        }
     }
 
     /** Removed files that have been last accessed before THRESHOLD.
