@@ -13,6 +13,8 @@
 <#list expansions><#items as expansion>
 |-
 | [[${ expansion.title }]] 
+| style="text-align:right;" | ${ expansion.equipment?size }
+| style="text-align:right;" | ${ expansion.ships?size }
 </#items></#list>
 |}
 
@@ -24,7 +26,7 @@ only visible equipment is listed here
 |+ 
 ! Equipment Name
 ! Equipment Id
-| Visible
+! Visible
 ! Expansion 
 ! Cost [deci-credits] 
 ! Techlevel
