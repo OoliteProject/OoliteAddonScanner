@@ -302,7 +302,12 @@ public class Main {
     private static void readOxps(ExpansionCache cache, Registry registry) {
         log.debug("readManifests({}, {})", cache, registry);
         
+        int i = 0;
+        int total = registry.getExpansions().size();
+        
         for(Expansion oxp: registry.getExpansions()) {
+            i++;
+            log.info("Reading expansions ({}/{})...", i, total);
             
             try {
                 ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(oxp.getDownload_url())));
