@@ -11,6 +11,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.nio.file.attribute.FileTime;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -31,7 +34,12 @@ public class ExpansionCache {
     private static final Logger log = LoggerFactory.getLogger(ExpansionCache.class);
     
     protected static File CACHE_DIR = new File("/home/hiran/.Oolite/expansion_cache");
+    
+    /** Time after which we try to update the cache entry. */
     private static final long MAX_AGE = 30L * 86400L * 1000L; // 7 days ago
+    
+    /** Time after which we remove files from the cache. */
+    private static final Instant THRESHOLD = Instant.now().minus(180, ChronoUnit.DAYS);
     
     public ExpansionCache() {
         if (!CACHE_DIR.exists()) {
@@ -41,10 +49,14 @@ public class ExpansionCache {
         // on startup clean too old files
         cleanCache(CACHE_DIR);
     }
-    
-    private void cleanCache(File dir) {
-        Instant threshold = Instant.now().minus(30, ChronoUnit.DAYS);
-        
+
+    /** Removed files that have been last accessed before THRESHOLD.
+     * Also removes empty subdirectories.
+     * 
+     * @param dir
+     * @throws IOException 
+     */
+    private void cleanCache(File dir) throws IOException {
         for (File f: dir.listFiles()) {
             if (".".equals(f.getName()) || "..".equals(f.getName())) {
                 continue;
@@ -52,11 +64,23 @@ public class ExpansionCache {
             
             if (f.isFile()) {
                 Instant lastModified = Instant.ofEpochMilli(f.lastModified());
-                if (lastModified.isBefore(threshold)) {
+                
+                BasicFileAttributes attrs = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
+                FileTime time = attrs.lastAccessTime();
+                Instant lastAccessed = time.toInstant();
+                
+                if (lastModified.isBefore(THRESHOLD) && lastAccessed.isBefore(THRESHOLD)) {
                     f.delete();
                 }
             } else if (f.isDirectory()) {
                 cleanCache(f);
+            }
+        }
+        
+        if (dir != CACHE_DIR) {
+            if (dir.listFiles().length <= 2) {
+                log.warn("Remove empty directory {}", dir.getAbsolutePath());
+                dir.delete();
             }
         }
     }
