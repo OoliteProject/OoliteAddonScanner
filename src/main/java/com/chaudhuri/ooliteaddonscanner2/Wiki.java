@@ -47,8 +47,9 @@ public class Wiki {
     }
     
     public static String getPageUrl(String name) {
-        //return "http://wiki.alioth.net/index.php/"+name.replace(" ", "_");
-        return "http://wiki.alioth.net/index.php/"+name.replace(" ", "%20");
+        return "http://wiki.alioth.net/index.php/"
+                + name.replace(" ", "%20")
+                        .replace("\"", "%22");
     }
     
     public static void checkWikiPage(Wikiworthy wikiworthy) {
