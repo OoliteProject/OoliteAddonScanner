@@ -18,6 +18,7 @@ import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,9 +29,12 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -38,6 +42,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.antlr.v4.runtime.CharStream;
@@ -469,6 +474,52 @@ public class Main {
         }
     }
     
+    private static void zipup_internal(ZipOutputStream zos, File file, File root) throws IOException {
+        log.debug("zipup_internal({}, {}, {})", zos, file, root);
+        
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            for (File f: files) {
+                if (!".".equals(f.getName()) && !"..".equals(f.getName())) {
+                    zipup_internal(zos, f, root);
+                }
+            }
+        } else {
+            Path p1 = file.toPath();
+            Path p2 = root.toPath();
+            Path rel = p2.relativize(p1);
+            log.info("Zip {} to {}", file, rel);
+            ZipEntry ze = new ZipEntry(rel.toString());
+            zos.putNextEntry(ze);
+            
+            // we announced something. Now copy data...
+            try (FileInputStream fin = new FileInputStream(file)) {
+                byte[] buffer = new byte[4096];
+                int read = fin.read(buffer);
+                while (read >= 0) {
+                    zos.write(buffer, 0, read);
+                    read = fin.read(buffer);
+                }
+            }
+        }
+    }
+    
+    private static void zipup(File directory) {
+        Date d = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
+        File zipfile = new File(directory.getParentFile(), directory.getName()+"-"+sdf.format(d)+".zip");
+        log.info("Zip {} -> {}", directory, zipfile);
+        
+        try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipfile))) {
+            
+            zipup_internal(zos, directory, directory.getParentFile());
+            
+            zos.close();
+        } catch(IOException e) {
+            log.error("Could not zip to {}", zipfile, e);
+        }
+    }
+    
     public static void main(String[] args) throws Exception {
         log.info("Starting {} {} {}", Main.class.getPackage().getImplementationVendor(), Main.class.getPackage().getImplementationTitle(),  Main.class.getPackage().getImplementationVersion());
 
@@ -530,6 +581,8 @@ public class Main {
             printEquipment(registry, outputdir, templateEngine);
             printShips(registry, outputdir, templateEngine);
             templateEngine.process(registry, "wikiIindex.ftlh", new File(outputdir, "wiki.txt"));
+            
+            zipup(outputdir);
             
             System.exit(0);
         } catch (Exception e) {
