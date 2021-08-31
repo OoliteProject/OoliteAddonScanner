@@ -7,6 +7,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Set;
@@ -47,11 +48,14 @@ public class Wiki {
     }
     
     public static String getPageUrl(String name) {
-        return "http://wiki.alioth.net/index.php/"
-                + name.replace(" ", "%20")
-                        .replace("\"", "%22")
-                        .replace("[", "%5B")
-                        .replace("]", "%5D");
+        final String base = "http://wiki.alioth.net/index.php/";
+//        return base
+//                + name.replace(" ", "%20")
+//                        .replace("\"", "%22")
+//                        .replace("[", "%5B")
+//                        .replace("]", "%5D");
+
+        return base + URLEncoder.encode(name, Charset.forName("utf-8"));
     }
     
     public static void checkWikiPage(Wikiworthy wikiworthy) {
