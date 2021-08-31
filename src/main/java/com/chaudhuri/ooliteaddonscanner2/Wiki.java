@@ -49,13 +49,14 @@ public class Wiki {
     
     public static String getPageUrl(String name) {
         final String base = "http://wiki.alioth.net/index.php/";
-//        return base
-//                + name.replace(" ", "%20")
-//                        .replace("\"", "%22")
-//                        .replace("[", "%5B")
-//                        .replace("]", "%5D");
-
-        return base + URLEncoder.encode(name, Charset.forName("utf-8"));
+        // this uses too much of + escaping
+        //return base + URLEncoder.encode(name, Charset.forName("utf-8"));
+        
+        return base
+                + name.replace(" ", "%20")
+                        .replace("\"", "%22")
+                        .replace("[", "%5B")
+                        .replace("]", "%5D");
     }
     
     public static void checkWikiPage(Wikiworthy wikiworthy) {
