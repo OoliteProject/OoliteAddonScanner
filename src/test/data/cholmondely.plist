@@ -1,0 +1,78 @@
+{
+	"identifier" = "oolite.oxp.Cholmondeley.Lore_Collection_(Classic_Elite)";
+	"required_oolite_version" = "1.88";
+	"title" = "Lore Collection (Classic Elite)";
+	"version" = "1.1";
+	"category" = "Systems";
+	"description" = "A collection of oxp's to make your Ooniverse resemble that of the Dark Wheel/Classic Elite Press \"i\" for the installation list. This pack does nothing after being installed so you can remove it and then remove any unwanted packages.
+
+Installs: FPO Lave, Lave Academy, Tionisla Orbital GraveYard, Generation Ships, Deep Space Dredgers, Liners, BigShips, Griff Moray, Energy Bomb & New Cargoes.
+
+Warning: do not install this collection if you plan to read through the whole addon list and can spend enough time to build up your very unique Ooniverse.";
+	"download_url" = "http://wiki.alioth.net/img_auth.php/c/cc/Oolite.oxp.Cholmondeley.Lore_Collection_%28Classic_Elite%29.oxz";
+	"author" = "Cholmondeley";
+	"file_size" = "5403";
+	"information_url" = "http://wiki.alioth.net/index.php/Lore_Collection_(Classic_Elite)";
+	"license" = "CC-BY-NC-SA 4.0";
+	"tags" = (
+		"collection"
+	);
+	"requires_oxps" = (
+		{
+			"identifier" = "oolite.oxp.stranger.FPO_Lave";
+			"description" = "FPO Lave - Stranger's lore-based depiction";
+		},
+		{
+			"identifier" = "oolite.oxp.Thargoid.LaveAcademy";
+			"description" = "Lave Academy for training pilots";
+		},
+		{
+			"identifier" = "oolite.oxp.phkb.TionislaOrbitalGraveyard";
+			"description" = "TOGY - the famous Tionisla Orbital GraveYard";
+		},
+		{
+			"identifier" = "oolite.oxp.phkb.TionislaOrbitalGraveyard_Monuments";
+			"description" = "Monuments adds more realistic monuments to TOGY";
+		},
+		{
+			"identifier" = "oolite.oxp.phkb.TionislaOrbitalGraveyard_Shipwrecks";
+			"description" = "Shipwrecks adds more realistic ships to TOGY";
+		},
+		{
+			"identifier" = "oolie.oxp.redspear.janes_galactic_shipset";
+			"description" = "Jane's shipset restores the Classic Elite ship definitions";
+		},
+		{
+			"identifier" = "oolite.oxp.EricWalch.DeepSpaceDredger";
+			"description" = "Deep Space Dredgers as mentioned in the Pilot's Manual";
+		},
+		{
+			"identifier" = "oolite.oxp.Draco_Caeles.GenerationShips";
+			"description" = "Generation Ships as mentioned in the Pilot's Manual";
+		},
+		{
+			"identifier" = "oolite.oxp.smivs.Liners";
+			"description" = "Liners as mentioned in the Dark Wheel";
+		},
+		{
+			"identifier" = "oolite.oxp.phkb.LinersMarkets";
+			"description" = "Markets - part of Liners";
+		},
+		{
+			"identifier" = "oolite.oxp.Thargoid.Bigships";
+			"description" = "BigShips needed for running Liners";
+		},
+		{
+			"identifier" = "oolite.oxp.Griff.Ophidian_(EliteA)";
+			"description" = "Ophidian yacht as mentioned in the Dark Wheel";
+		},
+		{
+			"identifier" = "oolite.oxp.cim.energy-bomb";
+			"description" = "Energy bomb from Classic Elite";
+		},
+		{
+			"identifier" = "ooolite.oxp.cim.new-cargoes";
+			"description" = "New Cargoes allows trade in Dark Wheel goods such as Shanaskilk furs";
+		},
+			);
+}
