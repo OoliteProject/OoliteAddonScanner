@@ -249,6 +249,11 @@ public class ExpansionCache {
         return new FileInputStream(cached);
     }
     
+    /** Removes the cached file.
+     * 
+     * @param url
+     * @throws MalformedURLException 
+     */
     public void invalidate(String url) throws MalformedURLException {
         log.debug("invalidate({})", url);
         File cached = getCachedFile(url);

@@ -17,6 +17,7 @@ import freemarker.template.TemplateException;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -395,6 +396,15 @@ public class Main {
                         }
                     }
                 }
+            } catch (EOFException e) {
+                log.warn("Incomplete plugin archive for "+oxp.getDownload_url(), e);
+                try {
+                    cache.invalidate(oxp.getDownload_url());
+                    log.warn("Evicted from cache.");
+                } catch (Exception ex) {
+                    log.error("Could not cleanup cache for {}", oxp.getDownload_url(), ex);
+                }
+                System.exit(1);
             } catch (Exception e) {
                 throw new RuntimeException("Could not access plugin "+oxp.getDownload_url(), e);
             }
@@ -533,7 +543,7 @@ public class Main {
         ExpansionCache.CACHE_DIR = new File(cachePath);
         
         String urlStr = commandline.getOptionValue("u", "http://addons.oolite.org/api/1.0/overview");
-        String outputDirStr = commandline.getOptionValue("o", "target/outputdir");
+        String outputDirStr = commandline.getOptionValue("o", "target/OoliteExpansionIndex");
         
         // try to download from http://addons.oolite.org/api/1.0/overview
         File data = File.createTempFile("OoliteAddonScanner2", ".nsdata");
