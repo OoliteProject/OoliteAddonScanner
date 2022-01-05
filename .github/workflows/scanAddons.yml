@@ -3,7 +3,7 @@ on: workflow_dispatch
       
 jobs:
   scan:
-    runs-on: ubuntu_latest
+    runs-on: ubuntu-latest
     steps:
       - run: |
           uname -a
