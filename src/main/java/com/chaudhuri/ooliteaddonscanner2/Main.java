@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -405,6 +406,16 @@ public class Main {
                     log.error("Could not cleanup cache for {}", oxp.getDownload_url(), ex);
                 }
                 System.exit(1);
+            } catch (ConnectException e) {
+                String s = String.format("Could not download %s, %s: %s", oxp.getDownload_url(), e.getClass().getName(), e.getMessage());
+                oxp.addWarning(s);
+                log.error(s);
+                try {
+                    cache.invalidate(oxp.getDownload_url());
+                    log.warn("Evicted from cache.");
+                } catch (Exception ex) {
+                    log.error("Could not cleanup cache for {}", oxp.getDownload_url(), ex);
+                }
             } catch (Exception e) {
                 throw new RuntimeException("Could not access plugin "+oxp.getDownload_url(), e);
             }
