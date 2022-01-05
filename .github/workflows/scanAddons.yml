@@ -8,8 +8,8 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v2
         with:
-#          name: java-app
-           path: .
+          name: OoliteAddonScanner
+#           path: .
           
       - run: |
           uname -a

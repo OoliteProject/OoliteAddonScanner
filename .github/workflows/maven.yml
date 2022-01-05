@@ -26,6 +26,12 @@ jobs:
       run: |
         set
         mvn -B package --file pom.xml
+        ls -l target
+        
+    - uses: actions/upload-artifact@v2
+      with:
+        name: OoliteAddonScanner
+        path: target/OoliteAddonScanner-1.0-SNAPSHOT-executable.zip
       
     - name: Create Release
       id: create_release
