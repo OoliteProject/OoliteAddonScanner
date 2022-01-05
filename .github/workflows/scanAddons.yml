@@ -12,7 +12,12 @@ jobs:
           workflow: maven.yml
           name: OoliteAddonScanner
           
-      - run: |
+      - name: Install AddonScanner
+        run: |
           unzip OoliteAddonScanner-1.0-SNAPSHOT-executable.zip
           find
+          
+      - name: Run AddonScanner
+        run: |
           java -jar OoliteAddonScanner-1.0-SNAPSHOT/OoliteAddonScanner-1.0-SNAPSHOT.jar
+          

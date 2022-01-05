@@ -61,6 +61,9 @@ public class ExpansionCache {
      * @throws IOException 
      */
     private void cleanCache(File dir) throws IOException {
+        if (dir == null) {
+            throw new IllegalArgumentException("dir must not be null");
+        }
         for (File f: dir.listFiles()) {
             if (".".equals(f.getName()) || "..".equals(f.getName())) {
                 continue;
