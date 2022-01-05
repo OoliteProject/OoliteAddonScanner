@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 public class ExpansionCache {
     private static final Logger log = LoggerFactory.getLogger(ExpansionCache.class);
     
-    protected static File CACHE_DIR = new File("/home/hiran/.Oolite/expansion_cache");
+    protected static File CACHE_DIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
     
     /** Time after which we try to update the cache entry. */
     private static final long MAX_AGE = 30L * 86400L * 1000L; // 7 days ago
@@ -43,6 +43,7 @@ public class ExpansionCache {
     
     public ExpansionCache() {
         if (!CACHE_DIR.exists()) {
+            log.info("Creating cache directory {}", CACHE_DIR);
             CACHE_DIR.mkdirs();
         }
         
