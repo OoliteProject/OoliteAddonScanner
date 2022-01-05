@@ -13,6 +13,6 @@ jobs:
           name: OoliteAddonScanner
           
       - run: |
-          find
           unzip OoliteAddonScanner-1.0-SNAPSHOT-executable.zip
-          java -version
+          find
+          java -jar OoliteAddonScanner-1.0-SNAPSHOT/OoliteAddonScanner-1.0-SNAPSHOT.jar
