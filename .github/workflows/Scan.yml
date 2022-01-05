@@ -1,10 +1,10 @@
-name: Scan AddOns
+name: Scan
 on: 
   schedule:
     - cron: '0 0 1 * *'
   workflow_dispatch:
   workflow_run:
-    workflows: ["maven"]
+    workflows: ["Build"]
     branches: [master]
     types:
       - completed
