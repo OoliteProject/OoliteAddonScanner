@@ -3,6 +3,11 @@ on:
   schedule:
     - cron: '0 0 1 * *'
   workflow_dispatch:
+  workflow_run:
+    workflows: ["maven"]
+    branches: [master]
+    types:
+      - completed
       
 jobs:
   scan:
@@ -37,5 +42,5 @@ jobs:
           prerelease: false
           title: "OoliteExpansionIndex"
           files: |
-            target/OoliteExpansionIndex*.zip
+            target/OoliteExpansionIndex-*.zip
             
