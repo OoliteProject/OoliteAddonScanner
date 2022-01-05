@@ -6,10 +6,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v2
+        # inspired by https://github.com/marketplace/actions/download-workflow-artifact
+        uses: dawidd6/action-download-artifact@v2
         with:
+          workflow: maven.yml
           name: OoliteAddonScanner
-#           path: .
           
       - run: |
           uname -a
