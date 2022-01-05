@@ -1,0 +1,10 @@
+name: Scan AddOns
+on: workflow_dispatch
+      
+jobs:
+  scan:
+    runs_on: ubuntu_latest
+    steps:
+      - run: |
+          uname -a
+          echo "Hi there from scanner"
