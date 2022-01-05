@@ -13,6 +13,6 @@ jobs:
           name: OoliteAddonScanner
           
       - run: |
-          uname -a
-          echo "Hi there from scanner"
           find
+          unzip OoliteAddonScanner-1.0-SNAPSHOT-executable.zip
+          java -version
