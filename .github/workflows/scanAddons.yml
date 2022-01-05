@@ -15,9 +15,20 @@ jobs:
       - name: Install AddonScanner
         run: |
           unzip OoliteAddonScanner-1.0-SNAPSHOT-executable.zip
-          find
           
       - name: Run AddonScanner
         run: |
           java -jar OoliteAddonScanner-1.0-SNAPSHOT/OoliteAddonScanner-1.0-SNAPSHOT.jar
+          find
           
+      - name: Create Release
+        id: create_release
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "OoliteExpansionIndex"
+          files: |
+            target/OoliteExpansionIndex*.zip
+            
