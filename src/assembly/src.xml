@@ -19,4 +19,13 @@
             <outputDirectory></outputDirectory>
         </file>
     </files>
+    <fileSets>
+        <fileSet>
+            <directory>target/lib</directory>
+            <outputDirectory>/lib</outputDirectory>
+            <includes>
+                <include>**</include>
+            </includes>
+        </fileSet>
+    </fileSets>
 </assembly>
