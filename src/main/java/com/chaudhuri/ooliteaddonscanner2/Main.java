@@ -417,7 +417,8 @@ public class Main {
                     log.error("Could not cleanup cache for {}", oxp.getDownload_url(), ex);
                 }
             } catch (Exception e) {
-                throw new RuntimeException("Could not access plugin "+oxp.getDownload_url(), e);
+                oxp.addWarning(String.format("Could not access: %s, %s: %s", oxp.getDownload_url(), e.getClass().getName(), e.getMessage()));
+                log.error("Could not access plugin "+oxp.getDownload_url(), e);
             }
         }
     }
