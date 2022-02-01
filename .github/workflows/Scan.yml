@@ -17,7 +17,7 @@ jobs:
         # inspired by https://github.com/marketplace/actions/download-workflow-artifact
         uses: dawidd6/action-download-artifact@v2
         with:
-          workflow: maven.yml
+          workflow: Build.yml
           name: OoliteAddonScanner
           
       - name: Install AddonScanner
@@ -31,7 +31,6 @@ jobs:
       - name: Run AddonScanner
         run: |
           java -jar OoliteAddonScanner-1.0-SNAPSHOT/OoliteAddonScanner-1.0-SNAPSHOT.jar
-          find
           
       - name: Create Release
         id: create_release
