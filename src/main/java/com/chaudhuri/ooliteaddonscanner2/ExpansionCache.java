@@ -146,38 +146,43 @@ public class ExpansionCache {
     
     private void doDownload(URL u, File local) throws IOException {
         log.info("Downloading to {}", local);
+        
+        try {
 
-        File parent = local.getParentFile();
-        if(!parent.exists()) {
-            parent.mkdirs();
-        }
-
-        HttpURLConnection conn = (HttpURLConnection)u.openConnection();
-        conn.setReadTimeout(5000);
-
-        int status = conn.getResponseCode();
-        log.info("HTTP status for {}: {}", u, status);
-
-        while (status != HttpURLConnection.HTTP_OK) {
-            String newUrl = conn.getHeaderField("Location");
-            conn = (HttpURLConnection)new URL(newUrl).openConnection();
-            conn.setReadTimeout(5000);
-            status = conn.getResponseCode();
-            log.info("HTTP status for {}: {}", newUrl, status);
-        }
-
-        try ( InputStream in = conn.getInputStream(); FileOutputStream out = new FileOutputStream(local) ) {
-            byte[] buffer = new byte[8192];
-            int read = in.read(buffer);
-            long bytecount = 0;
-
-            while (read >= 0) {
-                bytecount += read;
-                out.write(buffer, 0, read);
-                read = in.read(buffer);
+            File parent = local.getParentFile();
+            if(!parent.exists()) {
+                parent.mkdirs();
             }
 
-            log.debug("Downloaded {} bytes", bytecount);
+            HttpURLConnection conn = (HttpURLConnection)u.openConnection();
+            conn.setReadTimeout(5000);
+
+            int status = conn.getResponseCode();
+            log.info("HTTP status for {}: {}", u, status);
+
+            while (status != HttpURLConnection.HTTP_OK) {
+                String newUrl = conn.getHeaderField("Location");
+                conn = (HttpURLConnection)new URL(newUrl).openConnection();
+                conn.setReadTimeout(5000);
+                status = conn.getResponseCode();
+                log.info("HTTP status for {}: {}", newUrl, status);
+            }
+
+            try ( InputStream in = conn.getInputStream(); FileOutputStream out = new FileOutputStream(local) ) {
+                byte[] buffer = new byte[8192];
+                int read = in.read(buffer);
+                long bytecount = 0;
+
+                while (read >= 0) {
+                    bytecount += read;
+                    out.write(buffer, 0, read);
+                    read = in.read(buffer);
+                }
+
+                log.debug("Downloaded {} bytes", bytecount);
+            }
+        } catch (Exception e) {
+            throw new IOException("Could not download "+u, e);
         }
     }
     
@@ -248,7 +253,7 @@ public class ExpansionCache {
         log.debug("getPluginInputStream({})", url);
         
         update(url);
-        
+
         File cached = getCachedFile(url);
         return new FileInputStream(cached);
     }

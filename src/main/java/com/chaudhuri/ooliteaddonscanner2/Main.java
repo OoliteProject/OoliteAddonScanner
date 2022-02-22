@@ -274,25 +274,30 @@ public class Main {
         int countFailure = 0;
         
         for (Expansion expansion: registry.getExpansions()) {
-            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownload_url())));
-            
-            // parse all the models we can get, then distribute over ships
-            ZipEntry zentry = null;
-            while ((zentry = zin.getNextEntry()) != null) {
-                if (zentry.getName().startsWith("Models/") && zentry.getName().length() > "Models/.dat".length() && zentry.getName().endsWith(".dat")) {
-                    log.info("Found model {}!{}", expansion.getDownload_url(), zentry.getName());
-                    
-                    try {
-                        parseModel(getZipEntryStream(zin, zentry), expansion.getDownload_url() + "!" + zentry.getName());
-                        countSuccess++;
-                    } catch (Exception e) {
-                        expansion.addWarning("Could not parse model "+expansion.getDownload_url() + "!" + zentry.getName()+": "+e.getMessage());
-                        countFailure++;
+            try {
+                ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownload_url())));
+
+                // parse all the models we can get, then distribute over ships
+                ZipEntry zentry = null;
+                while ((zentry = zin.getNextEntry()) != null) {
+                    if (zentry.getName().startsWith("Models/") && zentry.getName().length() > "Models/.dat".length() && zentry.getName().endsWith(".dat")) {
+                        log.info("Found model {}!{}", expansion.getDownload_url(), zentry.getName());
+
+                        try {
+                            parseModel(getZipEntryStream(zin, zentry), expansion.getDownload_url() + "!" + zentry.getName());
+                            countSuccess++;
+                        } catch (Exception e) {
+                            expansion.addWarning("Could not parse model "+expansion.getDownload_url() + "!" + zentry.getName()+": "+e.getMessage());
+                            countFailure++;
+                        }
                     }
                 }
-            }
-            
-            for (Ship ship: expansion.getShips()) {
+
+                for (Ship ship: expansion.getShips()) {
+                }
+            } catch (Exception e) {
+                log.error("Incomplete Index: Could not read expansion {}", expansion, e);
+                expansion.addWarning("Could not download: "+e.getMessage());
             }
         }
         
