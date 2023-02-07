@@ -32,8 +32,7 @@ import org.slf4j.LoggerFactory;
 public class PlistTester {
     private static final Logger log = LoggerFactory.getLogger(PlistTester.class);
 
-    //private static String plistFilePath = "src/test/data/cholmondely.plist";
-    private static String plistFilePath = "/home/hiran/test/oolite.oxp.Cholmondeley.Carver's_Anarchy-Ships_Library.oxp/oolite.oxp.Cholmondeley.Carver's_Anarchy-Ships_Library.oxp/Config/missiontext.plist";
+    private static String plistFilePath = "src/test/data/cholmondely.plist";
     
     private static void dumpPc(PlistParser.ParseContext pc, String prefix) {
         System.out.print(prefix); System.out.println(pc.getClass().getName());
