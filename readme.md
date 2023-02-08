@@ -3,7 +3,9 @@
 This project downloads the Oolite.org main game including all expansions,
 scans them for ships and equipment and builds easy to surf HTML files.
 
-It also helps OXP authors of validating their plist files.
+These HTML files are generated regularly with the output being downloadable as Release.
+
+This project also helps OXP authors by validating their plist files.
 
 ## Compile:
 Based on Java 11+. Just run the maven build.
@@ -11,6 +13,9 @@ Based on Java 11+. Just run the maven build.
 ## Run the scanner:
 Use the scripts `run-scanner.cmd` on Windows and `run-scanner.sh` on Linux.
 Or run `mvn run`, or `java -jar ooliteaddonscanner.jar`
+
+The scanner will fire up, download the relevant files and create a file structure
+in your current directory.
 
 ## Run the Plist Tester:
 Use the scripts `run-plist-tester.cmd` on Windows and `run-plist-tester.sh` on Linux.
