@@ -5,7 +5,7 @@ JAVA_OPTS=""
 
 pushd .
 cd "${ADDONSCANNER_HOME}"
-java ${JAVA_OPTS} -jar @projectname@-@pomversion@ $@
+java ${JAVA_OPTS} -cp @projectname@-@pomversion@.jar com.chaudhuri.plistcheck.PlistTest $@
 RETVAL=$?
 popd
 

@@ -183,8 +183,8 @@
                 <configuration>
                     <basedir>${project.basedir}</basedir>
                     <includes>
-                        <include>src/main/resources-ext/run-linux.sh</include>
-                        <include>src/main/resources-ext/run.cmd</include>
+                        <include>src/main/resources-ext/run*.sh</include>
+                        <include>src/main/resources-ext/run*.cmd</include>
                     </includes>
                     <outputDir>target</outputDir>
                     <replacements>
