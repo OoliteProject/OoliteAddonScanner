@@ -4,6 +4,7 @@
     <id>executable</id>
     <formats>
         <format>zip</format>
+        <format>tar.gz</format>
     </formats>
     <files>
         <file>
@@ -17,6 +18,15 @@
         <file>
             <source>target/${artifact.artifactId}-${artifact.version}.jar</source>
             <outputDirectory></outputDirectory>
+        </file>
+        <file>
+            <source>src/main/resources-ext/run.cmd</source>
+            <outputDirectory></outputDirectory>
+        </file>
+        <file>
+            <source>src/main/resources-ext/run-linux.sh</source>
+            <outputDirectory></outputDirectory>
+            <fileMode>0755</fileMode>
         </file>
     </files>
     <fileSets>

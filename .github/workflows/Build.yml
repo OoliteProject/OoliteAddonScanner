@@ -46,3 +46,4 @@ jobs:
         title: "OoliteAddonScanner"
         files: |
           target/*.zip
+          target/*.tar.gz
