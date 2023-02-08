@@ -5,7 +5,7 @@ JAVA_OPTS=""
 
 pushd .
 cd "${ADDONSCANNER_HOME}"
-java ${JAVA_OPTS} -jar dist/@projectname@-@pomversion@ $@
+java ${JAVA_OPTS} -jar @projectname@-@pomversion@ $@
 RETVAL=$?
 popd
 

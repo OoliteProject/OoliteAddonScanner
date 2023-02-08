@@ -20,11 +20,11 @@
             <outputDirectory></outputDirectory>
         </file>
         <file>
-            <source>src/main/resources-ext/run.cmd</source>
+            <source>target/src/main/resources-ext/run.cmd</source>
             <outputDirectory></outputDirectory>
         </file>
         <file>
-            <source>src/main/resources-ext/run-linux.sh</source>
+            <source>target/src/main/resources-ext/run-linux.sh</source>
             <outputDirectory></outputDirectory>
             <fileMode>0755</fileMode>
         </file>
