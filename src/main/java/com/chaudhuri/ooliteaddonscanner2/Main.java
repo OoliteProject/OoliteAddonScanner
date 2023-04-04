@@ -559,7 +559,7 @@ public class Main {
         String cachePath = commandline.getOptionValue("c", ExpansionCache.CACHE_DIR.getAbsolutePath());
         ExpansionCache.CACHE_DIR = new File(cachePath);
         
-        String urlStr = commandline.getOptionValue("u", "http://addons.oolite.org/api/1.0/overview");
+        String urlStr = commandline.getOptionValue("u", "http://addons.oolite.space/api/1.0/overview");
         String outputDirStr = commandline.getOptionValue("o", "target/OoliteExpansionIndex");
         
         // try to download from http://addons.oolite.org/api/1.0/overview
@@ -568,7 +568,7 @@ public class Main {
         try (InputStream in = u.openStream(); OutputStream out = new FileOutputStream(data)) {
             in.transferTo(out);
         } catch (Exception e) {
-            throw new Exception("Could not download up to date expansions list.", e);
+            throw new Exception("Could not download up to date expansions list from " + u, e);
         }
         
         log.info("Want to read {}", data.getAbsolutePath());
