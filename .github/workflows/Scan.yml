@@ -22,7 +22,7 @@ jobs:
           
       - name: Install AddonScanner
         run: |
-          unzip OoliteAddonScanner-1.0-SNAPSHOT-executable.zip
+          unzip OoliteAddonScanner-*-executable.zip
           
       - name: get date
         run: |
