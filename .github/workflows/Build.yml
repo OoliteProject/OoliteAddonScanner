@@ -58,7 +58,7 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "v${{ env.GITVERSION_SEMVER }}"
         prerelease: true
-        title: "OoliteAddonScanner"
+        title: "OoliteAddonScanner v${{ env.GITVERSION_SEMVER }}"
         files: |
           target/*.zip
           target/*.tar.gz
@@ -71,7 +71,7 @@ jobs:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
         automatic_release_tag: "v${{ env.GITVERSION_SEMVER }}"
         prerelease: false
-        title: "OoliteAddonScanner"
+        title: "OoliteAddonScanner v${{ env.GITVERSION_SEMVER }}"
         files: |
           target/*.zip
           target/*.tar.gz
