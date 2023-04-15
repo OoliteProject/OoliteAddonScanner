@@ -50,23 +50,13 @@ jobs:
         name: OoliteAddonScanner
         path: target/OoliteAddonScanner-${{ env.GITVERSION_SEMVER }}-SNAPSHOT-executable.zip
 
-    - name: Remove old releases
-      uses: s00d/delete-older-releases@0.2.1
-      with:
-        #repo: <owner>/<repoName> # defaults to current repo
-        keep_latest: 3
-        delete_tag_pattern: v.*
-        delete_type: 'release'
-        target_branch: 'main'
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    
     - name: Remove old prereleases
+      if: github.ref != 'refs/heads/main'
       uses: s00d/delete-older-releases@0.2.1
       with:
         #repo: <owner>/<repoName> # defaults to current repo
         keep_latest: 3
-        delete_tag_pattern: v.*
+        delete_tag_pattern: v
         delete_type: 'prerelease'
         target_branch: '${{ github.ref_name }}'
       env:
@@ -85,6 +75,18 @@ jobs:
           target/*.zip
           target/*.tar.gz
       
+    - name: Remove old releases
+      if: github.ref == 'refs/heads/main'
+      uses: s00d/delete-older-releases@0.2.1
+      with:
+        #repo: <owner>/<repoName> # defaults to current repo
+        keep_latest: 3
+        delete_tag_pattern: v
+        delete_type: 'release'
+        target_branch: 'main'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
     - name: Create Release
       if: github.ref == 'refs/heads/main'
       id: create_release
