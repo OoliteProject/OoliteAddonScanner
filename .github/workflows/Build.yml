@@ -41,7 +41,7 @@ jobs:
     - name: Build with Maven
       run: |
         set
-        mvn versions:set -DnewVersion=1.0.1
+        mvn versions:set "-DnewVersion=${{ env.GITVERSION_SEMVER }}"
         mvn -B package --file pom.xml
         ls -l target
         
@@ -50,7 +50,21 @@ jobs:
         name: OoliteAddonScanner
         path: target/OoliteAddonScanner-1.0-SNAPSHOT-executable.zip
       
+    - name: Create Prerelease
+      if: github.ref != 'refs/heads/main'
+      id: create_prerelease
+      uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "v${{ env.GITVERSION_SEMVER }}"
+        prerelease: true
+        title: "OoliteAddonScanner"
+        files: |
+          target/*.zip
+          target/*.tar.gz
+      
     - name: Create Release
+      if: github.ref == 'refs/heads/main'
       id: create_release
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
