@@ -37,9 +37,9 @@ jobs:
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "${{ env.TODAY }}"
+          automatic_release_tag: "idx-${{ env.TODAY }}"
           prerelease: false
-          title: "OoliteExpansionIndex"
+          title: "OoliteExpansionIndex ${{ env.TODAY }}"
           files: |
             target/OoliteExpansionIndex-*.zip
             
