@@ -57,7 +57,7 @@ jobs:
         keep_latest: 3
         delete_tag_pattern: v.*
         delete_type: 'release'
-        #delete_branch: 'main'
+        delete_branch: 'main'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
@@ -65,10 +65,10 @@ jobs:
       uses: s00d/delete-older-releases@0.2.1
       with:
         #repo: <owner>/<repoName> # defaults to current repo
-        keep_latest: 5
+        keep_latest: 3
         delete_tag_pattern: v.*
         delete_type: 'prerelease'
-        #delete_branch: 'main'
+        delete_branch: '${{ github.ref_name }}'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     
