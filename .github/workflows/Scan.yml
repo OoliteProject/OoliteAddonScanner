@@ -32,6 +32,18 @@ jobs:
         run: |
           B=$(basename "OoliteAddonScanner*")
           java -jar $B/$B.jar
+
+      - name: Remove old OoliteExpansionIndex releases
+        if: github.ref == 'refs/heads/main'
+        uses: s00d/delete-older-releases@0.2.1
+        with:
+          #repo: <owner>/<repoName> # defaults to current repo
+          keep_latest: 12
+          delete_tag_pattern: idx-
+          delete_type: 'release'
+          target_branch: 'main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Create Release
         id: create_release
