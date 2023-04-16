@@ -2,7 +2,6 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
-import com.chaudhuri.ModelParser;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.RecognitionException;

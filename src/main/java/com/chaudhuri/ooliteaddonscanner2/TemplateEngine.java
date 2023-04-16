@@ -2,9 +2,7 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
-import freemarker.core.ParseException;
 import freemarker.template.Configuration;
-import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
@@ -37,7 +35,7 @@ public class TemplateEngine {
         cfg.setFallbackOnNullLoopVariable(false);
     }
     
-    public void process(Object data, String templatename, File outfile) throws MalformedTemplateNameException, ParseException, IOException, TemplateException {
+    public void process(Object data, String templatename, File outfile) throws IOException, TemplateException {
         log.debug("process({}, {})", data, templatename);
     
         log.info("writing {}", outfile.getAbsolutePath());

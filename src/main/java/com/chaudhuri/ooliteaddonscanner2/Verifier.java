@@ -5,7 +5,6 @@ package com.chaudhuri.ooliteaddonscanner2;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
-import freemarker.template.utility.StringUtil;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -17,6 +16,12 @@ import org.slf4j.LoggerFactory;
  */
 public class Verifier {
     private static final Logger log = LoggerFactory.getLogger(Verifier.class);
+    
+    /**
+     * Prevent this class from being instantiated.
+     */
+    private Verifier() {
+    }
     
     public static String describeCodePoint(int codepoint) {
         String s = Character.getName(codepoint);

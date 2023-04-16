@@ -42,8 +42,14 @@ public class Ship implements Wikiworthy {
         this.identifier = identifier;
     }
     
+    /**
+     * Adds a feature to a ship.
+     * Do we need to check for uniqueness?
+     * 
+     * @param name the feature name
+     * @param value the feature value
+     */
     public void addFeature(String name, String value) {
-        // todo: do we need to check for uniqueness?
         
         features.put(name, value);
     }
@@ -65,7 +71,7 @@ public class Ship implements Wikiworthy {
     }
     
     public Map<String, String> getFeatures() {
-        return new TreeMap<String, String>(features);
+        return new TreeMap<>(features);
     }
 
     public String getAsWikipage() {
@@ -85,7 +91,7 @@ public class Ship implements Wikiworthy {
     }
     
     public List<String> getWarnings() {
-        return new ArrayList<String>(warnings);
+        return new ArrayList<>(warnings);
     }
     
     public boolean isTemplate() {

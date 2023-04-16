@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +29,14 @@ public class Registry {
     private final Map<String, Equipment> equipment;
     private final Map<String, Ship> ships;
     private final List<String> warnings;
+    private final Properties properties;
     
     public Registry() {
         expansions = new TreeMap<>();
         equipment = new TreeMap<>();
         ships = new TreeMap<>();
         warnings = new ArrayList<>();
+        properties = new Properties();
     }
 
     /** Adds a list of expansions. This list of expansions is the
@@ -483,6 +486,18 @@ public class Registry {
      */
     public List<String> getGlobalWarnings() {
         return new ArrayList<String>(warnings);
+    }
+    
+    public String getProperty(String key) {
+        return properties.getProperty(key);
+    }
+    
+    public void setProperty(String key, String value) {
+        properties.setProperty(key, value);
+    }
+    
+    public Properties getProperties() {
+        return properties;
     }
     
 }

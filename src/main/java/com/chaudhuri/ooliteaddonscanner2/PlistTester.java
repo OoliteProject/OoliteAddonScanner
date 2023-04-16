@@ -108,7 +108,6 @@ public class PlistTester {
         CharStream charStream = CharStreams.fromChannel(channel, StandardCharsets.UTF_8, 4096, CodingErrorAction.REPLACE, plistFilePath, -1);
         PlistLexer lexer = new PlistLexer(charStream);
         lexer.addErrorListener(el);
-        //lexer.getAllTokens();
         
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         PlistParser parser = new PlistParser(tokenStream);
@@ -117,7 +116,7 @@ public class PlistTester {
         
         if (el.hasErrors()) {
             log.error("Found errors in {}", plistFilePath);
-            log.error(String.format("Syntax Errors:          %4d", el.getSyntaxErrorCount()));
+            log.error("Syntax Errors:          {}", el.getSyntaxErrorCount());
             log.error(String.format("Ambiguities:            %4d", el.getAmbiguityCount()));
             log.error(String.format("Context Errors:         %4d", el.getContextSensitivityCount()));
             log.error(String.format("Attempted Full Context: %4d", el.getAttemptFullContextCount()));

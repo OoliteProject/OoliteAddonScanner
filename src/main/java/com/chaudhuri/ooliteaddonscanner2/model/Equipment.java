@@ -84,7 +84,7 @@ public class Equipment implements Wikiworthy {
     }
     
     public Map<String, String> getFeatures() {
-        return new TreeMap<String, String>(features);
+        return new TreeMap<>(features);
     }
     
     public void putFeature(String key, String value) {
@@ -112,7 +112,7 @@ public class Equipment implements Wikiworthy {
     }
     
     public List<String> getWarnings() {
-        return new ArrayList<String>(warnings);
+        return new ArrayList<>(warnings);
     }
     
     public boolean isVisible() {

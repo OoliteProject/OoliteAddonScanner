@@ -11,8 +11,6 @@ import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
-import freemarker.core.ParseException;
-import freemarker.template.MalformedTemplateNameException;
 import freemarker.template.TemplateException;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -20,7 +18,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,6 +64,8 @@ public class Main {
     
     public static final String OOLITE_CORE = "oolite.core";
     public static final String XML_HEADER = "<?xml";
+    public static final String HTML_EXTENSION = ".html";
+    public static final String OXP_PATH_SCRIPTS = "Scripts/";
 
     /** Reads a file into a string, assuming UTF-8 encoding
      * and fixing linefeeds
@@ -344,16 +343,15 @@ public class Main {
                         in.mark(10);
 
                         Scanner sc = new Scanner(in);
-                        if ("<?xml".equals(sc.next())) {
+                        if (XML_HEADER.equals(sc.next())) {
                             log.trace("XML content found in {}!{}", oxp.getDownload_url(), zentry.getName());
                             in.reset();
-                            //List manifest = XMLPlistParser.parseList(in, new XMLPlistParser.MySaxErrorHandler(oxp));
-                            List manifest = XMLPlistParser.parseList(in, null);
+
+                            List<Object> manifest = XMLPlistParser.parseList(in, null);
                             if (manifest.size() != 1) {
                                 throw new Exception(String.format("Expected exactly one manifest, found %d", manifest.size()));
                             }
                             oxp.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
-                            //oxp.addWarning(String.format("XML content found in %s!%s", oxp.getDownload_url(), zentry.getName()));
                         } else {
                             in.reset();
                             PlistParser.DictionaryContext dc = parsePlistDictionary(in, oxp.getDownload_url()+"!"+zentry.getName());
@@ -362,7 +360,7 @@ public class Main {
                     } else if ("Config/script.js".equals(zentry.getName())) {
                         String content = readToString(getZipEntryStream(zin));
                         oxp.addScript(zentry.getName(), content);
-                    } else if (zentry.getName().startsWith("Scripts/") && zentry.getName().length()>"Scripts/".length()) {
+                    } else if (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length()) {
                         String content = readToString(getZipEntryStream(zin));
                         oxp.addScript(zentry.getName(), content);
                     } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
@@ -370,19 +368,19 @@ public class Main {
                         in.mark(10);
 
                         Scanner sc = new Scanner(in);
-                        if ("<?xml".equals(sc.next())) {
+                        if (XML_HEADER.equals(sc.next())) {
                             log.trace("XML content found in {}!{}", oxp.getDownload_url(), zentry.getName());
                             in.reset();
-                            List worldscripts = XMLPlistParser.parseList(in, null);
+                            List<Object> worldscripts = XMLPlistParser.parseList(in, null);
                             List<Object> scriptlist = (List)worldscripts.get(0);
                             for (Object worldscript: scriptlist) {
-                                oxp.addScript(String.valueOf("Scripts/" + worldscript), "notYetParsed");
+                                oxp.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
                             }
                         } else {
                             in.reset();
                             PlistParser.ListContext lc = parsePlistList(in, oxp.getDownload_url()+"!"+zentry.getName());
                             for (PlistParser.ValueContext vc: lc.value()) {
-                                oxp.addScript("Scripts/" + vc.getText(), "notYetParsed");
+                                oxp.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
                             }
                         }
                     } else {
@@ -474,7 +472,10 @@ public class Main {
         log.debug("Checked {} wiki lookups in {}", tpe.getTaskCount(), Duration.between(start, end));
     }
     
-    private static void printIndex(Registry registry, File outputdir, TemplateEngine templateEngine) throws FileNotFoundException, ParseException, IOException, MalformedTemplateNameException, TemplateException {
+    private static void printIndex(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException {
+        registry.setProperty("ImplementationVendor", Main.class.getPackage().getImplementationVendor());
+        registry.setProperty("ImplementationTitle", Main.class.getPackage().getImplementationTitle());
+        registry.setProperty("ImplementationVersion", Main.class.getPackage().getImplementationVersion());
         templateEngine.process(registry, "index.ftlh", new File(outputdir, "index.html"));
         templateEngine.process(registry, "indexExpansionsByName.ftlh", new File(outputdir, "indexExpansionsByName.html"));
         templateEngine.process(registry, "indexEquipmentByName.ftlh", new File(outputdir, "indexEquipmentByName.html"));
@@ -484,32 +485,32 @@ public class Main {
         templateEngine.process(registry, "style.ftlh", new File(outputdir, "style.css"));
     }
     
-    private static void printExpansions(Registry registry, File outputdir, TemplateEngine templateEngine) throws FileNotFoundException, ParseException, IOException, MalformedTemplateNameException, TemplateException {
+    private static void printExpansions(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException {
         for (Expansion expansion: registry.getExpansions()) {
-            templateEngine.process(expansion, "expansion.ftlh", new File(outputdir, "expansions/"+expansion.getIdentifier()+".html"));
+            templateEngine.process(expansion, "expansion.ftlh", new File(outputdir, "expansions/"+expansion.getIdentifier()+HTML_EXTENSION));
         }
     }
     
-    private static void printEquipment(Registry registry, File outputdir, TemplateEngine templateEngine) throws FileNotFoundException, ParseException, IOException, MalformedTemplateNameException, TemplateException {
+    private static void printEquipment(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException {
         for (Equipment equipment: registry.getEquipment()) {
-            templateEngine.process(equipment, "equipment.ftlh", new File(outputdir, "equipment/"+equipment.getIdentifier()+".html"));
+            templateEngine.process(equipment, "equipment.ftlh", new File(outputdir, "equipment/"+equipment.getIdentifier()+HTML_EXTENSION));
         }
     }
     
-    private static void printShips(Registry registry, File outputdir, TemplateEngine templateEngine) throws FileNotFoundException, ParseException, IOException, MalformedTemplateNameException, TemplateException {
+    private static void printShips(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException {
         for (Ship ship: registry.getShips()) {
-            templateEngine.process(ship, "ship.ftlh", new File(outputdir, "ships/"+ship.getIdentifier()+".html"));
+            templateEngine.process(ship, "ship.ftlh", new File(outputdir, "ships/"+ship.getIdentifier()+HTML_EXTENSION));
         }
     }
     
-    private static void zipup_internal(ZipOutputStream zos, File file, File root) throws IOException {
+    private static void zipupInternal(ZipOutputStream zos, File file, File root) throws IOException {
         log.debug("zipup_internal({}, {}, {})", zos, file, root);
         
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             for (File f: files) {
                 if (!".".equals(f.getName()) && !"..".equals(f.getName())) {
-                    zipup_internal(zos, f, root);
+                    zipupInternal(zos, f, root);
                 }
             }
         } else {
@@ -539,10 +540,7 @@ public class Main {
         log.info("Zip {} -> {}", directory, zipfile);
         
         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipfile))) {
-            
-            zipup_internal(zos, directory, directory.getParentFile());
-            
-            zos.close();
+            zipupInternal(zos, directory, directory.getParentFile());
         } catch(IOException e) {
             log.error("Could not zip to {}", zipfile, e);
         }
