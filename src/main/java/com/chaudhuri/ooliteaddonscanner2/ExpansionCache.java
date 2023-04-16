@@ -20,11 +20,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -54,6 +51,19 @@ public class ExpansionCache {
             log.warn("Could not cleanup cache.", e);
         }
     }
+    
+    private void deleteIfOlderThanTHRESHOLD(File f) throws IOException {
+        Instant lastModified = Instant.ofEpochMilli(f.lastModified());
+
+        BasicFileAttributes attrs = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
+        FileTime time = attrs.lastAccessTime();
+        Instant lastAccessed = time.toInstant();
+
+        if (lastModified.isBefore(THRESHOLD) && lastAccessed.isBefore(THRESHOLD)) {
+
+            Files.delete(f.toPath());
+        }
+    }
 
     /** Removed files that have been last accessed before THRESHOLD.
      * Also removes empty subdirectories.
@@ -65,39 +75,26 @@ public class ExpansionCache {
         if (dir == null) {
             throw new IllegalArgumentException("dir must not be null");
         }
+
         for (File f: dir.listFiles()) {
             if (".".equals(f.getName()) || "..".equals(f.getName())) {
                 continue;
             }
             
             if (f.isFile()) {
-                Instant lastModified = Instant.ofEpochMilli(f.lastModified());
-                
-                BasicFileAttributes attrs = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
-                FileTime time = attrs.lastAccessTime();
-                Instant lastAccessed = time.toInstant();
-                
-                if (lastModified.isBefore(THRESHOLD) && lastAccessed.isBefore(THRESHOLD)) {
-                    if (!f.delete()) {
-                        f.deleteOnExit();
-                    }
-                }
+                deleteIfOlderThanTHRESHOLD(f);
             } else if (f.isDirectory()) {
                 cleanCache(f);
             }
         }
         
-        if (dir != cacheDIR) {
-            if (dir.listFiles().length <= 2) {
-                log.warn("Remove empty directory {}", dir.getAbsolutePath());
-                if (!dir.delete()) {
-                    dir.deleteOnExit();
-                }
-            }
+        if (!dir.getAbsolutePath().equals(cacheDIR.getAbsolutePath()) && dir.listFiles().length <= 2) {
+            log.warn("Remove empty directory {}", dir.getAbsolutePath());
+            Files.delete(dir.toPath());
         }
     }
     
-    public Map<String, Object> getOoliteManifest(String tag) throws MalformedURLException, IOException {
+    public Map<String, Object> getOoliteManifest(String tag) throws IOException {
         log.debug("getOoliteManifest({})", tag);
         String repository = "OoliteProject/oolite";
         String urlStr = "https://api.github.com/repos/" + repository + "/releases/" + tag;
@@ -105,24 +102,22 @@ public class ExpansionCache {
         log.debug("Reading {}", urlStr);
         URL url = new URL(urlStr);
         try ( InputStream in = url.openStream()) {
-            Map<String, Object> latestRelease = (Map<String, Object>) new Genson().deserialize(url.openStream(), Object.class);
-            return latestRelease;
+            return (Map<String, Object>) new Genson().deserialize(url.openStream(), Object.class);
         }
     }
     
     /** Returns the download url for the latest Oolite release
      * 
      */
-    public String getOoliteDownloadUrl(Map<String, Object> manifest) throws ParserConfigurationException, SAXException, TransformerException, IOException {
+    public String getOoliteDownloadUrl(Map<String, Object> manifest) {
         log.debug("getOoliteDownloadUrl({})", manifest);
 
-        //Pattern pattern = Pattern.compile("oolite-\\d+\\.\\d+\\.linux-x86_64.tgz");
         Pattern pattern = Pattern.compile("oolite-\\d+\\.\\d+\\.zip");
         
         List<Object> assets = (List<Object>)manifest.get("assets");
         for (Object oasset: assets) {
             Map<String, Object> asset = (Map<String, Object>)oasset;
-            //log.debug("asset: {}: {}", asset.getClass(), asset);
+            log.trace("asset: {}: {}", asset.getClass(), asset);
 
             String name = String.valueOf(asset.get("name"));
             if (pattern.matcher(name).matches()) {
@@ -136,10 +131,10 @@ public class ExpansionCache {
     
     private File getCachedFile(String url) throws MalformedURLException {
         URL u = new URL(url);
-        return new File(cacheDIR, u.getHost() + "/" + u.getFile());
+        return new File(cacheDIR, u.getHost() + File.separator + u.getFile());
     }
     
-    public void update(List<String> urls) throws MalformedURLException, IOException {
+    public void update(List<String> urls) throws IOException {
         int count = 0;
         for (String u: urls) {
             update(u);
@@ -232,7 +227,7 @@ public class ExpansionCache {
      * @throws MalformedURLException
      * @throws IOException 
      */
-    public void update(String url) throws MalformedURLException, IOException {
+    public void update(String url) throws IOException {
         log.debug("update({})", url);
         
         URL u = new URL(url);
@@ -267,11 +262,9 @@ public class ExpansionCache {
      * @param url
      * @throws MalformedURLException 
      */
-    public void invalidate(String url) throws MalformedURLException {
+    public void invalidate(String url) throws IOException {
         log.debug("invalidate({})", url);
         File cached = getCachedFile(url);
-        if (!cached.delete()) {
-            cached.deleteOnExit();
-        }
+        Files.delete(cached.toPath());
     }
 }

@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -67,6 +66,7 @@ public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
     
     public static final String OOLITE_CORE = "oolite.core";
+    public static final String XML_HEADER = "<?xml";
 
     /** Reads a file into a string, assuming UTF-8 encoding
      * and fixing linefeeds
@@ -115,8 +115,7 @@ public class Main {
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
 
-        PlistParser.ListContext lc = parser.list();
-        return lc;
+        return parser.list();
     }
 
     private static PlistParser.DictionaryContext parsePlistDictionary(InputStream data, String source) throws IOException {
@@ -132,8 +131,7 @@ public class Main {
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
 
-        PlistParser.DictionaryContext dc = parser.dictionary();
-        return dc;
+        return parser.dictionary();
     }
     
     private static void parseModel(InputStream data, String source) throws IOException {
@@ -166,7 +164,7 @@ public class Main {
      * @throws IOException 
      * 
      */
-    private static InputStream getZipEntryStream(ZipInputStream zin, ZipEntry ze) throws IOException {
+    private static InputStream getZipEntryStream(ZipInputStream zin) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
         int read = 0;
@@ -183,7 +181,7 @@ public class Main {
      * 
      * @param registry 
      */
-    private static void readOolite(ExpansionCache cache, Registry registry) throws ParserConfigurationException, SAXException, TransformerException, IOException, Exception {
+    private static void readOolite(ExpansionCache cache, Registry registry) throws Exception {
         log.debug("readOolite({})", registry); 
         
         String tag = "latest";
@@ -218,28 +216,28 @@ public class Main {
             while ((entry= zin.getNextEntry()) != null) {
                 if ("Oolite.app/Contents/Resources/Config/shipdata.plist".equals(entry.getName())) {
                     log.debug("found {}", entry.getName());
-                    readShips(url+"!"+entry.getName(), getZipEntryStream(zin, entry), registry, oxp);
+                    readShips(url+"!"+entry.getName(), getZipEntryStream(zin), registry, oxp);
                 }
                 if ("Oolite.app/Contents/Resources/Config/equipment.plist".equals(entry.getName())) {
                     log.debug("found {}", entry.getName());
-                    readEquipment(url+"!"+entry.getName(), getZipEntryStream(zin, entry), registry, oxp);
+                    readEquipment(url+"!"+entry.getName(), getZipEntryStream(zin), registry, oxp);
                 }
             }
         }
     }
     
-    private static void readEquipment(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException, Exception {
+    private static void readEquipment(String url, InputStream in, Registry registry, Expansion oxp) throws Exception {
         in.mark(10);
 
         Scanner sc = new Scanner(in);
-        if ("<?xml".equals(sc.next())) {
-            log.debug(String.format("Parsing %s", url));
+        if (XML_HEADER.equals(sc.next())) {
+            log.trace("Parsing {}", url);
             in.reset();
-            //List equipmentList = XMLPlistParser.parseList(in, new XMLPlistParser.MySaxErrorHandler(oxp));
-            List equipmentList = XMLPlistParser.parseList(in, null);
+            
+            List<Object> equipmentList = XMLPlistParser.parseList(in, null);
+            
             log.info("Parsed {} ({} items of equipment)", oxp.getName(), equipmentList.size());
             registry.addEquipmentList(oxp, (List)equipmentList.get(0));
-            //oxp.addWarning(String.format("XML content found in %s (see http://aegidian.org/bb/viewtopic.php?f=2&t=10039)", url));
         } else {
             in.reset();
             PlistParser.ListContext lc = parsePlistList(in, url);
@@ -251,14 +249,13 @@ public class Main {
         in.mark(10);
 
         Scanner sc = new Scanner(in);
-        if ("<?xml".equals(sc.next())) {
-            log.debug(String.format("Parsing %s", url));
+        if (XML_HEADER.equals(sc.next())) {
+            log.trace("Parsing {}", url);
             in.reset();
-            //Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(in, new XMLPlistParser.MySaxErrorHandler(oxp));
+
             Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(in, null);
             log.info("Parsed {} ({} ships)", oxp.getName(), shipList.size());
             registry.addShipList(oxp, shipList);
-            //oxp.addWarning(String.format("XML content found in %s (see http://aegidian.org/bb/viewtopic.php?f=2&t=10039)", url));
         } else {
             in.reset();
             PlistParser.DictionaryContext dc = parsePlistDictionary(in, url);
@@ -273,7 +270,7 @@ public class Main {
         log.debug("readShipModels({}, {})", cache, registry);
         int countSuccess = 0;
         int countFailure = 0;
-        
+
         for (Expansion expansion: registry.getExpansions()) {
             try {
                 ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownload_url())));
@@ -285,7 +282,7 @@ public class Main {
                         log.info("Found model {}!{}", expansion.getDownload_url(), zentry.getName());
 
                         try {
-                            parseModel(getZipEntryStream(zin, zentry), expansion.getDownload_url() + "!" + zentry.getName());
+                            parseModel(getZipEntryStream(zin), expansion.getDownload_url() + "!" + zentry.getName());
                             countSuccess++;
                         } catch (Exception e) {
                             expansion.addWarning("Could not parse model "+expansion.getDownload_url() + "!" + zentry.getName()+": "+e.getMessage());
@@ -329,21 +326,21 @@ public class Main {
                     
                     if ("Config/equipment.plist".equals(zentry.getName())) {
                         log.trace("parsing equipment of {}", oxp.getDownload_url());
-                        InputStream in = getZipEntryStream(zin, zentry);
+                        InputStream in = getZipEntryStream(zin);
                         String url = String.format("%s!%s", oxp.getDownload_url(), zentry.getName());
                         readEquipment(url, in, registry, oxp);
                         
                     } else if("Config/shipdata.plist".equals(zentry.getName())) {
                         try {
                             log.trace("parsing shipdata of {}", oxp.getDownload_url());
-                            readShips(String.format("%s!%s", oxp.getDownload_url(), zentry.getName()), getZipEntryStream(zin, zentry), registry, oxp);
+                            readShips(String.format("%s!%s", oxp.getDownload_url(), zentry.getName()), getZipEntryStream(zin), registry, oxp);
                         } catch (Exception e) {
                             oxp.addWarning(String.format("%s: %s at %s!%s", e.getClass().getName(), e.getMessage(), oxp.getDownload_url(), zentry.getName()));
                         }
                         
                     } else if("manifest.plist".equals(zentry.getName())) {
                         log.trace("parsing manifest from {}", oxp.getDownload_url());
-                        InputStream in = getZipEntryStream(zin, zentry);
+                        InputStream in = getZipEntryStream(zin);
                         in.mark(10);
 
                         Scanner sc = new Scanner(in);
@@ -363,13 +360,13 @@ public class Main {
                             oxp.setManifest(registry.toManifest(dc));
                         }
                     } else if ("Config/script.js".equals(zentry.getName())) {
-                        String content = readToString(getZipEntryStream(zin, zentry));
+                        String content = readToString(getZipEntryStream(zin));
                         oxp.addScript(zentry.getName(), content);
                     } else if (zentry.getName().startsWith("Scripts/") && zentry.getName().length()>"Scripts/".length()) {
-                        String content = readToString(getZipEntryStream(zin, zentry));
+                        String content = readToString(getZipEntryStream(zin));
                         oxp.addScript(zentry.getName(), content);
                     } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
-                        InputStream in = getZipEntryStream(zin, zentry);
+                        InputStream in = getZipEntryStream(zin);
                         in.mark(10);
 
                         Scanner sc = new Scanner(in);
@@ -393,7 +390,7 @@ public class Main {
                         if(name.contains("read")) {
                             log.trace("README {}!{}", oxp.getDownload_url(), zentry.getName());
                             
-                            String r = readToString(getZipEntryStream(zin, zentry));                            
+                            String r = readToString(getZipEntryStream(zin));                            
                             oxp.addReadme(zentry.getName(), r);
                             
                         } else if (zentry.getName().startsWith("Config") || zentry.getName().startsWith("config")) {
@@ -474,7 +471,7 @@ public class Main {
             Thread.currentThread().interrupt();
         }
         Instant end = Instant.now();
-        log.debug("Checked {} wiki lookups in {}", String.valueOf(tpe.getTaskCount()), Duration.between(start, end));
+        log.debug("Checked {} wiki lookups in {}", tpe.getTaskCount(), Duration.between(start, end));
     }
     
     private static void printIndex(Registry registry, File outputdir, TemplateEngine templateEngine) throws FileNotFoundException, ParseException, IOException, MalformedTemplateNameException, TemplateException {

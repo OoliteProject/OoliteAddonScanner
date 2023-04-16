@@ -260,14 +260,11 @@ public class PlistTest extends javax.swing.JFrame {
 
     }
     
-    private int errorCount;
-    
     private void validateFile() {
         File f = new File(txtFile.getText());
         txtLog.setText(new Date().toString());
         txtLog.append("\nValidating "+f.getAbsolutePath());
         
-        errorCount = 0;
         MyANTLRErrorListener el = new MyANTLRErrorListener();
 
         try {
@@ -282,10 +279,10 @@ public class PlistTest extends javax.swing.JFrame {
                 parser.addErrorListener(el);
                 PlistParser.ParseContext pc = parser.parse();
             
-                if (0 == el.errorCount) {
+                if (0 == el.getErrorCount()) {
                     txtLog.append("\nSuccessfully parsed.");
                 } else {
-                    txtLog.append(String.format("\nFound %d errors.", errorCount));
+                    txtLog.append(String.format("%nFound %d errors.", el.getErrorCount()));
                     setVisible(true);
                     toFront();
                 }
