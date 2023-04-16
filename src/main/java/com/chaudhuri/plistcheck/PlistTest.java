@@ -29,12 +29,15 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  * @author hiran
  */
 public class PlistTest extends javax.swing.JFrame {
+    private static final Logger log = LoggerFactory.getLogger(PlistTest.class);
 
     private Timer watcher;
     private File watchedFile;
@@ -216,6 +219,47 @@ public class PlistTest extends javax.swing.JFrame {
         }
     }
 
+    class MyANTLRErrorListener implements ANTLRErrorListener {
+        
+        private int errorCount;
+
+        public int getErrorCount() {
+            return errorCount;
+        }
+        
+        @Override
+        public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int line, int column, String message, RecognitionException re) {
+            errorCount++;
+//                if (re != null) {
+//                    re.printStackTrace();
+//                }
+            txtLog.append(String.format("\nline %d:%d %s", line, column, message));
+            //txtLog.append(rcgnzr.toString() + o + line + column + message);
+        }
+
+        @Override
+        public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean bln, BitSet bitset, ATNConfigSet atncs) {
+            errorCount++;
+            txtLog.append("\n");
+            txtLog.append(parser.toString() + dfa + i + i1 + bln + bitset + atncs);
+        }
+
+        @Override
+        public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitset, ATNConfigSet atncs) {
+            errorCount++;
+            txtLog.append("\n");
+            txtLog.append(parser.toString() + dfa + i + i1 + bitset + atncs);
+        }
+
+        @Override
+        public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atncs) {
+            errorCount++;
+            txtLog.append("\n");
+            txtLog.append(parser.toString() + dfa + i + i1 + i2 + atncs);
+        }
+
+    }
+    
     private int errorCount;
     
     private void validateFile() {
@@ -224,62 +268,30 @@ public class PlistTest extends javax.swing.JFrame {
         txtLog.append("\nValidating "+f.getAbsolutePath());
         
         errorCount = 0;
-        ANTLRErrorListener el = new ANTLRErrorListener() {
-            
-            @Override
-            public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int line, int column, String message, RecognitionException re) {
-                errorCount++;
-//                if (re != null) {
-//                    re.printStackTrace();
-//                }
-                txtLog.append(String.format("\nline %d:%d %s", line, column, message));
-                //txtLog.append(rcgnzr.toString() + o + line + column + message);
-            }
-
-            @Override
-            public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean bln, BitSet bitset, ATNConfigSet atncs) {
-                errorCount++;
-                txtLog.append("\n");
-                txtLog.append(parser.toString() + dfa + i + i1 + bln + bitset + atncs);
-            }
-
-            @Override
-            public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitset, ATNConfigSet atncs) {
-                errorCount++;
-                txtLog.append("\n");
-                txtLog.append(parser.toString() + dfa + i + i1 + bitset + atncs);
-            }
-
-            @Override
-            public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atncs) {
-                errorCount++;
-                txtLog.append("\n");
-                txtLog.append(parser.toString() + dfa + i + i1 + i2 + atncs);
-            }
-            
-        };
+        MyANTLRErrorListener el = new MyANTLRErrorListener();
 
         try {
             InputStream in = new FileInputStream(f);
-            ReadableByteChannel channel = Channels.newChannel(in);
-            CharStream charStream = CharStreams.fromChannel(channel, StandardCharsets.UTF_8, 4096, CodingErrorAction.REPLACE, f.getAbsolutePath(), -1);
-            PlistLexer lexer = new PlistLexer(charStream);
-            lexer.addErrorListener(el);
+            try (ReadableByteChannel channel = Channels.newChannel(in)) {
+                CharStream charStream = CharStreams.fromChannel(channel, StandardCharsets.UTF_8, 4096, CodingErrorAction.REPLACE, f.getAbsolutePath(), -1);
+                PlistLexer lexer = new PlistLexer(charStream);
+                lexer.addErrorListener(el);
 
-            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-            PlistParser parser = new PlistParser(tokenStream);
-            parser.addErrorListener(el);
-            PlistParser.ParseContext pc = parser.parse();
+                CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+                PlistParser parser = new PlistParser(tokenStream);
+                parser.addErrorListener(el);
+                PlistParser.ParseContext pc = parser.parse();
             
-            if (errorCount == 0) {
-                txtLog.append("\nSuccessfully parsed.");
-            } else {
-                txtLog.append(String.format("\nFound %d errors.", errorCount));
-                setVisible(true);
-                toFront();
+                if (0 == el.errorCount) {
+                    txtLog.append("\nSuccessfully parsed.");
+                } else {
+                    txtLog.append(String.format("\nFound %d errors.", errorCount));
+                    setVisible(true);
+                    toFront();
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Problem", e);
             txtLog.append("\n");
             txtLog.append(e.getClass().getName() + ": " + e.getMessage());
         }

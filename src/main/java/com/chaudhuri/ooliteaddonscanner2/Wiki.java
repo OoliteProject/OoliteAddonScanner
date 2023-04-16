@@ -7,7 +7,6 @@ import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Map;
 import java.util.Set;
@@ -122,16 +121,17 @@ public class Wiki {
         
         try {
             URL url = new URL(urlStr);
-            InputStreamReader rin = new InputStreamReader(url.openStream());
-            StringBuilder sb = new StringBuilder();
-            char[] buffer = new char[1024];
-            int read = read = rin.read(buffer);;
-            while (read >= 0) {
-                sb.append(buffer, 0, read);
-                read = rin.read(buffer);
+            try (InputStreamReader rin = new InputStreamReader(url.openStream())) {
+                StringBuilder sb = new StringBuilder();
+                char[] buffer = new char[1024];
+                int read = read = rin.read(buffer);;
+                while (read >= 0) {
+                    sb.append(buffer, 0, read);
+                    read = rin.read(buffer);
+                }
+                log.trace("wiki={}", sb.toString());
+                wikiPageCache.put(name, urlStr);
             }
-            log.trace("wiki={}", sb.toString());
-            wikiPageCache.put(name, urlStr);
             
             return urlStr;
         } catch (Exception e) {

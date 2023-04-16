@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
 public class ExpansionCache {
     private static final Logger log = LoggerFactory.getLogger(ExpansionCache.class);
     
-    protected static File CACHE_DIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
+    protected static File cacheDIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
     
     /** Time after which we try to update the cache entry. */
     private static final long MAX_AGE = 30L * 86400L * 1000L; // 7 days ago
@@ -42,14 +42,14 @@ public class ExpansionCache {
     private static final Instant THRESHOLD = Instant.now().minus(180, ChronoUnit.DAYS);
     
     public ExpansionCache() {
-        if (!CACHE_DIR.exists()) {
-            log.info("Creating cache directory {}", CACHE_DIR);
-            CACHE_DIR.mkdirs();
+        if (!cacheDIR.exists()) {
+            log.info("Creating cache directory {}", cacheDIR);
+            cacheDIR.mkdirs();
         }
         
         // on startup clean too old files
         try {
-            cleanCache(CACHE_DIR);
+            cleanCache(cacheDIR);
         } catch (IOException e) {
             log.warn("Could not cleanup cache.", e);
         }
@@ -78,17 +78,21 @@ public class ExpansionCache {
                 Instant lastAccessed = time.toInstant();
                 
                 if (lastModified.isBefore(THRESHOLD) && lastAccessed.isBefore(THRESHOLD)) {
-                    f.delete();
+                    if (!f.delete()) {
+                        f.deleteOnExit();
+                    }
                 }
             } else if (f.isDirectory()) {
                 cleanCache(f);
             }
         }
         
-        if (dir != CACHE_DIR) {
+        if (dir != cacheDIR) {
             if (dir.listFiles().length <= 2) {
                 log.warn("Remove empty directory {}", dir.getAbsolutePath());
-                dir.delete();
+                if (!dir.delete()) {
+                    dir.deleteOnExit();
+                }
             }
         }
     }
@@ -132,7 +136,7 @@ public class ExpansionCache {
     
     private File getCachedFile(String url) throws MalformedURLException {
         URL u = new URL(url);
-        return new File(CACHE_DIR, u.getHost() + "/" + u.getFile());
+        return new File(cacheDIR, u.getHost() + "/" + u.getFile());
     }
     
     public void update(List<String> urls) throws MalformedURLException, IOException {
@@ -266,6 +270,8 @@ public class ExpansionCache {
     public void invalidate(String url) throws MalformedURLException {
         log.debug("invalidate({})", url);
         File cached = getCachedFile(url);
-        cached.delete();
+        if (!cached.delete()) {
+            cached.deleteOnExit();
+        }
     }
 }

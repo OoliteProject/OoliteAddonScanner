@@ -42,6 +42,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -468,9 +469,12 @@ public class Main {
         } catch (InterruptedException ie) {
             log.error("caught exception", ie);
             tpe.shutdownNow();
+            
+            // Restore interrupted state...
+            Thread.currentThread().interrupt();
         }
         Instant end = Instant.now();
-        log.debug("Checked {} wiki lookups in {}", tpe.getTaskCount(), Duration.between(start, end));
+        log.debug("Checked {} wiki lookups in {}", String.valueOf(tpe.getTaskCount()), Duration.between(start, end));
     }
     
     private static void printIndex(Registry registry, File outputdir, TemplateEngine templateEngine) throws FileNotFoundException, ParseException, IOException, MalformedTemplateNameException, TemplateException {
@@ -556,8 +560,8 @@ public class Main {
         options.addOption("u", "url", true, "URL for downloading the expansions list");
         CommandLine commandline = new DefaultParser().parse(options, args);
         
-        String cachePath = commandline.getOptionValue("c", ExpansionCache.CACHE_DIR.getAbsolutePath());
-        ExpansionCache.CACHE_DIR = new File(cachePath);
+        String cachePath = commandline.getOptionValue("c", ExpansionCache.cacheDIR.getAbsolutePath());
+        ExpansionCache.cacheDIR = new File(cachePath);
         
         String urlStr = commandline.getOptionValue("u", "http://addons.oolite.space/api/1.0/overview");
         String outputDirStr = commandline.getOptionValue("o", "target/OoliteExpansionIndex");
