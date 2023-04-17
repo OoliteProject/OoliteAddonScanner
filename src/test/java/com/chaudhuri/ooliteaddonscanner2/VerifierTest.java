@@ -2,9 +2,10 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
+import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
-import java.util.jar.Manifest;
+import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -72,7 +73,7 @@ public class VerifierTest {
      * Test of verify method, of class Verifier.
      */
     @Test
-    void testVerify_Expansion() {
+    public void testVerify_Expansion() {
         log.info("testVerify_Expansion");
         {
             Expansion expansion = new Expansion();
@@ -89,7 +90,7 @@ public class VerifierTest {
             
             assertEquals(0, expansion.getWarnings().size());
             Verifier.verify(expansion);
-            assertEquals(0, expansion.getWarnings().size());
+            assertEquals(1, expansion.getWarnings().size());
         }
         {
             Expansion expansion = new Expansion();
@@ -100,7 +101,7 @@ public class VerifierTest {
             
             assertEquals(0, expansion.getWarnings().size());
             Verifier.verify(expansion);
-            assertEquals(0, expansion.getWarnings().size());
+            assertEquals(1, expansion.getWarnings().size());
         }
     }
 
@@ -108,21 +109,105 @@ public class VerifierTest {
      * Test of verify method, of class Verifier.
      */
     @Test
-    void testVerify_Equipment() {
+    public void testVerify_Equipment() {
+        log.info("testVerify_Equipment");
+        {
+            Equipment equipment = new Equipment();
+            assertEquals(0, equipment.getWarnings().size());
+            Verifier.verify(equipment);
+            assertEquals(0, equipment.getWarnings().size());
+        }
+        {
+            Equipment equipment = new Equipment();
+            equipment.putFeature("visible", "true");
+            assertEquals(0, equipment.getWarnings().size());
+            Verifier.verify(equipment);
+            assertEquals(0, equipment.getWarnings().size());
+        }
+        {
+            Equipment equipment = new Equipment();
+            equipment.putFeature("visible", "false");
+            assertEquals(0, equipment.getWarnings().size());
+            Verifier.verify(equipment);
+            assertEquals(0, equipment.getWarnings().size());
+        }
+        {
+            Equipment equipment = new Equipment();
+            equipment.putFeature("visible", "yes");
+            assertEquals(0, equipment.getWarnings().size());
+            Verifier.verify(equipment);
+            assertEquals(0, equipment.getWarnings().size());
+        }
+        {
+            Equipment equipment = new Equipment();
+            equipment.putFeature("visible", "no");
+            assertEquals(0, equipment.getWarnings().size());
+            Verifier.verify(equipment);
+            assertEquals(0, equipment.getWarnings().size());
+        }
+        {
+            Equipment equipment = new Equipment();
+            equipment.putFeature("visible", "wrong");
+            assertEquals(0, equipment.getWarnings().size());
+            Verifier.verify(equipment);
+            assertEquals(1, equipment.getWarnings().size());
+        }
     }
 
     /**
      * Test of verify method, of class Verifier.
      */
     @Test
-    void testVerify_Ship() {
+    public void testVerify_Ship() {
+        log.info("testVerify_Ship");
+        {
+            Ship ship = new Ship();
+            assertEquals(0, ship.getWarnings().size());
+            Verifier.verify(ship);
+            assertEquals(0, ship.getWarnings().size());
+        }
+        {
+            Ship ship = new Ship();
+            ship.addFeature("is_template", "1");
+            assertEquals(0, ship.getWarnings().size());
+            Verifier.verify(ship);
+            assertEquals(0, ship.getWarnings().size());
+        }
+        {
+            Ship ship = new Ship();
+            ship.addFeature("is_template", "true");
+            assertEquals(0, ship.getWarnings().size());
+            Verifier.verify(ship);
+            assertEquals(0, ship.getWarnings().size());
+        }
+        {
+            Ship ship = new Ship();
+            ship.addFeature("is_template", "0");
+            assertEquals(0, ship.getWarnings().size());
+            Verifier.verify(ship);
+            assertEquals(0, ship.getWarnings().size());
+        }
+        {
+            Ship ship = new Ship();
+            ship.addFeature("is_template", "false");
+            assertEquals(0, ship.getWarnings().size());
+            Verifier.verify(ship);
+            assertEquals(0, ship.getWarnings().size());
+        }
+        {
+            Ship ship = new Ship();
+            ship.addFeature("is_template", "none");
+            assertEquals(0, ship.getWarnings().size());
+            Verifier.verify(ship);
+            assertEquals(1, ship.getWarnings().size());
+        }
     }
 
     /**
      * Test of verify method, of class Verifier.
      */
     @Test
-    void testVerify_Registry() {
+    public void testVerify_Registry() {
     }
     
 }
