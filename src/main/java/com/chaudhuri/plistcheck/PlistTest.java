@@ -168,12 +168,10 @@ public class PlistTest extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                JFrame f = new PlistTest();
-                f.setLocationRelativeTo(null);
-                f.setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            JFrame f = new PlistTest();
+            f.setLocationRelativeTo(null);
+            f.setVisible(true);
         });
     }
     
@@ -226,11 +224,7 @@ public class PlistTest extends javax.swing.JFrame {
         @Override
         public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int line, int column, String message, RecognitionException re) {
             errorCount++;
-//                if (re != null) {
-//                    re.printStackTrace();
-//                }
             txtLog.append(String.format("%nline %d:%d %s", line, column, message));
-            //txtLog.append(rcgnzr.toString() + o + line + column + message);
         }
 
         @Override

@@ -202,7 +202,10 @@ public class XMLPlistParser {
             throw new IllegalArgumentException("Expected plist 1.0 format");
         }
 
-        log.debug("Parsed {}", serialize(doc));
+        if (log.isTraceEnabled()) {
+            log.trace("Parsed {}", serialize(doc));
+        }
+        
         ArrayList<Object> result = new ArrayList<>();
         NodeList nl = plist.getChildNodes();
         for (int i= 0; i<nl.getLength();i++) {
