@@ -50,8 +50,14 @@ public class EquipmentTest {
     }
 
     @Test
-    void testSetGetTechlevel() {
-        log.debug("testSetGetTechlevel()");
+    public void testSetGetTechlevel() {
+        log.info("testSetGetTechlevel()");
+        {
+            Equipment equipment = new Equipment();
+            assertNull(equipment.getTechlevel());
+            equipment.setTechlevel("something");
+            assertEquals("something", equipment.getTechlevel());
+        }
     }
 
     @Test

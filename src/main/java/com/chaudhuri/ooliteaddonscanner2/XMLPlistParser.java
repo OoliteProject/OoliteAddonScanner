@@ -60,6 +60,12 @@ public class XMLPlistParser {
         
     }
     
+    /**
+     * Prevent this class from instantiation.
+     */
+    private XMLPlistParser() {
+    }
+    
     public static String serialize(Node n) throws TransformerException {
         StringWriter sw = new StringWriter();
         Transformer t = TransformerFactory.newDefaultInstance().newTransformer();
@@ -70,7 +76,7 @@ public class XMLPlistParser {
     private static List<Object> parseArray(Element array) {
         log.debug("parseArray({})", array);
         
-        ArrayList<Object> result = new ArrayList();
+        ArrayList<Object> result = new ArrayList<>();
         NodeList nl = array.getChildNodes();
         for (int i=0;i<nl.getLength();i++) {
             Node n = nl.item(i);

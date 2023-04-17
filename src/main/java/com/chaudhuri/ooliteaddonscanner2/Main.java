@@ -101,7 +101,7 @@ public class Main {
         registry.addExpansions(lc);
     }
     
-    private static PlistParser.ListContext parsePlistList(InputStream data, String source) throws IOException {
+    private static PlistParser prepareParser(InputStream data, String source) throws IOException {
         ThrowingErrorListener errorListener = new ThrowingErrorListener();
 
         ReadableByteChannel channel = Channels.newChannel(data);
@@ -113,24 +113,16 @@ public class Main {
         PlistParser parser = new PlistParser(tokenStream);
         parser.removeErrorListeners();
         parser.addErrorListener(errorListener);
-
-        return parser.list();
+        
+        return parser;
+    }
+    
+    private static PlistParser.ListContext parsePlistList(InputStream data, String source) throws IOException {
+        return prepareParser(data, source).list();
     }
 
     private static PlistParser.DictionaryContext parsePlistDictionary(InputStream data, String source) throws IOException {
-        ThrowingErrorListener errorListener = new ThrowingErrorListener();
-
-        ReadableByteChannel channel = Channels.newChannel(data);
-        CharStream charStream = CharStreams.fromChannel(channel, StandardCharsets.UTF_8, 4096, CodingErrorAction.REPLACE, source, -1);
-        PlistLexer lexer = new PlistLexer(charStream);
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(errorListener);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        PlistParser parser = new PlistParser(tokenStream);
-        parser.removeErrorListeners();
-        parser.addErrorListener(errorListener);
-
-        return parser.dictionary();
+        return prepareParser(data, source).dictionary();
     }
     
     private static void parseModel(InputStream data, String source) throws IOException {
