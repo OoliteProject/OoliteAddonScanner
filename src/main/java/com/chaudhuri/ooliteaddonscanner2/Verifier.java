@@ -7,15 +7,15 @@ import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import java.util.Map;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author hiran
  */
 public class Verifier {
-    private static final Logger log = LoggerFactory.getLogger(Verifier.class);
+    private static final Logger log = LogManager.getLogger(Verifier.class);
     
     /**
      * Prevent this class from being instantiated.
@@ -49,7 +49,7 @@ public class Verifier {
     }
     
     /**
-     *  check for licenses.
+     *  Verifies an expansion and adds warnings to the expansion.
      * 
      * @param expansion 
      */

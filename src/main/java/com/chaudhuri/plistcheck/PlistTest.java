@@ -29,15 +29,15 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
 import org.antlr.v4.runtime.atn.ATNConfigSet;
 import org.antlr.v4.runtime.dfa.DFA;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author hiran
  */
 public class PlistTest extends javax.swing.JFrame {
-    private static final Logger log = LoggerFactory.getLogger(PlistTest.class);
+    private static final Logger log = LogManager.getLogger(PlistTest.class);
 
     private Timer watcher;
     private File watchedFile;

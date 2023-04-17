@@ -2,6 +2,11 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
+import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
+import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
+import java.util.jar.Manifest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author hiran
  */
 public class VerifierTest {
+    private static final Logger log = LogManager.getLogger();
     
     public VerifierTest() {
     }
@@ -34,7 +40,9 @@ public class VerifierTest {
     public void tearDown() {
     }
     
+    @Test
     public void testFindDiffereringPosition() {
+        log.info("testFindDiffereringPosition");
         {
             String l1 = "";
             String l2 = "";
@@ -65,6 +73,35 @@ public class VerifierTest {
      */
     @Test
     void testVerify_Expansion() {
+        log.info("testVerify_Expansion");
+        {
+            Expansion expansion = new Expansion();
+            assertEquals(0, expansion.getWarnings().size());
+            Verifier.verify(expansion);
+            assertEquals(0, expansion.getWarnings().size());
+        }
+        {
+            Expansion expansion = new Expansion();
+            expansion.setDescription("one");
+            ExpansionManifest manifest = new ExpansionManifest();
+            manifest.setDescription("two");
+            expansion.setManifest(manifest);
+            
+            assertEquals(0, expansion.getWarnings().size());
+            Verifier.verify(expansion);
+            assertEquals(0, expansion.getWarnings().size());
+        }
+        {
+            Expansion expansion = new Expansion();
+            expansion.setIdentifier("one");
+            ExpansionManifest manifest = new ExpansionManifest();
+            manifest.setIdentifier("two");
+            expansion.setManifest(manifest);
+            
+            assertEquals(0, expansion.getWarnings().size());
+            Verifier.verify(expansion);
+            assertEquals(0, expansion.getWarnings().size());
+        }
     }
 
     /**

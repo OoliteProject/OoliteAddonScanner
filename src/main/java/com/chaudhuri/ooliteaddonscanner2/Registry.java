@@ -14,15 +14,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author hiran
  */
 public class Registry {
-    private static final Logger log = LoggerFactory.getLogger(Registry.class);
+    private static final Logger log = LogManager.getLogger(Registry.class);
     
     public static final String EXPANSION_AUTHOR = "author";
     public static final String EXPANSION_CATEGORY = "category";

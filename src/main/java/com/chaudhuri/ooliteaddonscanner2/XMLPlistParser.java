@@ -18,8 +18,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,7 +33,7 @@ import org.xml.sax.SAXParseException;
  * @author hiran
  */
 public class XMLPlistParser {
-    private static final Logger log = LoggerFactory.getLogger(XMLPlistParser.class);
+    private static final Logger log = LogManager.getLogger(XMLPlistParser.class);
     
     public static class MySaxErrorHandler implements ErrorHandler {
         private Expansion expansion;

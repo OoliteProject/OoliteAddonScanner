@@ -20,15 +20,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author hiran
  */
 public class ExpansionCache {
-    private static final Logger log = LoggerFactory.getLogger(ExpansionCache.class);
+    private static final Logger log = LogManager.getLogger(ExpansionCache.class);
     
     protected static File cacheDIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
     

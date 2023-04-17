@@ -11,15 +11,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author hiran
  */
 public class TemplateEngine {
-    private static final Logger log = LoggerFactory.getLogger(TemplateEngine.class);
+    private static final Logger log = LogManager.getLogger(TemplateEngine.class);
     
     private Configuration cfg;
 
