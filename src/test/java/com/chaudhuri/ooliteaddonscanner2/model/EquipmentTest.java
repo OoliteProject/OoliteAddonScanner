@@ -38,7 +38,7 @@ public class EquipmentTest {
     }
 
     @Test
-    void testSetGetExpansion() {
+    public void testSetGetExpansion() {
         log.debug("testSetGetExpansion()");
         {
             Equipment equipment = new Equipment();
@@ -61,52 +61,108 @@ public class EquipmentTest {
     }
 
     @Test
-    void testSetGetCost() {
+    public void testSetGetCost() {
         log.debug("testSetGetCost()");
+        {
+            Equipment equipment = new Equipment();
+            assertNull(equipment.getCost());
+            equipment.setCost("something");
+            assertEquals("something", equipment.getCost());
+        }
     }
 
     @Test
-    void testSetGetIdentifier() {
+    public void testSetGetIdentifier() {
         log.debug("testSetGetIdentifier()");
+        {
+            Equipment equipment = new Equipment();
+            assertNull(equipment.getIdentifier());
+            equipment.setIdentifier("something");
+            assertEquals("something", equipment.getIdentifier());
+        }
     }
 
     @Test
-    void testSetGetDescription() {
+    public void testSetGetDescription() {
         log.debug("testSetGetDescription()");
+        {
+            Equipment equipment = new Equipment();
+            assertNull(equipment.getDescription());
+            equipment.setDescription("something");
+            assertEquals("something", equipment.getDescription());
+        }
     }
 
     @Test
-    void testSetGetName() {
+    public void testSetGetName() {
         log.debug("testSetGetName()");
+        {
+            Equipment equipment = new Equipment();
+            assertNull(equipment.getName());
+            equipment.setName("something");
+            assertEquals("something", equipment.getName());
+        }
     }
 
     @Test
-    void testSetGetFeatures() {
+    public void testSetGetFeatures() {
         log.debug("testSetGetFeatures()");
+        {
+            Equipment equipment = new Equipment();
+            assertNotNull(equipment.getFeatures());
+            assertEquals(0, equipment.getFeatures().size());
+            
+            equipment.putFeature("test", "myvalue");
+            assertEquals(1, equipment.getFeatures().size());
+            assertEquals("myvalue", equipment.getFeatures().get("test"));
+        }
     }
 
     @Test
-    void testToString() {
+    public void testToString() {
         log.debug("testToString()");
+        {
+            Equipment equipment = new Equipment();
+            assertEquals("com.chaudhuri.ooliteaddonscanner2.model.Equipment(expansion=null, identifier=null)", equipment.toString());
+        }
     }
 
     @Test
-    void testGetAsWikipage() {
+    public void testGetAsWikipage() {
         log.debug("testGetAsWikipage()");
+        {
+            Equipment equipment = new Equipment();
+            assertNull(equipment.getAsWikipage());
+            equipment.setAsWikipage("mywiki");
+            assertEquals("mywiki", equipment.getAsWikipage());
+        }
     }
 
     @Test
-    void testGetType() {
+    public void testGetType() {
         log.debug("testGetType()");
+        {
+            Equipment equipment = new Equipment();
+            assertEquals("Equipment", equipment.getType());
+        }
     }
 
     @Test
-    void testAddGetWarning() {
+    public void testAddGetWarning() {
         log.debug("testAddWarning()");
+        {
+            Equipment equipment = new Equipment();
+            assertNotNull(equipment.getWarnings());
+            assertEquals(0, equipment.getWarnings().size());
+
+            equipment.addWarning("attention");
+            assertEquals(1, equipment.getWarnings().size());
+            assertEquals("attention", equipment.getWarnings().get(0));
+        }
     }
 
     @Test
-    void testIsVisible() {
+    public void testIsVisible() {
         log.info("testIsVisible()");
         
         Equipment equipment = new Equipment();
