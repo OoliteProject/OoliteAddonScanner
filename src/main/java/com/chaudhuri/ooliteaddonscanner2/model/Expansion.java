@@ -13,22 +13,22 @@ import java.util.TreeMap;
  */
 public class Expansion implements Wikiworthy {
     private String identifier;
-    private String required_oolite_version;
+    private String requiredOoliteVersion;
     private String title;
     private String version;
     private String category;
     private String description;
-    private String download_url;
+    private String downloadUrl;
     private String author;
-    private String file_size;
-    private String information_url;
+    private String fileSize;
+    private String informationUrl;
     private String license;
-    private String upload_date;
+    private String uploadDate;
     private String tags;
-    private String requires_oxps;
-    private String optional_oxps;
-    private String conflict_oxps;
-    private String maximum_oolite_version;
+    private String requiresOxps;
+    private String optionalOxps;
+    private String conflictOxps;
+    private String maximumOoliteVersion;
     private ExpansionManifest manifest;
     private final TreeMap<String, Equipment> equipment;
     private final TreeMap<String, Ship> ships;
@@ -40,7 +40,7 @@ public class Expansion implements Wikiworthy {
     private List<String> warnings;
     
     public Expansion() {
-        this.warnings = new ArrayList<String>();
+        this.warnings = new ArrayList<>();
         
         this.equipment = new TreeMap<>();
         this.ships = new TreeMap<>();
@@ -70,15 +70,15 @@ public class Expansion implements Wikiworthy {
     }
     
     public List<Equipment> getEquipment() {
-        return new ArrayList<Equipment>(equipment.values());
+        return new ArrayList<>(equipment.values());
     }
     
     public List<Ship> getShips() {
-        return new ArrayList<Ship>(ships.values());
+        return new ArrayList<>(ships.values());
     }
     
     public Map<String, String> getReadmes() {
-        return new TreeMap<String, String>(readmes);
+        return new TreeMap<>(readmes);
     }
     
     public void setIdentifier(String identifier) {
@@ -105,12 +105,12 @@ public class Expansion implements Wikiworthy {
         this.category = category;
     }
 
-    public String getConflict_oxps() {
-        return conflict_oxps;
+    public String getConflictOxps() {
+        return conflictOxps;
     }
 
-    public void setConflict_oxps(String conflict_oxps) {
-        this.conflict_oxps = conflict_oxps;
+    public void setConflictOxps(String conflictOxps) {
+        this.conflictOxps = conflictOxps;
     }
 
     public String getVersion() {
@@ -121,12 +121,12 @@ public class Expansion implements Wikiworthy {
         this.version = version;
     }
 
-    public String getUpload_date() {
-        return upload_date;
+    public String getUploadDate() {
+        return uploadDate;
     }
 
-    public void setUpload_date(String upload_date) {
-        this.upload_date = upload_date;
+    public void setUploadDate(String uploadDate) {
+        this.uploadDate = uploadDate;
     }
 
     public String getDescription() {
@@ -137,12 +137,12 @@ public class Expansion implements Wikiworthy {
         this.description = description;
     }
 
-    public String getDownload_url() {
-        return download_url;
+    public String getDownloadUrl() {
+        return downloadUrl;
     }
 
-    public void setDownload_url(String download_url) {
-        this.download_url = download_url;
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 
     /** Returns the title aka the name of the OXP.
@@ -158,7 +158,7 @@ public class Expansion implements Wikiworthy {
      * @return the title
      */
     public String getName() {
-        return title;
+        return getTitle();
     }
 
     public void setTitle(String title) {
@@ -173,20 +173,20 @@ public class Expansion implements Wikiworthy {
         this.tags = tags;
     }
 
-    public String getFile_size() {
-        return file_size;
+    public String getFileSize() {
+        return fileSize;
     }
 
-    public void setFile_size(String file_size) {
-        this.file_size = file_size;
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
     }
 
-    public String getInformation_url() {
-        return information_url;
+    public String getInformationUrl() {
+        return informationUrl;
     }
 
-    public void setInformation_url(String information_url) {
-        this.information_url = information_url;
+    public void setInformationUrl(String informationUrl) {
+        this.informationUrl = informationUrl;
     }
 
     public String getLicense() {
@@ -197,36 +197,36 @@ public class Expansion implements Wikiworthy {
         this.license = license;
     }
 
-    public String getRequired_oolite_version() {
-        return required_oolite_version;
+    public String getRequiredOoliteVersion() {
+        return requiredOoliteVersion;
     }
 
-    public void setRequired_oolite_version(String required_oolite_version) {
-        this.required_oolite_version = required_oolite_version;
+    public void setRequiredOoliteVersion(String requiredOoliteVersion) {
+        this.requiredOoliteVersion = requiredOoliteVersion;
     }
 
-    public String getRequires_oxps() {
-        return requires_oxps;
+    public String getRequiresOxps() {
+        return requiresOxps;
     }
 
-    public void setRequires_oxps(String requires_oxps) {
-        this.requires_oxps = requires_oxps;
+    public void setRequiresOxps(String requiresOxps) {
+        this.requiresOxps = requiresOxps;
     }
 
-    public String getOptional_oxps() {
-        return optional_oxps;
+    public String getOptionalOxps() {
+        return optionalOxps;
     }
 
-    public void setOptional_oxps(String optional_oxps) {
-        this.optional_oxps = optional_oxps;
+    public void setOptionalOxps(String optionalOxps) {
+        this.optionalOxps = optionalOxps;
     }
 
-    public String getMaximum_oolite_version() {
-        return maximum_oolite_version;
+    public String getMaximumOoliteVersion() {
+        return maximumOoliteVersion;
     }
 
-    public void setMaximum_oolite_version(String maximum_oolite_version) {
-        this.maximum_oolite_version = maximum_oolite_version;
+    public void setMaximumOoliteVersion(String maximumOoliteVersion) {
+        this.maximumOoliteVersion = maximumOoliteVersion;
     }
 
     public ExpansionManifest getManifest() {
@@ -262,7 +262,7 @@ public class Expansion implements Wikiworthy {
     }
     
     public List<String> getWarnings() {
-        List<String> result = new ArrayList<String>(warnings);
+        List<String> result = new ArrayList<>(warnings);
         if (manifest != null) {
             result.addAll(manifest.getWarnings());
         }

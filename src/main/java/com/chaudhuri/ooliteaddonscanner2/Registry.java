@@ -25,6 +25,12 @@ import org.slf4j.LoggerFactory;
 public class Registry {
     private static final Logger log = LoggerFactory.getLogger(Registry.class);
     
+    public static final String EXPANSION_CATEGORY = "category";
+    public static final String EXPANSION_IDENTIFIER = "identifier";
+    public static final String EXPANSION_TITLE = "title";
+    public static final String EXPANSION_VERSION = "version";
+    public static final String EXPANSION_REQUIRED_OOLITE_VERSION = "required_oolite_version";
+    
     private final Map<String, Expansion> expansions;
     private final Map<String, Equipment> equipment;
     private final Map<String, Ship> ships;
@@ -50,7 +56,9 @@ public class Registry {
         
         for (PlistParser.ValueContext vc: lc.value()) {
             PlistParser.DictionaryContext dc = vc.dictionary();
-            log.trace("{} {}", dc.getClass(), dc.toStringTree());
+            if (log.isTraceEnabled()) {
+                log.trace("{} {}", dc.getClass(), dc.toStringTree());
+            }
             addExpansion(dc);
         }
     }
@@ -69,43 +77,42 @@ public class Registry {
             log.trace("{}", kc);
 
             String key = kc.STRING().getText();
-            if ("identifier".equals(key)) {
+            if (EXPANSION_IDENTIFIER.equals(key)) {
                 oxp.setIdentifier(kc.value().getText());
-            } else if ("required_oolite_version".equals(key)) {
-                oxp.setRequired_oolite_version(kc.value().getText());
-            } else if ("title".equals(key)) {
+            } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
+                oxp.setRequiredOoliteVersion(kc.value().getText());
+            } else if (EXPANSION_TITLE.equals(key)) {
                 oxp.setTitle(kc.value().getText());
-            } else if ("version".equals(key)) {
+            } else if (EXPANSION_VERSION.equals(key)) {
                 oxp.setVersion(kc.value().getText());
-            } else if ("category".equals(key)) {
+            } else if (EXPANSION_CATEGORY.equals(key)) {
                 oxp.setCategory(kc.value().getText());
             } else if ("description".equals(key)) {
                 oxp.setDescription(kc.value().getText());
             } else if ("download_url".equals(key)) {
-                oxp.setDownload_url(kc.value().getText());
+                oxp.setDownloadUrl(kc.value().getText());
             } else if ("author".equals(key)) {
                 oxp.setAuthor(kc.value().getText());
             } else if ("file_size".equals(key)) {
-                oxp.setFile_size(kc.value().getText());
+                oxp.setFileSize(kc.value().getText());
             } else if ("information_url".equals(key)) {
-                oxp.setInformation_url(kc.value().getText());
+                oxp.setInformationUrl(kc.value().getText());
             } else if ("license".equals(key)) {
                 oxp.setLicense(kc.value().getText());
             } else if ("upload_date".equals(key)) {
-                oxp.setUpload_date(kc.value().getText());
+                oxp.setUploadDate(kc.value().getText());
             } else if ("tags".equals(key)) {
                 oxp.setTags(kc.value().getText());
             } else if ("requires_oxps".equals(key)) {
-                oxp.setRequires_oxps(kc.value().getText());
+                oxp.setRequiresOxps(kc.value().getText());
             } else if ("optional_oxps".equals(key)) {
-                oxp.setOptional_oxps(kc.value().getText());
+                oxp.setOptionalOxps(kc.value().getText());
             } else if ("conflict_oxps".equals(key)) {
-                oxp.setConflict_oxps(kc.value().getText());
+                oxp.setConflictOxps(kc.value().getText());
             } else if ("maximum_oolite_version".equals(key)) {
-                oxp.setMaximum_oolite_version(kc.value().getText());
+                oxp.setMaximumOoliteVersion(kc.value().getText());
             } else {
                 log.warn("Could not process key '{}'", key);
-                //throw new IllegalArgumentException("Could not process key '" + key + "'");
             }
         }
         
@@ -122,7 +129,7 @@ public class Registry {
     public void addExpansion(Expansion oxp) {
         if (expansions.containsKey(oxp.getIdentifier())) {
             Expansion oldOxp = expansions.get(oxp.getIdentifier());
-            addWarning(String.format("OXP Overwrite! %s (%s) and %s (%s) share same id %s", oxp.getName(), oxp.getDownload_url(), oldOxp.getName(), oldOxp.getDownload_url(), oxp.getIdentifier()));
+            addWarning(String.format("OXP Overwrite! %s (%s) and %s (%s) share same id %s", oxp.getName(), oxp.getDownloadUrl(), oldOxp.getName(), oldOxp.getDownloadUrl(), oxp.getIdentifier()));
         }
         expansions.put(oxp.getIdentifier(), oxp);
     }
@@ -133,10 +140,10 @@ public class Registry {
      * @param expansion
      * @param lc 
      */
-    public void addEquipmentList(Expansion expansion, List list) throws Exception {
+    public void addEquipmentList(Expansion expansion, List<List<Map<String, Object>>> list) throws RegistryException {
         log.debug("addEquipmentList({}, {})", expansion, list);
-        for (Object vc: list) {
-            addEquipment(expansion, (List)vc);
+        for (List<Map<String, Object>> vc: list) {
+            addEquipment(expansion, vc);
         }
     }
     
@@ -146,7 +153,7 @@ public class Registry {
      * @param expansion
      * @param lc 
      */
-    public void addEquipmentList(Expansion expansion, PlistParser.ListContext lc) {
+    public void addEquipmentList(Expansion expansion, PlistParser.ListContext lc) throws RegistryException {
         log.debug("addEquipmentList({}, {})", expansion, lc);
         if (lc==null) {
             throw new IllegalArgumentException("ListContext must not be null");
@@ -162,33 +169,33 @@ public class Registry {
      * @param expansion
      * @param lc 
      */
-    public void addEquipment(Expansion expansion, List list) throws Exception {
+    public void addEquipment(Expansion expansion, List<Map<String, Object>> list) throws RegistryException {
         log.debug("addEquipment({}, {})", expansion, list);
-        Equipment equipment = new Equipment();
-        equipment.setExpansion(expansion);
+        Equipment eq = new Equipment();
+        eq.setExpansion(expansion);
 
         try {
-            equipment.setTechlevel(String.valueOf(list.get(0)));
-            equipment.setCost(String.valueOf(list.get(1)));
-            equipment.setName(String.valueOf(list.get(2)));
-            equipment.setIdentifier(String.valueOf(list.get(3)));
-            equipment.setDescription(String.valueOf(list.get(4)));
+            eq.setTechlevel(String.valueOf(list.get(0)));
+            eq.setCost(String.valueOf(list.get(1)));
+            eq.setName(String.valueOf(list.get(2)));
+            eq.setIdentifier(String.valueOf(list.get(3)));
+            eq.setDescription(String.valueOf(list.get(4)));
 
             if(list.size()>5) {
-                Map<String, Object> dict = (Map<String, Object>)list.get(5);
+                Map<String, Object> dict = list.get(5);
                 for (Map.Entry<String, Object> entry: dict.entrySet()) {
-                    equipment.putFeature(entry.getKey(), String.valueOf(entry.getValue()));
+                    eq.putFeature(entry.getKey(), String.valueOf(entry.getValue()));
                 }
             } else {
-                expansion.addWarning(String.format("No features for equipment %s", equipment.getName()));
+                expansion.addWarning(String.format("No features for equipment %s", eq.getName()));
             }            
         } catch (IndexOutOfBoundsException e) {
-            throw new Exception(String.format("Could not evaluate expansion %s equipment %s", expansion, list), e);
+            throw new RegistryException(String.format("Could not evaluate expansion %s equipment %s", expansion, list), e);
         }
         
         // todo: can we add just like that? Do we need to check for duplicates?
-        expansion.addEquipment(equipment);
-        addEquipment(equipment);
+        expansion.addEquipment(eq);
+        addEquipment(eq);
     }
     
     public void addShip(Ship ship) {
@@ -218,16 +225,16 @@ public class Registry {
      * @param expansion
      * @param lc 
      */
-    public void addEquipment(Expansion expansion, PlistParser.ListContext lc) {
+    public void addEquipment(Expansion expansion, PlistParser.ListContext lc) throws RegistryException {
         log.debug("addEquipment({}, {})", expansion, lc);
-        Equipment equipment = new Equipment();
-        equipment.setExpansion(expansion);
+        Equipment eq = new Equipment();
+        eq.setExpansion(expansion);
 
-        equipment.setTechlevel(lc.value(0).getText());
-        equipment.setCost(lc.value(1).getText());
-        equipment.setName(lc.value(2).getText());
-        equipment.setIdentifier(lc.value(3).getText());
-        equipment.setDescription(lc.value(4).getText());
+        eq.setTechlevel(lc.value(0).getText());
+        eq.setCost(lc.value(1).getText());
+        eq.setName(lc.value(2).getText());
+        eq.setIdentifier(lc.value(3).getText());
+        eq.setDescription(lc.value(4).getText());
         
         try {
             PlistParser.ValueContext v = lc.value(5);
@@ -237,18 +244,18 @@ public class Registry {
                     List<PlistParser.KeyvaluepairContext> kl = d.keyvaluepair();
                     if (kl != null) {
                         for (PlistParser.KeyvaluepairContext kc: kl) {
-                            equipment.putFeature(kc.STRING().getText(), kc.value().getText());
+                            eq.putFeature(kc.STRING().getText(), kc.value().getText());
                         }
                     }
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(String.format("Could not parse features for %s", equipment), e);
+            throw new RegistryException(String.format("Could not parse features for %s", eq), e);
         }
         
         // todo: can we add just like that? Do we need to check for duplicates?
-        expansion.addEquipment(equipment);
-        this.equipment.put(equipment.getIdentifier(), equipment);
+        expansion.addEquipment(eq);
+        this.equipment.put(eq.getIdentifier(), eq);
     }
     
     public void addShipList(Expansion expansion, Map<String, Object> shipList) {
@@ -301,26 +308,23 @@ public class Registry {
     }
     
     public List<Expansion> getExpansions() {
-        return new ArrayList<Expansion>(expansions.values());
+        return new ArrayList<>(expansions.values());
     }
     
     public List<Expansion> getExpansionsByName() {
-        ArrayList<Expansion> result = new ArrayList<Expansion>(expansions.values());
-        Collections.sort(result, new Comparator<Expansion>() {
-            @Override
-            public int compare(Expansion t, Expansion t1) {
-                return t.getName().compareTo(t1.getName());
-            }
-        });
+        ArrayList<Expansion> result = new ArrayList<>(expansions.values());
+        
+        Collections.sort(result, (t, t1) -> t.getName().compareTo(t1.getName()));
+        
         return result;
     }
     
     public List<Equipment> getEquipment() {
-        return new ArrayList<Equipment>(equipment.values());
+        return new ArrayList<>(equipment.values());
     }
     
     public List<Equipment> getEquipmentByName() {
-        ArrayList<Equipment> result = new ArrayList<Equipment>(equipment.values());
+        ArrayList<Equipment> result = new ArrayList<>(equipment.values());
         Collections.sort(result, new Comparator<Equipment>() {
             @Override
             public int compare(Equipment t, Equipment t1) {
@@ -331,11 +335,11 @@ public class Registry {
     }
     
     public List<Ship> getShips() {
-        return new ArrayList<Ship>(ships.values());
+        return new ArrayList<>(ships.values());
     }
     
     public List<Ship> getShipsByName() {
-        ArrayList<Ship> result = new ArrayList<Ship>(ships.values());
+        ArrayList<Ship> result = new ArrayList<>(ships.values());
         Collections.sort(result, new Comparator<Ship>() {
             @Override
             public int compare(Ship t, Ship t1) {
@@ -368,43 +372,43 @@ public class Registry {
                 case "author":
                     em.setAuthor(String.valueOf(entry.getValue()));
                     break;
-                case "category":
+                case EXPANSION_CATEGORY:
                     em.setCategory(String.valueOf(entry.getValue()));
                     break;
                 case "conflict_oxps":
-                    em.setConflict_oxps(String.valueOf(entry.getValue()));
+                    em.setConflictOxps(String.valueOf(entry.getValue()));
                     break;
                 case "description":
                     em.setDescription(String.valueOf(entry.getValue()));
                     break;
-                case "identifier":
+                case EXPANSION_IDENTIFIER:
                     em.setIdentifier(String.valueOf(entry.getValue()));
                     break;
                 case "information_url":
-                    em.setInformation_url(String.valueOf(entry.getValue()));
+                    em.setInformationUrl(String.valueOf(entry.getValue()));
                     break;
                 case "license":
                     em.setLicense(String.valueOf(entry.getValue()));
                     break;
                 case "maximum_oolite_version":
-                    em.setMaximum_oolite_version(String.valueOf(entry.getValue()));
+                    em.setMaximumOoliteVersion(String.valueOf(entry.getValue()));
                     break;
                 case "optional_oxps":
-                    em.setOptional_oxps(String.valueOf(entry.getValue()));
+                    em.setOptionalOxps(String.valueOf(entry.getValue()));
                     break;
-                case "required_oolite_version":
-                    em.setRequired_oolite_version(String.valueOf(entry.getValue()));
+                case EXPANSION_REQUIRED_OOLITE_VERSION:
+                    em.setRequiredOoliteVersion(String.valueOf(entry.getValue()));
                     break;
                 case "requires_oxps":
-                    em.setRequires_oxps(String.valueOf(entry.getValue()));
+                    em.setRequiresOxps(String.valueOf(entry.getValue()));
                     break;
                 case "tags":
                     em.setTags(String.valueOf(entry.getValue()));
                     break;
-                case "title":
+                case EXPANSION_TITLE:
                     em.setTitle(String.valueOf(entry.getValue()));
                     break;
-                case "version":
+                case EXPANSION_VERSION:
                     em.setVersion(String.valueOf(entry.getValue()));
                     break;
                 default:
@@ -424,37 +428,37 @@ public class Registry {
         
         for (PlistParser.KeyvaluepairContext kc: dc.keyvaluepair()) {
             String key = kc.STRING().getText();
-            if ("identifier".equals(key)) {
+            if (EXPANSION_IDENTIFIER.equals(key)) {
                 em.setIdentifier(kc.value().getText());
             } else if ("author".equals(key)) {
                 em.setAuthor(kc.value().getText());
             } else if ("conflict_oxps".equals(key)) {
-                em.setConflict_oxps(kc.value().getText());
+                em.setConflictOxps(kc.value().getText());
             } else if ("description".equals(key)) {
                 em.setDescription(kc.value().getText());
             } else if ("download_url".equals(key)) {
-                em.setDownload_url(kc.value().getText());
-            } else if ("category".equals(key)) {
+                em.setDownloadUrl(kc.value().getText());
+            } else if (EXPANSION_CATEGORY.equals(key)) {
                 em.setCategory(kc.value().getText());
             } else if ("file_size".equals(key)) {
-                em.setFile_size(kc.value().getText());
+                em.setFileSize(kc.value().getText());
             } else if ("information_url".equals(key)) {
-                em.setInformation_url(kc.value().getText());
+                em.setInformationUrl(kc.value().getText());
             } else if ("license".equals(key)) {
                 em.setLicense(kc.value().getText());
             } else if ("maximum_oolite_version".equals(key)) {
-                em.setMaximum_oolite_version(kc.value().getText());
+                em.setMaximumOoliteVersion(kc.value().getText());
             } else if ("optional_oxps".equals(key)) {
-                em.setOptional_oxps(kc.value().getText());
-            } else if ("required_oolite_version".equals(key)) {
-                em.setRequired_oolite_version(kc.value().getText());
+                em.setOptionalOxps(kc.value().getText());
+            } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
+                em.setRequiredOoliteVersion(kc.value().getText());
             } else if ("requires_oxps".equals(key)) {
-                em.setRequires_oxps(kc.value().getText());
+                em.setRequiresOxps(kc.value().getText());
             } else if ("tags".equals(key)) {
                 em.setTags(kc.value().getText());
-            } else if ("title".equals(key)) {
+            } else if (EXPANSION_TITLE.equals(key)) {
                 em.setTitle(kc.value().getText());
-            } else if ("version".equals(key)) {
+            } else if (EXPANSION_VERSION.equals(key)) {
                 em.setVersion(kc.value().getText());
             } else {
                 log.trace("Unknown key {}->{} at {}", key, kc.value().getText(), kc.getStart().getTokenSource().getSourceName());
@@ -473,7 +477,7 @@ public class Registry {
      * @return 
      */
     public List<String> getWarnings() {
-        ArrayList<String> result = new ArrayList<String>(warnings);
+        ArrayList<String> result = new ArrayList<>(warnings);
         for (Expansion e: expansions.values()) {
             result.addAll(e.getWarnings());
         }
@@ -485,7 +489,7 @@ public class Registry {
      * @return 
      */
     public List<String> getGlobalWarnings() {
-        return new ArrayList<String>(warnings);
+        return new ArrayList<>(warnings);
     }
     
     public String getProperty(String key) {

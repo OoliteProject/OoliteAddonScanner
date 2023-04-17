@@ -180,7 +180,7 @@ public class Main {
      * 
      * @param registry 
      */
-    private static void readOolite(ExpansionCache cache, Registry registry) throws Exception {
+    private static void readOolite(ExpansionCache cache, Registry registry) throws IOException, SAXException, ParserConfigurationException, RegistryException, TransformerException {
         log.debug("readOolite({})", registry); 
         
         String tag = "latest";
@@ -189,14 +189,14 @@ public class Main {
         String url = cache.getOoliteDownloadUrl(manifest);
         try (InputStream olitezip = cache.getPluginInputStream(url); ZipInputStream zin = new ZipInputStream(olitezip)) {
             Expansion oxp = new Expansion();
-            oxp.setDownload_url(url);
+            oxp.setDownloadUrl(url);
             oxp.setTitle(String.valueOf(manifest.get("name")));
             oxp.setIdentifier(OOLITE_CORE);
             oxp.setDescription(String.valueOf(manifest.get("body")));
             oxp.setCategory("vanilla");
             oxp.setAuthor(((Map<String, String>)manifest.get("author")).get("login"));
             oxp.setVersion(String.valueOf(manifest.get("tag_name")));
-            oxp.setUpload_date(String.valueOf(manifest.get("published_at")));
+            oxp.setUploadDate(String.valueOf(manifest.get("published_at")));
             oxp.setTags(String.valueOf(manifest.get("target_commitish")) + " " + tag);
             
             ExpansionManifest oxpManifest = new ExpansionManifest();
@@ -225,7 +225,7 @@ public class Main {
         }
     }
     
-    private static void readEquipment(String url, InputStream in, Registry registry, Expansion oxp) throws Exception {
+    private static void readEquipment(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException {
         in.mark(10);
 
         Scanner sc = new Scanner(in);
@@ -244,7 +244,7 @@ public class Main {
         }
     }
     
-    private static void readShips(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+    private static void readShips(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException {
         in.mark(10);
 
         Scanner sc = new Scanner(in);
@@ -272,26 +272,25 @@ public class Main {
 
         for (Expansion expansion: registry.getExpansions()) {
             try {
-                ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownload_url())));
+                ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownloadUrl())));
 
                 // parse all the models we can get, then distribute over ships
                 ZipEntry zentry = null;
                 while ((zentry = zin.getNextEntry()) != null) {
                     if (zentry.getName().startsWith("Models/") && zentry.getName().length() > "Models/.dat".length() && zentry.getName().endsWith(".dat")) {
-                        log.info("Found model {}!{}", expansion.getDownload_url(), zentry.getName());
+                        log.info("Found model {}!{}", expansion.getDownloadUrl(), zentry.getName());
 
                         try {
-                            parseModel(getZipEntryStream(zin), expansion.getDownload_url() + "!" + zentry.getName());
+                            parseModel(getZipEntryStream(zin), expansion.getDownloadUrl() + "!" + zentry.getName());
                             countSuccess++;
                         } catch (Exception e) {
-                            expansion.addWarning("Could not parse model "+expansion.getDownload_url() + "!" + zentry.getName()+": "+e.getMessage());
+                            expansion.addWarning("Could not parse model "+expansion.getDownloadUrl() + "!" + zentry.getName()+": "+e.getMessage());
                             countFailure++;
                         }
                     }
                 }
 
-                for (Ship ship: expansion.getShips()) {
-                }
+                // TODO: distribute models over ships. not yet implemented
             } catch (Exception e) {
                 log.error("Incomplete Index: Could not read expansion {}", expansion, e);
                 expansion.addWarning("Could not download: "+e.getMessage());
@@ -319,48 +318,45 @@ public class Main {
             log.info("Reading expansions ({}/{})...", i, total);
             
             try {
-                ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(oxp.getDownload_url())));
+                ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(oxp.getDownloadUrl())));
                 ZipEntry zentry = null;
                 while ((zentry = zin.getNextEntry()) != null) {
                     
                     if ("Config/equipment.plist".equals(zentry.getName())) {
-                        log.trace("parsing equipment of {}", oxp.getDownload_url());
+                        log.trace("parsing equipment of {}", oxp.getDownloadUrl());
                         InputStream in = getZipEntryStream(zin);
-                        String url = String.format("%s!%s", oxp.getDownload_url(), zentry.getName());
+                        String url = String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName());
                         readEquipment(url, in, registry, oxp);
                         
                     } else if("Config/shipdata.plist".equals(zentry.getName())) {
                         try {
-                            log.trace("parsing shipdata of {}", oxp.getDownload_url());
-                            readShips(String.format("%s!%s", oxp.getDownload_url(), zentry.getName()), getZipEntryStream(zin), registry, oxp);
+                            log.trace("parsing shipdata of {}", oxp.getDownloadUrl());
+                            readShips(String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName()), getZipEntryStream(zin), registry, oxp);
                         } catch (Exception e) {
-                            oxp.addWarning(String.format("%s: %s at %s!%s", e.getClass().getName(), e.getMessage(), oxp.getDownload_url(), zentry.getName()));
+                            oxp.addWarning(String.format("%s: %s at %s!%s", e.getClass().getName(), e.getMessage(), oxp.getDownloadUrl(), zentry.getName()));
                         }
                         
                     } else if("manifest.plist".equals(zentry.getName())) {
-                        log.trace("parsing manifest from {}", oxp.getDownload_url());
+                        log.trace("parsing manifest from {}", oxp.getDownloadUrl());
                         InputStream in = getZipEntryStream(zin);
                         in.mark(10);
 
                         Scanner sc = new Scanner(in);
                         if (XML_HEADER.equals(sc.next())) {
-                            log.trace("XML content found in {}!{}", oxp.getDownload_url(), zentry.getName());
+                            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
                             in.reset();
 
                             List<Object> manifest = XMLPlistParser.parseList(in, null);
                             if (manifest.size() != 1) {
-                                throw new Exception(String.format("Expected exactly one manifest, found %d", manifest.size()));
+                                throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
                             }
                             oxp.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
                         } else {
                             in.reset();
-                            PlistParser.DictionaryContext dc = parsePlistDictionary(in, oxp.getDownload_url()+"!"+zentry.getName());
+                            PlistParser.DictionaryContext dc = parsePlistDictionary(in, oxp.getDownloadUrl()+"!"+zentry.getName());
                             oxp.setManifest(registry.toManifest(dc));
                         }
-                    } else if ("Config/script.js".equals(zentry.getName())) {
-                        String content = readToString(getZipEntryStream(zin));
-                        oxp.addScript(zentry.getName(), content);
-                    } else if (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length()) {
+                    } else if ("Config/script.js".equals(zentry.getName()) || (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length())) {
                         String content = readToString(getZipEntryStream(zin));
                         oxp.addScript(zentry.getName(), content);
                     } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
@@ -369,7 +365,7 @@ public class Main {
 
                         Scanner sc = new Scanner(in);
                         if (XML_HEADER.equals(sc.next())) {
-                            log.trace("XML content found in {}!{}", oxp.getDownload_url(), zentry.getName());
+                            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
                             in.reset();
                             List<Object> worldscripts = XMLPlistParser.parseList(in, null);
                             List<Object> scriptlist = (List)worldscripts.get(0);
@@ -378,7 +374,7 @@ public class Main {
                             }
                         } else {
                             in.reset();
-                            PlistParser.ListContext lc = parsePlistList(in, oxp.getDownload_url()+"!"+zentry.getName());
+                            PlistParser.ListContext lc = parsePlistList(in, oxp.getDownloadUrl()+"!"+zentry.getName());
                             for (PlistParser.ValueContext vc: lc.value()) {
                                 oxp.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
                             }
@@ -386,40 +382,40 @@ public class Main {
                     } else {
                         String name = zentry.getName().toLowerCase();
                         if(name.contains("read")) {
-                            log.trace("README {}!{}", oxp.getDownload_url(), zentry.getName());
+                            log.trace("README {}!{}", oxp.getDownloadUrl(), zentry.getName());
                             
                             String r = readToString(getZipEntryStream(zin));                            
                             oxp.addReadme(zentry.getName(), r);
                             
                         } else if (zentry.getName().startsWith("Config") || zentry.getName().startsWith("config")) {
-                            log.trace("skipping {}!{}", oxp.getDownload_url(), zentry.getName());
+                            log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
                         } else {
-                            log.trace("skipping {}!{}", oxp.getDownload_url(), zentry.getName());
+                            log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
                         }
                     }
                 }
             } catch (EOFException e) {
-                log.warn("Incomplete plugin archive for "+oxp.getDownload_url(), e);
+                log.warn("Incomplete plugin archive for "+oxp.getDownloadUrl(), e);
                 try {
-                    cache.invalidate(oxp.getDownload_url());
+                    cache.invalidate(oxp.getDownloadUrl());
                     log.warn("Evicted from cache.");
                 } catch (Exception ex) {
-                    log.error("Could not cleanup cache for {}", oxp.getDownload_url(), ex);
+                    log.error("Could not cleanup cache for {}", oxp.getDownloadUrl(), ex);
                 }
                 System.exit(1);
             } catch (ConnectException e) {
-                String s = String.format("Could not download %s, %s: %s", oxp.getDownload_url(), e.getClass().getName(), e.getMessage());
+                String s = String.format("Could not download %s, %s: %s", oxp.getDownloadUrl(), e.getClass().getName(), e.getMessage());
                 oxp.addWarning(s);
                 log.error(s);
                 try {
-                    cache.invalidate(oxp.getDownload_url());
+                    cache.invalidate(oxp.getDownloadUrl());
                     log.warn("Evicted from cache.");
                 } catch (Exception ex) {
-                    log.error("Could not cleanup cache for {}", oxp.getDownload_url(), ex);
+                    log.error("Could not cleanup cache for {}", oxp.getDownloadUrl(), ex);
                 }
             } catch (Exception e) {
-                oxp.addWarning(String.format("Could not access: %s, %s: %s", oxp.getDownload_url(), e.getClass().getName(), e.getMessage()));
-                log.error("Could not access plugin "+oxp.getDownload_url(), e);
+                oxp.addWarning(String.format("Could not access: %s, %s: %s", oxp.getDownloadUrl(), e.getClass().getName(), e.getMessage()));
+                log.error("Could not access plugin "+oxp.getDownloadUrl(), e);
             }
         }
     }
@@ -472,7 +468,7 @@ public class Main {
         log.debug("Checked {} wiki lookups in {}", tpe.getTaskCount(), Duration.between(start, end));
     }
     
-    private static void printIndex(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException {
+    private static void printIndex(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
         registry.setProperty("ImplementationVendor", Main.class.getPackage().getImplementationVendor());
         registry.setProperty("ImplementationTitle", Main.class.getPackage().getImplementationTitle());
         registry.setProperty("ImplementationVersion", Main.class.getPackage().getImplementationVersion());
@@ -485,19 +481,19 @@ public class Main {
         templateEngine.process(registry, "style.ftlh", new File(outputdir, "style.css"));
     }
     
-    private static void printExpansions(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException {
+    private static void printExpansions(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
         for (Expansion expansion: registry.getExpansions()) {
             templateEngine.process(expansion, "expansion.ftlh", new File(outputdir, "expansions/"+expansion.getIdentifier()+HTML_EXTENSION));
         }
     }
     
-    private static void printEquipment(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException {
+    private static void printEquipment(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
         for (Equipment equipment: registry.getEquipment()) {
             templateEngine.process(equipment, "equipment.ftlh", new File(outputdir, "equipment/"+equipment.getIdentifier()+HTML_EXTENSION));
         }
     }
     
-    private static void printShips(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException {
+    private static void printShips(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
         for (Ship ship: registry.getShips()) {
             templateEngine.process(ship, "ship.ftlh", new File(outputdir, "ships/"+ship.getIdentifier()+HTML_EXTENSION));
         }
@@ -567,7 +563,7 @@ public class Main {
         try (InputStream in = u.openStream(); OutputStream out = new FileOutputStream(data)) {
             in.transferTo(out);
         } catch (Exception e) {
-            throw new Exception("Could not download up to date expansions list from " + u, e);
+            throw new OxpException("Could not download up to date expansions list from " + u, e);
         }
         
         log.info("Want to read {}", data.getAbsolutePath());

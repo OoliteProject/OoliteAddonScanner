@@ -38,62 +38,62 @@ public class EquipmentTest {
     }
 
     @Test
-    public void testSetGetExpansion() {
+    void testSetGetExpansion() {
         log.debug("testSetGetExpansion()");
     }
 
     @Test
-    public void testSetGetTechlevel() {
+    void testSetGetTechlevel() {
         log.debug("testSetGetTechlevel()");
     }
 
     @Test
-    public void testSetGetCost() {
+    void testSetGetCost() {
         log.debug("testSetGetCost()");
     }
 
     @Test
-    public void testSetGetIdentifier() {
+    void testSetGetIdentifier() {
         log.debug("testSetGetIdentifier()");
     }
 
     @Test
-    public void testSetGetDescription() {
+    void testSetGetDescription() {
         log.debug("testSetGetDescription()");
     }
 
     @Test
-    public void testSetGetName() {
+    void testSetGetName() {
         log.debug("testSetGetName()");
     }
 
     @Test
-    public void testSetGetFeatures() {
+    void testSetGetFeatures() {
         log.debug("testSetGetFeatures()");
     }
 
     @Test
-    public void testToString() {
+    void testToString() {
         log.debug("testToString()");
     }
 
     @Test
-    public void testGetAsWikipage() {
+    void testGetAsWikipage() {
         log.debug("testGetAsWikipage()");
     }
 
     @Test
-    public void testGetType() {
+    void testGetType() {
         log.debug("testGetType()");
     }
 
     @Test
-    public void testAddGetWarning() {
+    void testAddGetWarning() {
         log.debug("testAddWarning()");
     }
 
     @Test
-    public void testIsVisible() {
+    void testIsVisible() {
         log.debug("testIsVisible()");
         
         Equipment equipment = new Equipment();

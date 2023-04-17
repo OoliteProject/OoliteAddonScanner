@@ -12,17 +12,17 @@ import java.util.List;
 public class ExpansionManifest {
     private String author;
     private String category;
-    private String conflict_oxps;
+    private String conflictOxps;
     private String description;
-    private String download_url;
-    private String file_size;
+    private String downloadUrl;
+    private String fileSize;
     private String identifier;
-    private String information_url;
+    private String informationUrl;
     private String license;
-    private String maximum_oolite_version;
-    private String optional_oxps;
-    private String required_oolite_version;
-    private String requires_oxps;
+    private String maximumOoliteVersion;
+    private String optionalOxps;
+    private String requiredOoliteVersion;
+    private String requiresOxps;
     private String tags;
     private String title;
     private String version;
@@ -81,20 +81,20 @@ public class ExpansionManifest {
         this.description = description;
     }
 
-    public String getRequires_oxps() {
-        return requires_oxps;
+    public String getRequiresOxps() {
+        return requiresOxps;
     }
 
-    public void setRequires_oxps(String requires_oxps) {
-        this.requires_oxps = requires_oxps;
+    public void setRequiresOxps(String requiresOxps) {
+        this.requiresOxps = requiresOxps;
     }
 
-    public String getOptional_oxps() {
-        return optional_oxps;
+    public String getOptionalOxps() {
+        return optionalOxps;
     }
 
-    public void setOptional_oxps(String optional_oxps) {
-        this.optional_oxps = optional_oxps;
+    public void setOptionalOxps(String optionalOxps) {
+        this.optionalOxps = optionalOxps;
     }
 
     public String getLicense() {
@@ -105,20 +105,20 @@ public class ExpansionManifest {
         this.license = license;
     }
 
-    public String getRequired_oolite_version() {
-        return required_oolite_version;
+    public String getRequiredOoliteVersion() {
+        return requiredOoliteVersion;
     }
 
-    public void setRequired_oolite_version(String required_oolite_version) {
-        this.required_oolite_version = required_oolite_version;
+    public void setRequiredOoliteVersion(String requiredOoliteVersion) {
+        this.requiredOoliteVersion = requiredOoliteVersion;
     }
 
-    public String getInformation_url() {
-        return information_url;
+    public String getInformationUrl() {
+        return informationUrl;
     }
 
-    public void setInformation_url(String information_url) {
-        this.information_url = information_url;
+    public void setInformationUrl(String informationUrl) {
+        this.informationUrl = informationUrl;
     }
 
     public String getTags() {
@@ -129,36 +129,36 @@ public class ExpansionManifest {
         this.tags = tags;
     }
 
-    public String getFile_size() {
-        return file_size;
+    public String getFileSize() {
+        return fileSize;
     }
 
-    public void setFile_size(String file_size) {
-        this.file_size = file_size;
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
     }
 
-    public String getDownload_url() {
-        return download_url;
+    public String getDownloadUrl() {
+        return downloadUrl;
     }
 
-    public void setDownload_url(String download_url) {
-        this.download_url = download_url;
+    public void setDownloadUrl(String downloadUrl) {
+        this.downloadUrl = downloadUrl;
     }
 
-    public String getConflict_oxps() {
-        return conflict_oxps;
+    public String getConflictOxps() {
+        return conflictOxps;
     }
 
-    public void setConflict_oxps(String conflict_oxps) {
-        this.conflict_oxps = conflict_oxps;
+    public void setConflictOxps(String conflictOxps) {
+        this.conflictOxps = conflictOxps;
     }
 
-    public String getMaximum_oolite_version() {
-        return maximum_oolite_version;
+    public String getMaximumOoliteVersion() {
+        return maximumOoliteVersion;
     }
 
-    public void setMaximum_oolite_version(String maximum_oolite_version) {
-        this.maximum_oolite_version = maximum_oolite_version;
+    public void setMaximumOoliteVersion(String maximumOoliteVersion) {
+        this.maximumOoliteVersion = maximumOoliteVersion;
     }
     
     public void addWarning(String warning) {
@@ -166,7 +166,7 @@ public class ExpansionManifest {
     }
     
     public List<String> getWarnings() {
-        return new ArrayList<String>(warnings);
+        return new ArrayList<>(warnings);
     }
     
     public boolean hasWarnings() {

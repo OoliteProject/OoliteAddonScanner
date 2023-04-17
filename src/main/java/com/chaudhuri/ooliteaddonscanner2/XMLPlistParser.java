@@ -14,7 +14,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -61,17 +60,17 @@ public class XMLPlistParser {
         
     }
     
-    public static String serialize(Node n) throws TransformerConfigurationException, TransformerException {
+    public static String serialize(Node n) throws TransformerException {
         StringWriter sw = new StringWriter();
         Transformer t = TransformerFactory.newDefaultInstance().newTransformer();
         t.transform(new DOMSource(n), new StreamResult(sw));
         return sw.toString();
     }
     
-    private static List parseArray(Element array) {
+    private static List<Object> parseArray(Element array) {
         log.debug("parseArray({})", array);
         
-        ArrayList result = new ArrayList();
+        ArrayList<Object> result = new ArrayList();
         NodeList nl = array.getChildNodes();
         for (int i=0;i<nl.getLength();i++) {
             Node n = nl.item(i);
@@ -132,7 +131,7 @@ public class XMLPlistParser {
         }
     }
     
-    public static Map<String, Object> parseListOfMaps(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+    public static Map<String, Object> parseListOfMaps(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException {
         log.debug("parseMap({})", in);
         
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
@@ -163,7 +162,7 @@ public class XMLPlistParser {
             throw new IllegalArgumentException("Not exactly one map in document?");
         }
         
-        return (Map<String, Object>)result.get(0);
+        return result.get(0);
     }
 
     /** Parses an XML file, checks it is a plist and returns the list of values
@@ -177,7 +176,7 @@ public class XMLPlistParser {
      * @throws IOException
      * @throws TransformerException 
      */
-    public static List parseList(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+    public static List<Object> parseList(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
         log.debug("parseList({})", in);
         
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
@@ -195,7 +194,7 @@ public class XMLPlistParser {
         }
 
         log.debug("Parsed {}", serialize(doc));
-        ArrayList result = new ArrayList();
+        ArrayList<Object> result = new ArrayList<>();
         NodeList nl = plist.getChildNodes();
         for (int i= 0; i<nl.getLength();i++) {
             Node n = nl.item(i);

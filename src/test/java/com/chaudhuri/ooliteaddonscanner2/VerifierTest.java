@@ -64,28 +64,28 @@ public class VerifierTest {
      * Test of verify method, of class Verifier.
      */
     @Test
-    public void testVerify_Expansion() {
+    void testVerify_Expansion() {
     }
 
     /**
      * Test of verify method, of class Verifier.
      */
     @Test
-    public void testVerify_Equipment() {
+    void testVerify_Equipment() {
     }
 
     /**
      * Test of verify method, of class Verifier.
      */
     @Test
-    public void testVerify_Ship() {
+    void testVerify_Ship() {
     }
 
     /**
      * Test of verify method, of class Verifier.
      */
     @Test
-    public void testVerify_Registry() {
+    void testVerify_Registry() {
     }
     
 }

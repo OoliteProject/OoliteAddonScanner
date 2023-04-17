@@ -7,7 +7,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -46,6 +46,12 @@ public class Wiki {
         
     }
     
+    /**
+     * Prevent this class from being instantiated.
+     */
+    private Wiki() {
+    }
+    
     public static String getPageUrl(String name) {
         final String base = "http://wiki.alioth.net/index.php/";
         // this uses too much of + escaping
@@ -63,7 +69,7 @@ public class Wiki {
 
         try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {    
             RequestBuilder builder = RequestBuilder.head(getPageUrl(wikiworthy.getName()));
-            builder.setCharset(Charset.forName("UTF-8"));
+            builder.setCharset(StandardCharsets.UTF_8);
             
             HttpUriRequest request = builder.build();
             try (final CloseableHttpResponse response = httpclient.execute(request)) {
@@ -77,10 +83,10 @@ public class Wiki {
                         if (wikiworthy instanceof Expansion) {
                             Expansion expansion = (Expansion)wikiworthy;
                             
-                            if (String.valueOf(expansion.getInformation_url()).contains("//wiki.alioth.net/index.php")) {
+                            if (String.valueOf(expansion.getInformationUrl()).contains("//wiki.alioth.net/index.php")) {
                             
-                                RequestBuilder builder2 = RequestBuilder.head(expansion.getInformation_url());
-                                builder2.setCharset(Charset.forName("UTF-8"));
+                                RequestBuilder builder2 = RequestBuilder.head(expansion.getInformationUrl());
+                                builder2.setCharset(StandardCharsets.UTF_8);
                                 HttpUriRequest request2 = builder2.build();
                                 try (final CloseableHttpResponse response2 = httpclient.execute(request2)) {
                                     if (response2.getStatusLine().getStatusCode() == 200) {
@@ -124,12 +130,12 @@ public class Wiki {
             try (InputStreamReader rin = new InputStreamReader(url.openStream())) {
                 StringBuilder sb = new StringBuilder();
                 char[] buffer = new char[1024];
-                int read = read = rin.read(buffer);;
+                int read = read = rin.read(buffer);
                 while (read >= 0) {
                     sb.append(buffer, 0, read);
                     read = rin.read(buffer);
                 }
-                log.trace("wiki={}", sb.toString());
+                log.trace("wiki={}", sb);
                 wikiPageCache.put(name, urlStr);
             }
             

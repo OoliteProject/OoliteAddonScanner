@@ -35,7 +35,7 @@ public class TemplateEngine {
         cfg.setFallbackOnNullLoopVariable(false);
     }
     
-    public void process(Object data, String templatename, File outfile) throws IOException, TemplateException {
+    public void process(Object data, String templatename, File outfile) throws IOException, TemplateException, TemplateEngineException {
         log.debug("process({}, {})", data, templatename);
     
         log.info("writing {}", outfile.getAbsolutePath());
@@ -46,7 +46,7 @@ public class TemplateEngine {
         try {
             template.process(data, out);
         } catch (Exception e) {
-            throw new RuntimeException(String.format("Could not process template %s with data %s", templatename, data), e);
+            throw new TemplateEngineException(String.format("Could not process template %s with data %s", templatename, data), e);
         }
         
         out.flush();

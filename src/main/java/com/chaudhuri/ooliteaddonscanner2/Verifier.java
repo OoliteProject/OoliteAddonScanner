@@ -122,8 +122,8 @@ public class Verifier {
         }
 
         {   // check required oolite version
-            String l1 = String.valueOf(expansion.getRequired_oolite_version());
-            String l2 = String.valueOf(expansion.getManifest().getRequired_oolite_version());
+            String l1 = String.valueOf(expansion.getRequiredOoliteVersion());
+            String l2 = String.valueOf(expansion.getManifest().getRequiredOoliteVersion());
             
             if (!l1.contentEquals(l2)) {
                 expansion.addWarning("Required Oolite Version mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
@@ -131,8 +131,8 @@ public class Verifier {
         }
 
         {   // check maximum oolite version
-            String l1 = String.valueOf(expansion.getMaximum_oolite_version());
-            String l2 = String.valueOf(expansion.getManifest().getMaximum_oolite_version());
+            String l1 = String.valueOf(expansion.getMaximumOoliteVersion());
+            String l2 = String.valueOf(expansion.getManifest().getMaximumOoliteVersion());
 
             if (!l1.contentEquals(l2)) {
                 expansion.addWarning("Maximum Oolite Version mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
@@ -140,8 +140,8 @@ public class Verifier {
         }
 
         {   // check required expansions
-            String l1 = String.valueOf(expansion.getRequires_oxps());
-            String l2 = String.valueOf(expansion.getManifest().getRequires_oxps());
+            String l1 = String.valueOf(expansion.getRequiresOxps());
+            String l2 = String.valueOf(expansion.getManifest().getRequiresOxps());
 
             if (!l1.contentEquals(l2)) {
                 expansion.addWarning("Required Expansions mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
@@ -149,8 +149,8 @@ public class Verifier {
         }
 
         {   // check optional expansions
-            String l1 = String.valueOf(expansion.getOptional_oxps());
-            String l2 = String.valueOf(expansion.getManifest().getOptional_oxps());
+            String l1 = String.valueOf(expansion.getOptionalOxps());
+            String l2 = String.valueOf(expansion.getManifest().getOptionalOxps());
 
             if (!l1.contentEquals(l2)) {
                 expansion.addWarning("Optional Expansions mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
@@ -158,8 +158,8 @@ public class Verifier {
         }
 
         {   // check conflict expansions
-            String l1 = String.valueOf(expansion.getConflict_oxps());
-            String l2 = String.valueOf(expansion.getManifest().getConflict_oxps());
+            String l1 = String.valueOf(expansion.getConflictOxps());
+            String l2 = String.valueOf(expansion.getManifest().getConflictOxps());
 
             if (!l1.contentEquals(l2)) {
                 expansion.addWarning("Conflict Expansions mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
@@ -167,8 +167,8 @@ public class Verifier {
         }
 
         {   // check conflict expansions
-            String l1 = String.valueOf(expansion.getConflict_oxps());
-            String l2 = String.valueOf(expansion.getManifest().getConflict_oxps());
+            String l1 = String.valueOf(expansion.getConflictOxps());
+            String l2 = String.valueOf(expansion.getManifest().getConflictOxps());
 
             if (!l1.contentEquals(l2)) {
                 expansion.addWarning("Conflict Expansions mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
@@ -176,8 +176,8 @@ public class Verifier {
         }
 
         {   // check infortmation url
-            String l1 = String.valueOf(expansion.getInformation_url());
-            String l2 = String.valueOf(expansion.getManifest().getInformation_url());
+            String l1 = String.valueOf(expansion.getInformationUrl());
+            String l2 = String.valueOf(expansion.getManifest().getInformationUrl());
 
             if (!l1.contentEquals(l2)) {
                 expansion.addWarning("Information URL mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));

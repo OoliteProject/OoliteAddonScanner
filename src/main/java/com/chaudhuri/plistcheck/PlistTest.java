@@ -135,6 +135,8 @@ public class PlistTest extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btFileActionPerformed
+        log.debug("btFileActionPerformed({})", evt);
+        
         File current = new File(txtFile.getText());
         JFileChooser jfc = new JFileChooser();
         jfc.setSelectedFile(current);
@@ -147,7 +149,7 @@ public class PlistTest extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -160,13 +162,7 @@ public class PlistTest extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(PlistTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(PlistTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(PlistTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (Exception ex) {
             java.util.logging.Logger.getLogger(PlistTest.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
@@ -233,7 +229,7 @@ public class PlistTest extends javax.swing.JFrame {
 //                if (re != null) {
 //                    re.printStackTrace();
 //                }
-            txtLog.append(String.format("\nline %d:%d %s", line, column, message));
+            txtLog.append(String.format("%nline %d:%d %s", line, column, message));
             //txtLog.append(rcgnzr.toString() + o + line + column + message);
         }
 
@@ -277,7 +273,7 @@ public class PlistTest extends javax.swing.JFrame {
                 CommonTokenStream tokenStream = new CommonTokenStream(lexer);
                 PlistParser parser = new PlistParser(tokenStream);
                 parser.addErrorListener(el);
-                PlistParser.ParseContext pc = parser.parse();
+                parser.parse();
             
                 if (0 == el.getErrorCount()) {
                     txtLog.append("\nSuccessfully parsed.");
