@@ -55,7 +55,7 @@ public class XMLPlistParser {
         @Override
         public void fatalError(SAXParseException saxpe) throws SAXException {
             // these conditions will make the parser throw an exception, which is added to the index anyway
-            //expansion.addWarning(String.format("%s (Fatal)", saxpe.getMessage()));
+            expansion.addWarning(String.format("%s (Fatal)", saxpe.getMessage()));
         }
         
     }

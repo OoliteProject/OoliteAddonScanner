@@ -10,7 +10,6 @@ import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -25,8 +24,16 @@ import org.slf4j.LoggerFactory;
 public class Registry {
     private static final Logger log = LoggerFactory.getLogger(Registry.class);
     
+    public static final String EXPANSION_AUTHOR = "author";
     public static final String EXPANSION_CATEGORY = "category";
+    public static final String EXPANSION_CONFLICT_OXPS = "conflict_oxps";
+    public static final String EXPANSION_DESCRIPTION = "description";
     public static final String EXPANSION_IDENTIFIER = "identifier";
+    public static final String EXPANSION_INFORMATION_URL = "information_url";
+    public static final String EXPANSION_LICENSE = "license";
+    public static final String EXPANSION_MAXIMUM_OOLITE_VERSION = "maximum_oolite_version";
+    public static final String EXPANSION_OPTIONAL_OXPS = "optional_oxps";
+    public static final String EXPANSION_REQUIRES_OXPS = "requires_oxps";
     public static final String EXPANSION_TITLE = "title";
     public static final String EXPANSION_VERSION = "version";
     public static final String EXPANSION_REQUIRED_OOLITE_VERSION = "required_oolite_version";
@@ -87,29 +94,29 @@ public class Registry {
                 oxp.setVersion(kc.value().getText());
             } else if (EXPANSION_CATEGORY.equals(key)) {
                 oxp.setCategory(kc.value().getText());
-            } else if ("description".equals(key)) {
+            } else if (EXPANSION_DESCRIPTION.equals(key)) {
                 oxp.setDescription(kc.value().getText());
             } else if ("download_url".equals(key)) {
                 oxp.setDownloadUrl(kc.value().getText());
-            } else if ("author".equals(key)) {
+            } else if (EXPANSION_AUTHOR.equals(key)) {
                 oxp.setAuthor(kc.value().getText());
             } else if ("file_size".equals(key)) {
                 oxp.setFileSize(kc.value().getText());
-            } else if ("information_url".equals(key)) {
+            } else if (EXPANSION_INFORMATION_URL.equals(key)) {
                 oxp.setInformationUrl(kc.value().getText());
-            } else if ("license".equals(key)) {
+            } else if (EXPANSION_LICENSE.equals(key)) {
                 oxp.setLicense(kc.value().getText());
             } else if ("upload_date".equals(key)) {
                 oxp.setUploadDate(kc.value().getText());
             } else if ("tags".equals(key)) {
                 oxp.setTags(kc.value().getText());
-            } else if ("requires_oxps".equals(key)) {
+            } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
                 oxp.setRequiresOxps(kc.value().getText());
-            } else if ("optional_oxps".equals(key)) {
+            } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
                 oxp.setOptionalOxps(kc.value().getText());
-            } else if ("conflict_oxps".equals(key)) {
+            } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
                 oxp.setConflictOxps(kc.value().getText());
-            } else if ("maximum_oolite_version".equals(key)) {
+            } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
                 oxp.setMaximumOoliteVersion(kc.value().getText());
             } else {
                 log.warn("Could not process key '{}'", key);
@@ -325,12 +332,7 @@ public class Registry {
     
     public List<Equipment> getEquipmentByName() {
         ArrayList<Equipment> result = new ArrayList<>(equipment.values());
-        Collections.sort(result, new Comparator<Equipment>() {
-            @Override
-            public int compare(Equipment t, Equipment t1) {
-                return t.getName().compareTo(t1.getName());
-            }
-        });
+        Collections.sort(result, (t, t1) -> t.getName().compareTo(t1.getName()));
         return result;
     }
     
@@ -340,12 +342,7 @@ public class Registry {
     
     public List<Ship> getShipsByName() {
         ArrayList<Ship> result = new ArrayList<>(ships.values());
-        Collections.sort(result, new Comparator<Ship>() {
-            @Override
-            public int compare(Ship t, Ship t1) {
-                return t.getName().compareTo(t1.getName());
-            }
-        });
+        Collections.sort(result, (t, t1) -> t.getName().compareTo(t1.getName()));
         return result;
     }
     
@@ -354,12 +351,9 @@ public class Registry {
         result.addAll(expansions.values());
         result.addAll(equipment.values());
         result.addAll(ships.values());
-        Collections.sort(result, new Comparator<Wikiworthy>() {
-            @Override
-            public int compare(Wikiworthy t, Wikiworthy t1) {
-                return t.getIdentifier().compareTo(t1.getIdentifier());
-            }
-        });
+        
+        Collections.sort(result, (t, t1) -> t.getIdentifier().compareTo(t1.getIdentifier()));
+        
         return result;
     }
     
@@ -369,37 +363,37 @@ public class Registry {
         
         for (Map.Entry<String, Object> entry: data.entrySet()) {
             switch (entry.getKey()) {
-                case "author":
+                case EXPANSION_AUTHOR:
                     em.setAuthor(String.valueOf(entry.getValue()));
                     break;
                 case EXPANSION_CATEGORY:
                     em.setCategory(String.valueOf(entry.getValue()));
                     break;
-                case "conflict_oxps":
+                case EXPANSION_CONFLICT_OXPS:
                     em.setConflictOxps(String.valueOf(entry.getValue()));
                     break;
-                case "description":
+                case EXPANSION_DESCRIPTION:
                     em.setDescription(String.valueOf(entry.getValue()));
                     break;
                 case EXPANSION_IDENTIFIER:
                     em.setIdentifier(String.valueOf(entry.getValue()));
                     break;
-                case "information_url":
+                case EXPANSION_INFORMATION_URL:
                     em.setInformationUrl(String.valueOf(entry.getValue()));
                     break;
-                case "license":
+                case EXPANSION_LICENSE:
                     em.setLicense(String.valueOf(entry.getValue()));
                     break;
-                case "maximum_oolite_version":
+                case EXPANSION_MAXIMUM_OOLITE_VERSION:
                     em.setMaximumOoliteVersion(String.valueOf(entry.getValue()));
                     break;
-                case "optional_oxps":
+                case EXPANSION_OPTIONAL_OXPS:
                     em.setOptionalOxps(String.valueOf(entry.getValue()));
                     break;
                 case EXPANSION_REQUIRED_OOLITE_VERSION:
                     em.setRequiredOoliteVersion(String.valueOf(entry.getValue()));
                     break;
-                case "requires_oxps":
+                case EXPANSION_REQUIRES_OXPS:
                     em.setRequiresOxps(String.valueOf(entry.getValue()));
                     break;
                 case "tags":
@@ -430,11 +424,11 @@ public class Registry {
             String key = kc.STRING().getText();
             if (EXPANSION_IDENTIFIER.equals(key)) {
                 em.setIdentifier(kc.value().getText());
-            } else if ("author".equals(key)) {
+            } else if (EXPANSION_AUTHOR.equals(key)) {
                 em.setAuthor(kc.value().getText());
-            } else if ("conflict_oxps".equals(key)) {
+            } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
                 em.setConflictOxps(kc.value().getText());
-            } else if ("description".equals(key)) {
+            } else if (EXPANSION_DESCRIPTION.equals(key)) {
                 em.setDescription(kc.value().getText());
             } else if ("download_url".equals(key)) {
                 em.setDownloadUrl(kc.value().getText());
@@ -442,17 +436,17 @@ public class Registry {
                 em.setCategory(kc.value().getText());
             } else if ("file_size".equals(key)) {
                 em.setFileSize(kc.value().getText());
-            } else if ("information_url".equals(key)) {
+            } else if (EXPANSION_INFORMATION_URL.equals(key)) {
                 em.setInformationUrl(kc.value().getText());
-            } else if ("license".equals(key)) {
+            } else if (EXPANSION_LICENSE.equals(key)) {
                 em.setLicense(kc.value().getText());
-            } else if ("maximum_oolite_version".equals(key)) {
+            } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
                 em.setMaximumOoliteVersion(kc.value().getText());
-            } else if ("optional_oxps".equals(key)) {
+            } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
                 em.setOptionalOxps(kc.value().getText());
             } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
                 em.setRequiredOoliteVersion(kc.value().getText());
-            } else if ("requires_oxps".equals(key)) {
+            } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
                 em.setRequiresOxps(kc.value().getText());
             } else if ("tags".equals(key)) {
                 em.setTags(kc.value().getText());

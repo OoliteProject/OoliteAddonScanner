@@ -40,7 +40,6 @@ public class Wiki {
 
         @Override
         public void run() {
-            //ww.setAsWikipage(Wiki.wikiPageFor(ww.getName()));
             checkWikiPage(ww);
         }
         

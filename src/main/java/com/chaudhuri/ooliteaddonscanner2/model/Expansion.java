@@ -275,14 +275,4 @@ public class Expansion implements Wikiworthy {
         return result;
     }
     
-//    public boolean hasWarnings() {
-//        if (!warnings.isEmpty())
-//            return true;
-//        
-//        if (manifest != null) {
-//            return manifest.hasWarnings();
-//        }
-//        
-//        return false;
-//    }
 }
