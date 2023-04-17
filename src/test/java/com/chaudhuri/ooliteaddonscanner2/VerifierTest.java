@@ -208,6 +208,52 @@ public class VerifierTest {
      */
     @Test
     public void testVerify_Registry() {
+        log.info("testVerify_Registry");
+        {
+            Registry registry = new Registry();
+            assertEquals(0, registry.getWarnings().size());
+            Verifier.verify(registry);
+            assertEquals(0, registry.getWarnings().size());
+        }
     }
     
+    @Test
+    public void testDescribeCodePoint() {
+        log.info("testDescribeCodePoint");
+        assertEquals("NULL", Verifier.describeCodePoint(0));
+        assertEquals("START OF HEADING", Verifier.describeCodePoint(1));
+        assertEquals("START OF TEXT", Verifier.describeCodePoint(2));
+        assertEquals("END OF TEXT", Verifier.describeCodePoint(3));
+        assertEquals("END OF TRANSMISSION", Verifier.describeCodePoint(4));
+        assertEquals("ENQUIRY", Verifier.describeCodePoint(5));
+        assertEquals("ACKNOWLEDGE", Verifier.describeCodePoint(6));
+        assertEquals("BEL", Verifier.describeCodePoint(7));
+        assertEquals("BACKSPACE", Verifier.describeCodePoint(8));
+        assertEquals("CHARACTER TABULATION", Verifier.describeCodePoint(9));
+        assertEquals("LINE FEED (LF)", Verifier.describeCodePoint(10));
+        assertEquals("LINE TABULATION", Verifier.describeCodePoint(11));
+        assertEquals("FORM FEED (FF)", Verifier.describeCodePoint(12));
+        assertEquals("CARRIAGE RETURN (CR)", Verifier.describeCodePoint(13));
+        assertEquals("SHIFT OUT", Verifier.describeCodePoint(14));
+        assertEquals("SHIFT IN", Verifier.describeCodePoint(15));
+        assertEquals("DATA LINK ESCAPE", Verifier.describeCodePoint(16));
+        assertEquals("DEVICE CONTROL ONE", Verifier.describeCodePoint(17));
+        assertEquals("DEVICE CONTROL TWO", Verifier.describeCodePoint(18));
+        assertEquals("DEVICE CONTROL THREE", Verifier.describeCodePoint(19));
+        assertEquals("DEVICE CONTROL FOUR", Verifier.describeCodePoint(20));
+        assertEquals("NEGATIVE ACKNOWLEDGE", Verifier.describeCodePoint(21));
+        assertEquals("SYNCHRONOUS IDLE", Verifier.describeCodePoint(22));
+        assertEquals("END OF TRANSMISSION BLOCK", Verifier.describeCodePoint(23));
+        assertEquals("CANCEL", Verifier.describeCodePoint(24));
+        assertEquals("END OF MEDIUM", Verifier.describeCodePoint(25));
+        assertEquals("SUBSTITUTE", Verifier.describeCodePoint(26));
+        assertEquals("ESCAPE", Verifier.describeCodePoint(27));
+        assertEquals("INFORMATION SEPARATOR FOUR", Verifier.describeCodePoint(28));
+        assertEquals("INFORMATION SEPARATOR THREE", Verifier.describeCodePoint(29));
+        assertEquals("INFORMATION SEPARATOR TWO", Verifier.describeCodePoint(30));
+        assertEquals("INFORMATION SEPARATOR ONE", Verifier.describeCodePoint(31));
+        assertEquals("SPACE", Verifier.describeCodePoint(32));
+        assertEquals("EXCLAMATION MARK", Verifier.describeCodePoint(33));
+        assertEquals("QUOTATION MARK", Verifier.describeCodePoint(34));
+    }
 }

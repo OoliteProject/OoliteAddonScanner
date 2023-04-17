@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +40,13 @@ public class EquipmentTest {
     @Test
     void testSetGetExpansion() {
         log.debug("testSetGetExpansion()");
+        {
+            Equipment equipment = new Equipment();
+            assertNull(equipment.getExpansion());
+            Expansion expansion = new Expansion();
+            equipment.setExpansion(expansion);
+            assertEquals(expansion, equipment.getExpansion());
+        }
     }
 
     @Test
@@ -94,25 +101,25 @@ public class EquipmentTest {
 
     @Test
     void testIsVisible() {
-        log.debug("testIsVisible()");
+        log.info("testIsVisible()");
         
         Equipment equipment = new Equipment();
-        Assertions.assertTrue(equipment.isVisible(), "No value should result in true");
+        assertTrue(equipment.isVisible(), "No value should result in true");
         
         equipment.putFeature("visible", "false");
-        Assertions.assertFalse(equipment.isVisible(), "Visibility set to false");
+        assertFalse(equipment.isVisible(), "Visibility set to false");
         
         equipment.putFeature("visible", "true");
-        Assertions.assertTrue(equipment.isVisible(), "Visibility set to true");
+        assertTrue(equipment.isVisible(), "Visibility set to true");
         
         equipment.putFeature("visible", "no");
-        Assertions.assertFalse(equipment.isVisible(), "Visibility set to no");
+        assertFalse(equipment.isVisible(), "Visibility set to no");
         
         equipment.putFeature("visible", "yes");
-        Assertions.assertTrue(equipment.isVisible(), "Visibility set to yes");
+        assertTrue(equipment.isVisible(), "Visibility set to yes");
         
         equipment.putFeature("visible", "wrong");
-        Assertions.assertTrue(equipment.isVisible(), "Visibility set wrongly");
+        assertTrue(equipment.isVisible(), "Visibility set wrongly");
     }
     
 }
