@@ -236,7 +236,7 @@ public class Main {
         }
     }
     
-    private static void readShips(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException {
+    private static void readShips(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         in.mark(10);
 
         Scanner sc = new Scanner(in);
