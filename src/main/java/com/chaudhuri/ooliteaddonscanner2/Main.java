@@ -395,7 +395,7 @@ public class Main {
                     }
                 }
             } catch (EOFException e) {
-                log.warn("Incomplete plugin archive for "+oxp.getDownloadUrl(), e);
+                log.warn("Incomplete plugin archive for {}", oxp.getDownloadUrl(), e);
                 try {
                     cache.invalidate(oxp.getDownloadUrl());
                     log.warn("Evicted from cache.");
@@ -415,7 +415,7 @@ public class Main {
                 }
             } catch (Exception e) {
                 oxp.addWarning(String.format("Could not access: %s, %s: %s", oxp.getDownloadUrl(), e.getClass().getName(), e.getMessage()));
-                log.error("Could not access plugin "+oxp.getDownloadUrl(), e);
+                log.error("Could not access plugin {}", oxp.getDownloadUrl(), e);
             }
         }
     }
