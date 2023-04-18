@@ -77,6 +77,9 @@ public class Expansion implements Wikiworthy {
      * @param s the Shipto add
      */
     public void addShip(Ship s) {
+        if (s.getIdentifier()==null) {
+            throw new IllegalArgumentException("The ship must have an identifier.");
+        }
         ships.put(s.getIdentifier(), s);
     }
     

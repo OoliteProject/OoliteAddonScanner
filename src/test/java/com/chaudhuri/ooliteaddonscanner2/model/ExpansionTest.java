@@ -1,23 +1,22 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
 package com.chaudhuri.ooliteaddonscanner2.model;
 
-import java.util.List;
-import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
  * @author hiran
  */
 public class ExpansionTest {
+    private static final Logger log = LogManager.getLogger();
     
     public ExpansionTest() {
     }
@@ -43,15 +42,10 @@ public class ExpansionTest {
      */
     @Test
     public void testGetExpansion() {
-        System.out.println("getExpansion");
-    }
-
-    /**
-     * Test of addEquipment method, of class Expansion.
-     */
-    @Test
-    public void testAddEquipment() {
-        System.out.println("addEquipment");
+        System.out.println("testGetExpansion");
+        
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getExpansion());
     }
 
     /**
@@ -60,14 +54,46 @@ public class ExpansionTest {
     @Test
     public void testAddShip() {
         System.out.println("addShip");
+        
+        Expansion expansion = new Expansion();
+        {
+            assertNotNull(expansion.getShips());
+            assertEquals(0, expansion.getShips().size());
+        }
+        
+        try {
+            Ship ship = new Ship();
+            expansion.addShip(ship);
+            fail("Expected Exception but got none.");
+        } catch (IllegalArgumentException e) {
+            log.debug("Received expected exception", e);
+        }
+        {
+            Ship ship = new Ship();
+            ship.setIdentifier("blah");
+            expansion.addShip(ship);
+            assertNotNull(expansion.getShips());
+            assertEquals(1, expansion.getShips().size());
+            assertEquals(ship, expansion.getShips().get(0));
+        }
     }
 
     /**
      * Test of addReadme method, of class Expansion.
      */
     @Test
-    public void testAddReadme() {
+    public void testAddGetReadme() {
         System.out.println("addReadme");
+        
+        Expansion expansion = new Expansion();
+        assertNotNull(expansion.getReadmes());
+        assertEquals(0, expansion.getReadmes().size());
+        
+        expansion.addReadme("blah", "content");
+        assertNotNull(expansion.getReadmes());
+        assertEquals(1, expansion.getReadmes().size());
+        assertEquals("blah", expansion.getReadmes().keySet().iterator().next());
+        assertEquals("content", expansion.getReadmes().get("blah"));
     }
 
     /**
@@ -75,7 +101,15 @@ public class ExpansionTest {
      */
     @Test
     public void testToString() {
-        System.out.println("toString");
+        System.out.println("toString, getIdentifier, setIdentifier");
+        
+        Expansion expansion = new Expansion();
+        assertNull(expansion.toString());
+        assertNull(expansion.getIdentifier());
+        
+        expansion.setIdentifier("blah");
+        assertEquals("blah", expansion.toString());
+        assertEquals("blah", expansion.getIdentifier());
     }
 
     /**
@@ -84,38 +118,6 @@ public class ExpansionTest {
     @Test
     public void testGetEquipment() {
         System.out.println("getEquipment");
-    }
-
-    /**
-     * Test of getShips method, of class Expansion.
-     */
-    @Test
-    public void testGetShips() {
-        System.out.println("getShips");
-    }
-
-    /**
-     * Test of getReadmes method, of class Expansion.
-     */
-    @Test
-    public void testGetReadmes() {
-        System.out.println("getReadmes");
-    }
-
-    /**
-     * Test of setIdentifier method, of class Expansion.
-     */
-    @Test
-    public void testSetIdentifier() {
-        System.out.println("setIdentifier");
-    }
-
-    /**
-     * Test of getIdentifier method, of class Expansion.
-     */
-    @Test
-    public void testGetIdentifier() {
-        System.out.println("getIdentifier");
     }
 
     /**
