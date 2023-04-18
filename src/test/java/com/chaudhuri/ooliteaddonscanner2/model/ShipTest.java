@@ -1,17 +1,13 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
 package com.chaudhuri.ooliteaddonscanner2.model;
 
-import java.util.List;
-import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -42,56 +38,47 @@ public class ShipTest {
      * Test of getExpansion method, of class Ship.
      */
     @Test
-    public void testGetExpansion() {
-        System.out.println("getExpansion");
-    }
-
-    /**
-     * Test of setExpansion method, of class Ship.
-     */
-    @Test
-    public void testSetExpansion() {
-        System.out.println("setExpansion");
+    public void testSetGetExpansion() {
+        System.out.println("testSetGetExpansion");
+        
+        Ship ship = new Ship();
+        assertNull(ship.getExpansion());
+        
+        Expansion expansion = new Expansion();
+        ship.setExpansion(expansion);
+        assertEquals(expansion, ship.getExpansion());
     }
 
     /**
      * Test of getIdentifier method, of class Ship.
      */
     @Test
-    public void testGetIdentifier() {
-        System.out.println("getIdentifier");
-    }
-
-    /**
-     * Test of setIdentifier method, of class Ship.
-     */
-    @Test
-    public void testSetIdentifier() {
-        System.out.println("setIdentifier");
+    public void testSetGetIdentifier() {
+        System.out.println("testSetGetIdentifier");
+        
+        Ship ship = new Ship();
+        assertNull(ship.getIdentifier());
+        
+        ship.setIdentifier("blah");
+        assertEquals("blah", ship.getIdentifier());
     }
 
     /**
      * Test of addFeature method, of class Ship.
      */
     @Test
-    public void testAddFeature() {
-        System.out.println("addFeature");
-    }
-
-    /**
-     * Test of hasFeature method, of class Ship.
-     */
-    @Test
-    public void testHasFeature() {
-        System.out.println("hasFeature");
-    }
-
-    /**
-     * Test of getFeature method, of class Ship.
-     */
-    @Test
-    public void testGetFeature() {
-        System.out.println("getFeature");
+    public void testAddHasGetFeature() {
+        System.out.println("testAddHasGetFeature getFeatures");
+        
+        Ship ship = new Ship();
+        assertNotNull(ship.getFeatures());
+        assertEquals(0, ship.getFeatures().size());
+        
+        ship.addFeature("name", "content");
+        assertNotNull(ship.getFeatures());
+        assertEquals(1, ship.getFeatures().size());
+        assertEquals("name", ship.getFeatures().keySet().iterator().next());
+        assertEquals("content", ship.getFeature("name"));
     }
 
     /**
@@ -100,30 +87,29 @@ public class ShipTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-    }
-
-    /**
-     * Test of getFeatures method, of class Ship.
-     */
-    @Test
-    public void testGetFeatures() {
-        System.out.println("getFeatures");
+        
+        Ship ship = new Ship();
+        assertNull(ship.getName());
+        
+        ship.setIdentifier("blah");
+        assertEquals("blah", ship.getName());
+        
+        ship.addFeature("name", "hoho");
+        assertEquals("hoho", ship.getName());
     }
 
     /**
      * Test of getAsWikipage method, of class Ship.
      */
     @Test
-    public void testGetAsWikipage() {
-        System.out.println("getAsWikipage");
-    }
-
-    /**
-     * Test of setAsWikipage method, of class Ship.
-     */
-    @Test
-    public void testSetAsWikipage() {
-        System.out.println("setAsWikipage");
+    public void testSetGetAsWikipage() {
+        System.out.println("testSetGetAsWikipage");
+        
+        Ship ship = new Ship();
+        assertNull(ship.getAsWikipage());
+        
+        ship.setAsWikipage("blah");
+        assertEquals("blah", ship.getAsWikipage());
     }
 
     /**
@@ -132,22 +118,26 @@ public class ShipTest {
     @Test
     public void testGetType() {
         System.out.println("getType");
+        
+        Ship ship = new Ship();
+        assertEquals("Ship", ship.getType());
     }
 
     /**
      * Test of addWarning method, of class Ship.
      */
     @Test
-    public void testAddWarning() {
+    public void testAddGetWarning() {
         System.out.println("addWarning");
-    }
-
-    /**
-     * Test of getWarnings method, of class Ship.
-     */
-    @Test
-    public void testGetWarnings() {
-        System.out.println("getWarnings");
+        
+        Ship ship = new Ship();
+        assertNotNull(ship.getWarnings());
+        assertEquals(0, ship.getWarnings().size());
+        
+        ship.addWarning("blah");
+        assertNotNull(ship.getWarnings());
+        assertEquals(1, ship.getWarnings().size());
+        assertEquals("blah", ship.getWarnings().get(0));
     }
 
     /**
@@ -156,6 +146,16 @@ public class ShipTest {
     @Test
     public void testIsTemplate() {
         System.out.println("isTemplate");
+        
+        Ship ship = new Ship();
+        assertFalse(ship.isTemplate());
+        
+        ship.addFeature("is_template", "blah");
+        assertFalse(ship.isTemplate());
+
+        ship.addFeature("is_template", "1");
+        assertTrue(ship.isTemplate());
+        
     }
     
 }

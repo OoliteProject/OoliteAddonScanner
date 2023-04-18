@@ -433,7 +433,7 @@ public class ExpansionTest {
      */
     @Test
     public void testAddGetWarning() {
-        System.out.println("addWarning");
+        System.out.println("testAddGetWarning");
         
         Expansion expansion = new Expansion();
         assertNotNull(expansion.getWarnings());
