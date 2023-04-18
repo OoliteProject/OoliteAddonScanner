@@ -189,80 +189,70 @@ public class ExpansionManifestTest {
      * Test of getTags method, of class ExpansionManifest.
      */
     @Test
-    public void testGetTags() {
-        System.out.println("getTags");
+    public void testSetGetTags() {
+        System.out.println("testSetGetTags");
+        
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getTags());
+        
+        manifest.setTags("some");
+        assertEquals("some", manifest.getTags());
     }
-
-    /**
-     * Test of setTags method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetTags() {
-        System.out.println("setTags");
-    }
-
+    
     /**
      * Test of getFileSize method, of class ExpansionManifest.
      */
     @Test
-    public void testGetFileSize() {
-        System.out.println("getFileSize");
-    }
-
-    /**
-     * Test of setFileSize method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetFileSize() {
-        System.out.println("setFileSize");
+    public void testSetGetFileSize() {
+        System.out.println("testSetGetFileSize");
+        
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getFileSize());
+        
+        manifest.setFileSize("some");
+        assertEquals("some", manifest.getFileSize());
     }
 
     /**
      * Test of getDownloadUrl method, of class ExpansionManifest.
      */
     @Test
-    public void testGetDownloadUrl() {
-        System.out.println("getDownloadUrl");
-    }
-
-    /**
-     * Test of setDownloadUrl method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetDownloadUrl() {
-        System.out.println("setDownloadUrl");
+    public void testSetGetDownloadUrl() {
+        System.out.println("testSetGetDownloadUrl");
+        
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getDownloadUrl());
+        
+        manifest.setDownloadUrl("some");
+        assertEquals("some", manifest.getDownloadUrl());
     }
 
     /**
      * Test of getConflictOxps method, of class ExpansionManifest.
      */
     @Test
-    public void testGetConflictOxps() {
-        System.out.println("getConflictOxps");
-    }
-
-    /**
-     * Test of setConflictOxps method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetConflictOxps() {
-        System.out.println("setConflictOxps");
+    public void testSetGetConflictOxps() {
+        System.out.println("testSetGetConflictOxps");
+        
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getConflictOxps());
+        
+        manifest.setConflictOxps("some");
+        assertEquals("some", manifest.getConflictOxps());
     }
 
     /**
      * Test of getMaximumOoliteVersion method, of class ExpansionManifest.
      */
     @Test
-    public void testGetMaximumOoliteVersion() {
-        System.out.println("getMaximumOoliteVersion");
-    }
-
-    /**
-     * Test of setMaximumOoliteVersion method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetMaximumOoliteVersion() {
-        System.out.println("setMaximumOoliteVersion");
+    public void testSetGetMaximumOoliteVersion() {
+        System.out.println("testSetGetMaximumOoliteVersion");
+        
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getMaximumOoliteVersion());
+        
+        manifest.setMaximumOoliteVersion("some");
+        assertEquals("some", manifest.getMaximumOoliteVersion());
     }
 
     /**

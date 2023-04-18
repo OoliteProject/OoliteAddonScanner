@@ -35,9 +35,17 @@ import org.xml.sax.SAXParseException;
 public class XMLPlistParser {
     private static final Logger log = LogManager.getLogger(XMLPlistParser.class);
     
+    /**
+     * Handler that collects parsing errors as warnings in the Expansion.
+     */
     public static class MySaxErrorHandler implements ErrorHandler {
         private Expansion expansion;
         
+        /**
+         * Creates a new MySaxErrorHandler. 
+         * 
+         * @param expansion the expansion to store the errors in
+         */
         public MySaxErrorHandler(Expansion expansion) {
             this.expansion = expansion;
         }
@@ -66,13 +74,27 @@ public class XMLPlistParser {
     private XMLPlistParser() {
     }
     
+    /**
+     * Serializes a dom node to an XML string.
+     * 
+     * @param n the dom node
+     * @return the string
+     * @throws TransformerException something went wrong
+     */
     public static String serialize(Node n) throws TransformerException {
         StringWriter sw = new StringWriter();
         Transformer t = TransformerFactory.newDefaultInstance().newTransformer();
         t.transform(new DOMSource(n), new StreamResult(sw));
         return sw.toString();
     }
-    
+
+    /**
+     * Turns a PList array, represented as dom element, into an array of
+     * parsed elements.
+     * 
+     * @param array the dom element to parse
+     * @return the result ArrayList
+     */
     private static List<Object> parseArray(Element array) {
         log.debug("parseArray({})", array);
         
