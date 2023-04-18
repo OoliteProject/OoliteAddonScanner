@@ -68,6 +68,9 @@ public class Expansion implements Wikiworthy {
      * @param e the Equipment to add
      */
     public void addEquipment(Equipment e) {
+        if (e.getIdentifier() == null) {
+            throw new IllegalArgumentException("Equipment must have an identifier.");
+        }
         equipment.put(e.getIdentifier(), e);
     }
     

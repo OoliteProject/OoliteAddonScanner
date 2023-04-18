@@ -44,6 +44,9 @@ public class Registry {
     private final List<String> warnings;
     private final Properties properties;
     
+    /**
+     * Creates a new Registry.
+     */
     public Registry() {
         expansions = new TreeMap<>();
         equipment = new TreeMap<>();
@@ -205,6 +208,11 @@ public class Registry {
         addEquipment(eq);
     }
     
+    /**
+     * Adds a ship.
+     * 
+     * @param ship the ship to add
+     */
     public void addShip(Ship ship) {
         if (ships.containsKey(ship.getIdentifier())) {
             addWarning(String.format("Replacing %s/%s with %s/%s", 
@@ -216,6 +224,11 @@ public class Registry {
         ships.put(ship.getIdentifier(), ship);
     }
     
+    /**
+     * Adds equipment.
+     * 
+     * @param equipment the equipment
+     */
     public void addEquipment(Equipment equipment) {
         if (this.equipment.containsKey(equipment.getIdentifier())) {
             addWarning(String.format("Replacing %s/%s with %s/%s", 
@@ -227,10 +240,11 @@ public class Registry {
         this.equipment.put(equipment.getIdentifier(), equipment);
     }
     
-    /** Adds single equipment.
+    /** 
+     * Adds single equipment.
      * 
-     * @param expansion
-     * @param lc 
+     * @param expansion the expansion the equipment is part of
+     * @param lc the parser context from which to read the equipment
      */
     public void addEquipment(Expansion expansion, PlistParser.ListContext lc) throws RegistryException {
         log.debug("addEquipment({}, {})", expansion, lc);
@@ -265,6 +279,12 @@ public class Registry {
         this.equipment.put(eq.getIdentifier(), eq);
     }
     
+    /**
+     * Adds a list of ships.
+     * 
+     * @param expansion the expansion the ahip will belong to
+     * @param shipList the list from which to add the ships
+     */
     public void addShipList(Expansion expansion, Map<String, Object> shipList) {
         log.debug("addShipList({}, {})", expansion, shipList);
 
@@ -273,6 +293,12 @@ public class Registry {
         }
     }
     
+    /**
+     * Adds a list of ships.
+     * 
+     * @param expansion the expansion the ahip will belong to
+     * @param dc the dictionary context to read the ships from
+     */
     public void addShipList(Expansion expansion, PlistParser.DictionaryContext dc) {
         log.debug("addShipList({}, {})", expansion, dc);
         
@@ -284,6 +310,12 @@ public class Registry {
         }
     }
 
+    /**
+     * Adds a list of ships.
+     * 
+     * @param expansion the expansion the ahip will belong to
+     * @param data a map holding the ships
+     */
     public void addShip(Expansion expansion, String identifier, Map<String, Object> data) {
         log.debug("addShip({}, {}, {})", expansion, identifier, data);
 
@@ -299,6 +331,12 @@ public class Registry {
         addShip(ship);
     }
     
+    /**
+     * Adds a list of ships.
+     * 
+     * @param expansion the expansion the ships will belong to
+     * @param dc the dictionary context to read the ships from
+     */
     public void addShip(Expansion expansion, String identifier, PlistParser.DictionaryContext dc) {
         log.debug("addShip({}, {}, {})", expansion, identifier, dc);
         
@@ -314,10 +352,19 @@ public class Registry {
         addShip(ship);
     }
     
+    /**
+     * Returns the list of expansion.
+     * 
+     * @return the list
+     */
     public List<Expansion> getExpansions() {
         return new ArrayList<>(expansions.values());
     }
-    
+
+    /**
+     * Returns the list of expansions sorted by name.
+     * @return the list
+     */
     public List<Expansion> getExpansionsByName() {
         ArrayList<Expansion> result = new ArrayList<>(expansions.values());
         
@@ -325,27 +372,52 @@ public class Registry {
         
         return result;
     }
-    
+
+    /**
+     * Returns the list of equipment.
+     * 
+     * @return the list
+     */
     public List<Equipment> getEquipment() {
         return new ArrayList<>(equipment.values());
     }
     
+    /**
+     * Returns the list of equipment, sorted by name.
+     * 
+     * @return the list
+     */
     public List<Equipment> getEquipmentByName() {
         ArrayList<Equipment> result = new ArrayList<>(equipment.values());
         Collections.sort(result, (t, t1) -> t.getName().compareTo(t1.getName()));
         return result;
     }
-    
+
+    /**
+     * Returns the list of ships.
+     * 
+     * @return the list
+     */
     public List<Ship> getShips() {
         return new ArrayList<>(ships.values());
     }
-    
+
+    /**
+     * Returns the list of ships, sorted by name.
+     * 
+     * @return the list
+     */
     public List<Ship> getShipsByName() {
         ArrayList<Ship> result = new ArrayList<>(ships.values());
         Collections.sort(result, (t, t1) -> t.getName().compareTo(t1.getName()));
         return result;
     }
-    
+
+    /**
+     * Returns all ships, equipment, expansions, sorted by identifier.
+     * 
+     * @return the list
+     */
     public List<Wikiworthy> getAllByIdentifier() {
         ArrayList<Wikiworthy> result = new ArrayList<>();
         result.addAll(expansions.values());
@@ -356,7 +428,13 @@ public class Registry {
         
         return result;
     }
-    
+
+    /**
+     * Parses manifest data.
+     * 
+     * @param data the data to read
+     * @return the ExpansionManifest
+     */
     public ExpansionManifest toManifest(Map<String, Object> data) {
         log.debug("toManifest({})", data);
         ExpansionManifest em = new ExpansionManifest();
@@ -413,8 +491,10 @@ public class Registry {
         return em;
     }
     
-    /** Parses manifest data.
+    /** 
+     * Parses manifest data.
      * 
+     * @return the ExpansionManifest
      */
     public ExpansionManifest toManifest(PlistParser.DictionaryContext dc) {
         log.debug("toManifest({})", dc);
@@ -462,13 +542,19 @@ public class Registry {
         return em;
     }
 
+    /**
+     * Adds a warning.
+     * 
+     * @param warning the warning
+     */
     public void addWarning(String warning) {
         warnings.add(warning);
     }
 
-    /** Returns global warnings and all the others.
+    /** 
+     * Returns global list of warnings and all the others.
      * 
-     * @return 
+     * @return the list
      */
     public List<String> getWarnings() {
         ArrayList<String> result = new ArrayList<>(warnings);
@@ -486,14 +572,30 @@ public class Registry {
         return new ArrayList<>(warnings);
     }
     
+    /**
+     * Returns the property with given key's value.
+     * @param key the key
+     * @return the value
+     */
     public String getProperty(String key) {
         return properties.getProperty(key);
     }
-    
+
+    /**
+     * Sets a property.
+     * 
+     * @param key the key
+     * @param value the value
+     */
     public void setProperty(String key, String value) {
         properties.setProperty(key, value);
     }
-    
+
+    /**
+     * Returns all properties.
+     * 
+     * @return the properties
+     */
     public Properties getProperties() {
         return properties;
     }

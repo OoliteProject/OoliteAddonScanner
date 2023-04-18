@@ -116,104 +116,114 @@ public class ExpansionTest {
      * Test of getEquipment method, of class Expansion.
      */
     @Test
-    public void testGetEquipment() {
+    public void testAddGetEquipment() {
         System.out.println("getEquipment");
+        
+        Expansion expansion = new Expansion();
+        assertNotNull(expansion.getEquipment());
+        assertEquals(0, expansion.getEquipment().size());
+
+        try {
+            Equipment equipment = new Equipment();
+            expansion.addEquipment(equipment);
+            fail("Expected exception but got none");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+        
+        {
+            Equipment equipment = new Equipment();
+            equipment.setIdentifier("blah");
+
+            expansion.addEquipment(equipment);
+            assertNotNull(expansion.getEquipment());
+            assertEquals(1, expansion.getEquipment().size());
+            assertEquals(equipment, expansion.getEquipment().get(0));
+        }
     }
 
     /**
      * Test of getAuthor method, of class Expansion.
      */
     @Test
-    public void testGetAuthor() {
-        System.out.println("getAuthor");
-    }
-
-    /**
-     * Test of setAuthor method, of class Expansion.
-     */
-    @Test
-    public void testSetAuthor() {
-        System.out.println("setAuthor");
+    public void testSetGetAuthor() {
+        System.out.println("testSetGetAuthor");
+        
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getAuthor());
+        
+        expansion.setAuthor("blah");
+        assertEquals("blah", expansion.getAuthor());
     }
 
     /**
      * Test of getCategory method, of class Expansion.
      */
     @Test
-    public void testGetCategory() {
+    public void testSetGetCategory() {
         System.out.println("getCategory");
-    }
 
-    /**
-     * Test of setCategory method, of class Expansion.
-     */
-    @Test
-    public void testSetCategory() {
-        System.out.println("setCategory");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getCategory());
+        
+        expansion.setCategory("blah");
+        assertEquals("blah", expansion.getCategory());
     }
 
     /**
      * Test of getConflictOxps method, of class Expansion.
      */
     @Test
-    public void testGetConflictOxps() {
-        System.out.println("getConflictOxps");
-    }
-
-    /**
-     * Test of setConflictOxps method, of class Expansion.
-     */
-    @Test
-    public void testSetConflictOxps() {
-        System.out.println("setConflictOxps");
+    public void testSetGetConflictOxps() {
+        System.out.println("testSetGetConflictOxps");
+        
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getConflictOxps());
+        
+        expansion.setConflictOxps("blah");
+        assertEquals("blah", expansion.getConflictOxps());
     }
 
     /**
      * Test of getVersion method, of class Expansion.
      */
     @Test
-    public void testGetVersion() {
-        System.out.println("getVersion");
-    }
-
-    /**
-     * Test of setVersion method, of class Expansion.
-     */
-    @Test
-    public void testSetVersion() {
-        System.out.println("setVersion");
+    public void testSetGetVersion() {
+        System.out.println("testSetGetVersion");
+        
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getVersion());
+        
+        expansion.setVersion("blah");
+        assertEquals("blah", expansion.getVersion());
     }
 
     /**
      * Test of getUploadDate method, of class Expansion.
      */
     @Test
-    public void testGetUploadDate() {
-        System.out.println("getUploadDate");
-    }
+    public void testSetGetUploadDate() {
+        System.out.println("testSetGetUploadDate");
 
-    /**
-     * Test of setUploadDate method, of class Expansion.
-     */
-    @Test
-    public void testSetUploadDate() {
-        System.out.println("setUploadDate");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getUploadDate());
+        
+        expansion.setUploadDate("blah");
+        assertEquals("blah", expansion.getUploadDate());
     }
 
     /**
      * Test of getDescription method, of class Expansion.
      */
     @Test
-    public void testGetDescription() {
-        System.out.println("getDescription");
-    }
+    public void testSetGetDescription() {
+        System.out.println("testSetGetDescription");
 
-    /**
-     * Test of setDescription method, of class Expansion.
-     */
-    @Test
-    public void testSetDescription() {
-        System.out.println("setDescription");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getDescription());
+        
+        expansion.setDescription("blah");
+        assertEquals("blah", expansion.getDescription());
     }
 
     /**
