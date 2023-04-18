@@ -159,6 +159,17 @@ public class XMLPlistParser {
         }
     }
     
+    /**
+     * Parses a dictionary from an XML input stream.
+     * 
+     * @param in the inputstream to parse
+     * @param eh the errorhandler to use
+     * @return the map of maps
+     * @throws ParserConfigurationException something went wrong
+     * @throws SAXException something went wrong
+     * @throws IOException something went wrong
+     * @throws TransformerException something went wrong
+     */
     public static Map<String, Object> parseListOfMaps(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
         log.debug("parseMap({})", in);
         

@@ -259,24 +259,17 @@ public class ExpansionManifestTest {
      * Test of addWarning method, of class ExpansionManifest.
      */
     @Test
-    public void testAddWarning() {
-        System.out.println("addWarning");
+    public void testAddGetHasWarning() {
+        System.out.println("testAddGetHasWarning");
+
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertEquals(0, manifest.getWarnings().size());
+        assertFalse(manifest.hasWarnings());
+        
+        manifest.addWarning("blah");
+        assertEquals(1, manifest.getWarnings().size());
+        assertEquals("blah", manifest.getWarnings().get(0));
+        assertTrue(manifest.hasWarnings());
     }
 
-    /**
-     * Test of getWarnings method, of class ExpansionManifest.
-     */
-    @Test
-    public void testGetWarnings() {
-        System.out.println("getWarnings");
-    }
-
-    /**
-     * Test of hasWarnings method, of class ExpansionManifest.
-     */
-    @Test
-    public void testHasWarnings() {
-        System.out.println("hasWarnings");
-    }
-    
 }
