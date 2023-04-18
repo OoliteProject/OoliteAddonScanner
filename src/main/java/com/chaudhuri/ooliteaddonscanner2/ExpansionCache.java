@@ -38,6 +38,9 @@ public class ExpansionCache {
     /** Time after which we remove files from the cache. */
     private static final Instant THRESHOLD = Instant.now().minus(180, ChronoUnit.DAYS);
     
+    /**
+     * Creates a new ExpansionCache.
+     */
     public ExpansionCache() {
         if (!cacheDIR.exists()) {
             log.info("Creating cache directory {}", cacheDIR);
@@ -52,6 +55,12 @@ public class ExpansionCache {
         }
     }
     
+    /**
+     * Purges old files from the cache folder.
+     * 
+     * @param f the cache folder
+     * @throws IOException something went wrong
+     */
     private void deleteIfOlderThanTHRESHOLD(File f) throws IOException {
         Instant lastModified = Instant.ofEpochMilli(f.lastModified());
 
@@ -65,10 +74,11 @@ public class ExpansionCache {
         }
     }
 
-    /** Removed files that have been last accessed before THRESHOLD.
+    /** 
+     * Removes files that have been last accessed before THRESHOLD.
      * Also removes empty subdirectories.
      * 
-     * @param dir
+     * @param dir the directory to clean
      * @throws IOException 
      */
     private void cleanCache(File dir) throws IOException {
@@ -94,6 +104,13 @@ public class ExpansionCache {
         }
     }
     
+    /**
+     * Downloads a manifest from the github Oolite repository.
+     * 
+     * @param tag the tag to search for
+     * @return the manifest found
+     * @throws IOException something went wrong
+     */
     public Map<String, Object> getOoliteManifest(String tag) throws IOException {
         log.debug("getOoliteManifest({})", tag);
         String repository = "OoliteProject/oolite";
@@ -106,8 +123,10 @@ public class ExpansionCache {
         }
     }
     
-    /** Returns the download url for the latest Oolite release
+    /** 
+     * Returns the download url for the latest Oolite release.
      * 
+     * @param manifest the manifest to evaluate the url from
      */
     public String getOoliteDownloadUrl(Map<String, Object> manifest) {
         log.debug("getOoliteDownloadUrl({})", manifest);
@@ -134,6 +153,12 @@ public class ExpansionCache {
         return new File(cacheDIR, u.getHost() + File.separator + u.getFile());
     }
     
+    /**
+     * Populates the cache from the given url list.
+     * 
+     * @param urls the urls to download
+     * @throws IOException something went wrong
+     */
     public void update(List<String> urls) throws IOException {
         int count = 0;
         for (String u: urls) {
@@ -186,8 +211,10 @@ public class ExpansionCache {
     }
     
     /**
-
-     * Headers for URL http://wiki.alioth.net/img_auth.php/6/68/DTT_Atlas_1.1.oxz:
+     * Performs a HTTP HEAD request to check when the URL was last modified.
+     * 
+     * Headers for URL http://wiki.alioth.net/img_auth.php/6/68/DTT_Atlas_1.1.oxz.
+     * 
      *   Keep-Alive=[timeout=5, max=100], 
      *   null=[HTTP/1.1 200 OK], 
      *   Server=[Apache/2.4.38 (Debian)], 
@@ -198,8 +225,9 @@ public class ExpansionCache {
      *   Date=[Wed, 09 Jun 2021 06:37:05 GMT], 
      *   Content-Type=[application/zip]
      * 
-     * @param u
-     * @throws IOException 
+     * @param u the url to check
+     * @return the last modified date
+     * @throws IOException something went wrong
      */
     private Date doCheckLastModified(URL u, int followRedirectsCount) throws IOException {
         HttpURLConnection con = (HttpURLConnection)u.openConnection();

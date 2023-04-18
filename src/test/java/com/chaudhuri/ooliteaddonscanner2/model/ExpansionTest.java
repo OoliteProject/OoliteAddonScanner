@@ -230,200 +230,173 @@ public class ExpansionTest {
      * Test of getDownloadUrl method, of class Expansion.
      */
     @Test
-    public void testGetDownloadUrl() {
-        System.out.println("getDownloadUrl");
-    }
-
-    /**
-     * Test of setDownloadUrl method, of class Expansion.
-     */
-    @Test
-    public void testSetDownloadUrl() {
-        System.out.println("setDownloadUrl");
+    public void testSetGetDownloadUrl() {
+        System.out.println("testSetGetDownloadUrl");
+        
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getDownloadUrl());
+        
+        expansion.setDownloadUrl("blah");
+        assertEquals("blah", expansion.getDownloadUrl());
     }
 
     /**
      * Test of getTitle method, of class Expansion.
      */
     @Test
-    public void testGetTitle() {
-        System.out.println("getTitle");
-    }
-
-    /**
-     * Test of getName method, of class Expansion.
-     */
-    @Test
-    public void testGetName() {
-        System.out.println("getName");
-    }
-
-    /**
-     * Test of setTitle method, of class Expansion.
-     */
-    @Test
-    public void testSetTitle() {
-        System.out.println("setTitle");
+    public void testSetGetTitle() {
+        System.out.println("testSetGetTitle getName");
+        
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getTitle());
+        assertNull(expansion.getName());
+        
+        expansion.setTitle("blah");
+        assertEquals("blah", expansion.getTitle());
+        assertEquals("blah", expansion.getName());
     }
 
     /**
      * Test of getTags method, of class Expansion.
      */
     @Test
-    public void testGetTags() {
-        System.out.println("getTags");
-    }
+    public void testSetGetTags() {
+        System.out.println("testSetGetTags");
 
-    /**
-     * Test of setTags method, of class Expansion.
-     */
-    @Test
-    public void testSetTags() {
-        System.out.println("setTags");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getTags());
+        
+        expansion.setTags("blah");
+        assertEquals("blah", expansion.getTags());
     }
 
     /**
      * Test of getFileSize method, of class Expansion.
      */
     @Test
-    public void testGetFileSize() {
-        System.out.println("getFileSize");
-    }
+    public void testSetGetFileSize() {
+        System.out.println("testSetGetFileSize");
 
-    /**
-     * Test of setFileSize method, of class Expansion.
-     */
-    @Test
-    public void testSetFileSize() {
-        System.out.println("setFileSize");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getFileSize());
+        
+        expansion.setFileSize("blah");
+        assertEquals("blah", expansion.getFileSize());
     }
 
     /**
      * Test of getInformationUrl method, of class Expansion.
      */
     @Test
-    public void testGetInformationUrl() {
-        System.out.println("getInformationUrl");
-    }
+    public void testSetGetInformationUrl() {
+        System.out.println("testSetGetInformationUrl");
 
-    /**
-     * Test of setInformationUrl method, of class Expansion.
-     */
-    @Test
-    public void testSetInformationUrl() {
-        System.out.println("setInformationUrl");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getInformationUrl());
+        
+        expansion.setInformationUrl("blah");
+        assertEquals("blah", expansion.getInformationUrl());
     }
 
     /**
      * Test of getLicense method, of class Expansion.
      */
     @Test
-    public void testGetLicense() {
-        System.out.println("getLicense");
-    }
+    public void testSetGetLicense() {
+        System.out.println("testSetGetLicense");
 
-    /**
-     * Test of setLicense method, of class Expansion.
-     */
-    @Test
-    public void testSetLicense() {
-        System.out.println("setLicense");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getLicense());
+        
+        expansion.setLicense("blah");
+        assertEquals("blah", expansion.getLicense());
     }
 
     /**
      * Test of getRequiredOoliteVersion method, of class Expansion.
      */
     @Test
-    public void testGetRequiredOoliteVersion() {
-        System.out.println("getRequiredOoliteVersion");
-    }
+    public void testSetGetRequiredOoliteVersion() {
+        System.out.println("testSetGetRequiredOoliteVersion");
 
-    /**
-     * Test of setRequiredOoliteVersion method, of class Expansion.
-     */
-    @Test
-    public void testSetRequiredOoliteVersion() {
-        System.out.println("setRequiredOoliteVersion");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getRequiredOoliteVersion());
+        
+        expansion.setRequiredOoliteVersion("blah");
+        assertEquals("blah", expansion.getRequiredOoliteVersion());
     }
 
     /**
      * Test of getRequiresOxps method, of class Expansion.
      */
     @Test
-    public void testGetRequiresOxps() {
-        System.out.println("getRequiresOxps");
-    }
+    public void testSetGetRequiresOxps() {
+        System.out.println("testSetGetRequiresOxps");
 
-    /**
-     * Test of setRequiresOxps method, of class Expansion.
-     */
-    @Test
-    public void testSetRequiresOxps() {
-        System.out.println("setRequiresOxps");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getRequiresOxps());
+        
+        expansion.setRequiresOxps("blah");
+        assertEquals("blah", expansion.getRequiresOxps());
     }
 
     /**
      * Test of getOptionalOxps method, of class Expansion.
      */
     @Test
-    public void testGetOptionalOxps() {
+    public void testSetGetOptionalOxps() {
         System.out.println("getOptionalOxps");
-    }
 
-    /**
-     * Test of setOptionalOxps method, of class Expansion.
-     */
-    @Test
-    public void testSetOptionalOxps() {
-        System.out.println("setOptionalOxps");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getOptionalOxps());
+        
+        expansion.setOptionalOxps("blah");
+        assertEquals("blah", expansion.getOptionalOxps());
     }
 
     /**
      * Test of getMaximumOoliteVersion method, of class Expansion.
      */
     @Test
-    public void testGetMaximumOoliteVersion() {
-        System.out.println("getMaximumOoliteVersion");
-    }
+    public void testSetGetMaximumOoliteVersion() {
+        System.out.println("testSetGetMaximumOoliteVersion");
 
-    /**
-     * Test of setMaximumOoliteVersion method, of class Expansion.
-     */
-    @Test
-    public void testSetMaximumOoliteVersion() {
-        System.out.println("setMaximumOoliteVersion");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getMaximumOoliteVersion());
+        
+        expansion.setMaximumOoliteVersion("blah");
+        assertEquals("blah", expansion.getMaximumOoliteVersion());
     }
 
     /**
      * Test of getManifest method, of class Expansion.
      */
     @Test
-    public void testGetManifest() {
-        System.out.println("getManifest");
-    }
+    public void testSetGetManifest() {
+        System.out.println("testSetGetManifest");
 
-    /**
-     * Test of setManifest method, of class Expansion.
-     */
-    @Test
-    public void testSetManifest() {
-        System.out.println("setManifest");
+        Expansion expansion = new Expansion();
+        ExpansionManifest manifest = new ExpansionManifest();
+
+        assertNotNull(expansion.getManifest());
+        assertNotEquals(manifest, expansion.getManifest());
+        
+        expansion.setManifest(manifest);
+        assertEquals(manifest, expansion.getManifest());
     }
 
     /**
      * Test of getAsWikipage method, of class Expansion.
      */
     @Test
-    public void testGetAsWikipage() {
+    public void testSetGetAsWikipage() {
         System.out.println("getAsWikipage");
-    }
 
-    /**
-     * Test of setAsWikipage method, of class Expansion.
-     */
-    @Test
-    public void testSetAsWikipage() {
-        System.out.println("setAsWikipage");
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getAsWikipage());
+        
+        expansion.setAsWikipage("blah");
+        assertEquals("blah", expansion.getAsWikipage());
     }
 
     /**
@@ -432,38 +405,44 @@ public class ExpansionTest {
     @Test
     public void testGetType() {
         System.out.println("getType");
+
+        Expansion expansion = new Expansion();
+        assertEquals("Expansion", expansion.getType());
     }
 
     /**
      * Test of addScript method, of class Expansion.
      */
     @Test
-    public void testAddScript() {
-        System.out.println("addScript");
-    }
+    public void testAddGetScript() {
+        System.out.println("testAddGetScript");
 
-    /**
-     * Test of getScripts method, of class Expansion.
-     */
-    @Test
-    public void testGetScripts() {
-        System.out.println("getScripts");
+        Expansion expansion = new Expansion();
+        assertNotNull(expansion.getScripts());
+        assertEquals(0, expansion.getScripts().size());
+        
+        expansion.addScript("name", "content");
+        assertNotNull(expansion.getScripts());
+        assertEquals(1, expansion.getScripts().size());
+        assertEquals("name", expansion.getScripts().keySet().iterator().next());
+        assertEquals("content", expansion.getScripts().get("name"));
     }
 
     /**
      * Test of addWarning method, of class Expansion.
      */
     @Test
-    public void testAddWarning() {
+    public void testAddGetWarning() {
         System.out.println("addWarning");
+        
+        Expansion expansion = new Expansion();
+        assertNotNull(expansion.getWarnings());
+        assertEquals(0, expansion.getWarnings().size());
+        
+        expansion.addWarning("blah");
+        assertNotNull(expansion.getWarnings());
+        assertEquals(1, expansion.getWarnings().size());
+        assertEquals("blah", expansion.getWarnings().get(0));
     }
 
-    /**
-     * Test of getWarnings method, of class Expansion.
-     */
-    @Test
-    public void testGetWarnings() {
-        System.out.println("getWarnings");
-    }
-    
 }
