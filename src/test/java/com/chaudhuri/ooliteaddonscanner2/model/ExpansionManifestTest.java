@@ -1,6 +1,4 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
 package com.chaudhuri.ooliteaddonscanner2.model;
 
@@ -93,80 +91,70 @@ public class ExpansionManifestTest {
      * Test of getVersion method, of class ExpansionManifest.
      */
     @Test
-    public void testGetVersion() {
-        System.out.println("getVersion");
-    }
-
-    /**
-     * Test of setVersion method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetVersion() {
-        System.out.println("setVersion");
+    public void testSetGetVersion() {
+        System.out.println("testSetGetVersion");
+        
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getVersion());
+        
+        manifest.setVersion("blah");
+        assertEquals("blah", manifest.getVersion());
     }
 
     /**
      * Test of getDescription method, of class ExpansionManifest.
      */
     @Test
-    public void testGetDescription() {
-        System.out.println("getDescription");
-    }
+    public void testSetGetDescription() {
+        System.out.println("testSetGetDescription");
 
-    /**
-     * Test of setDescription method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetDescription() {
-        System.out.println("setDescription");
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getDescription());
+        
+        manifest.setDescription("blah");
+        assertEquals("blah", manifest.getDescription());
     }
 
     /**
      * Test of getRequiresOxps method, of class ExpansionManifest.
      */
     @Test
-    public void testGetRequiresOxps() {
-        System.out.println("getRequiresOxps");
-    }
+    public void testSetGetRequiresOxps() {
+        System.out.println("testSetGetRequiresOxps");
 
-    /**
-     * Test of setRequiresOxps method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetRequiresOxps() {
-        System.out.println("setRequiresOxps");
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getRequiresOxps());
+        
+        manifest.setRequiresOxps("blah");
+        assertEquals("blah", manifest.getRequiresOxps());
     }
 
     /**
      * Test of getOptionalOxps method, of class ExpansionManifest.
      */
     @Test
-    public void testGetOptionalOxps() {
-        System.out.println("getOptionalOxps");
-    }
+    public void testSetGetOptionalOxps() {
+        System.out.println("testSetGetOptionalOxps");
 
-    /**
-     * Test of setOptionalOxps method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetOptionalOxps() {
-        System.out.println("setOptionalOxps");
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getOptionalOxps());
+        
+        manifest.setOptionalOxps("blah");
+        assertEquals("blah", manifest.getOptionalOxps());
     }
 
     /**
      * Test of getLicense method, of class ExpansionManifest.
      */
     @Test
-    public void testGetLicense() {
-        System.out.println("getLicense");
-    }
-
-    /**
-     * Test of setLicense method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetLicense() {
-        System.out.println("setLicense");
+    public void testSetGetLicense() {
+        System.out.println("testSetGetLicense");
+        
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getLicense());
+        
+        manifest.setLicense("blah");
+        assertEquals("blah", manifest.getLicense());
     }
 
     /**
@@ -187,16 +175,14 @@ public class ExpansionManifestTest {
      * Test of getInformationUrl method, of class ExpansionManifest.
      */
     @Test
-    public void testGetInformationUrl() {
-        System.out.println("getInformationUrl");
-    }
-
-    /**
-     * Test of setInformationUrl method, of class ExpansionManifest.
-     */
-    @Test
-    public void testSetInformationUrl() {
-        System.out.println("setInformationUrl");
+    public void testSetGetInformationUrl() {
+        System.out.println("testSetGetInformationUrl");
+        
+        ExpansionManifest manifest = new ExpansionManifest();
+        assertNull(manifest.getInformationUrl());
+        
+        manifest.setInformationUrl("some");
+        assertEquals("some", manifest.getInformationUrl());
     }
 
     /**

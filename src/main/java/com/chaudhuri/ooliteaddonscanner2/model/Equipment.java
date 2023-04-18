@@ -26,47 +26,100 @@ public class Equipment implements Wikiworthy {
     
     private String asWikipage;
     
+    /**
+     * Creates a new equipment.
+     */
     public Equipment() {
         features = new HashMap<>();
         warnings = new ArrayList<>();
     }
 
+    /**
+     * Returns the expansion.
+     * 
+     * @return the expansion
+     */
     public Expansion getExpansion() {
         return expansion;
     }
 
+    /**
+     * Sets the expansion.
+     * 
+     * @param expansion the expansion
+     */
     public void setExpansion(Expansion expansion) {
         this.expansion = expansion;
     }
 
+    /**
+     * Returns the tech level.
+     * 
+     * @return the tech level
+     */
     public String getTechlevel() {
         return techlevel;
     }
 
+    /**
+     * Sets the tech level.
+     * 
+     * @param techlevel the tech level
+     */
     public void setTechlevel(String techlevel) {
         this.techlevel = techlevel;
     }
 
+    /**
+     * Returns the cost.
+     * 
+     * @return the cost
+     */
     public String getCost() {
         return cost;
     }
 
+    /**
+     * Sets the cost.
+     * 
+     * @param cost the cost
+     */
     public void setCost(String cost) {
         this.cost = cost;
     }
 
+    /**
+     * Returns the identifier.
+     * 
+     * @return the identifier
+     */
     public String getIdentifier() {
         return identifier;
     }
 
+    /**
+     * Sets the identifier.
+     * 
+     * @param identifier the identifier
+     */
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
+    /**
+     * Returns the description.
+     * 
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets the description.
+     * 
+     * @param description the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }

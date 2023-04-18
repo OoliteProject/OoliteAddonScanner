@@ -325,14 +325,29 @@ public class ExpansionManifest {
         this.maximumOoliteVersion = maximumOoliteVersion;
     }
     
+    /**
+     * Adds a warning to the list of warnings.
+     * 
+     * @param warning the warning
+     */
     public void addWarning(String warning) {
         warnings.add(warning);
     }
     
+    /**
+     * Returns the list of warnings.
+     * 
+     * @return the list
+     */
     public List<String> getWarnings() {
         return new ArrayList<>(warnings);
     }
     
+    /**
+     * Returns whether this ExpansionManifest has warnings.
+     * 
+     * @return true and only true if there are warnings
+     */
     public boolean hasWarnings() {
         return !warnings.isEmpty();
     }
