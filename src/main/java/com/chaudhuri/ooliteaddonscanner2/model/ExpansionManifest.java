@@ -55,122 +55,272 @@ public class ExpansionManifest {
         this.author = author;
     }
 
+    /**
+     * Returns the category.
+     * 
+     * @return the category
+     */
     public String getCategory() {
         return category;
     }
 
+    /**
+     * Sets the category.
+     * 
+     * @param category the category
+     */
     public void setCategory(String category) {
         this.category = category;
     }
 
+    /**
+     * Returns the identifier.
+     * 
+     * @return the identifier
+     */
     public String getIdentifier() {
         return identifier;
     }
 
+    /**
+     * Sets the identifier.
+     * 
+     * @param identifier the identifier
+     */
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
     }
 
+    /**
+     * Returns the title.
+     * 
+     * @return the title
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Sets the title.
+     * 
+     * @param title the title
+     */
     public void setTitle(String title) {
         this.title = title;
     }
 
+    /**
+     * Returns the version.
+     * 
+     * @return the version
+     */
     public String getVersion() {
         return version;
     }
 
+    /**
+     * Sets the version.
+     * 
+     * @param version the version
+     */
     public void setVersion(String version) {
         this.version = version;
     }
 
+    /**
+     * Returns the description.
+     * 
+     * @return the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Sets the description.
+     * 
+     * @param description the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Returns the OXPs required by this expansion.
+     * 
+     * @return the OXP specifier
+     */
     public String getRequiresOxps() {
         return requiresOxps;
     }
 
+    /**
+     * Sets the OXPs required by this expansion.
+     * 
+     * @param requiresOxps the OXP specifier
+     */
     public void setRequiresOxps(String requiresOxps) {
         this.requiresOxps = requiresOxps;
     }
 
+    /**
+     * Returns the OXPs optionallz used by this expansion.
+     * 
+     * @return the OXP specifier.
+     */
     public String getOptionalOxps() {
         return optionalOxps;
     }
 
+    /**
+     * Sets the OXPs optionallz used by this expansion.
+     * 
+     * @param optionalOxps the OXP specifier.
+     */
     public void setOptionalOxps(String optionalOxps) {
         this.optionalOxps = optionalOxps;
     }
 
+    /**
+     * Returns the license.
+     * 
+     * @return the license
+     */
     public String getLicense() {
         return license;
     }
 
+    /**
+     * Sets the license.
+     * 
+     * @param license the license
+     */
     public void setLicense(String license) {
         this.license = license;
     }
 
+    /**
+     * returns the required Oolite version.
+     * 
+     * @return the version specifier
+     */
     public String getRequiredOoliteVersion() {
         return requiredOoliteVersion;
     }
 
+    /**
+     * Sets the required Oolite version.
+     * 
+     * @param requiredOoliteVersion the version specifier
+     */
     public void setRequiredOoliteVersion(String requiredOoliteVersion) {
         this.requiredOoliteVersion = requiredOoliteVersion;
     }
 
+    /**
+     * Returns the information url.
+     * 
+     * @return the url
+     */
     public String getInformationUrl() {
         return informationUrl;
     }
 
+    /**
+     * Sets the information url.
+     * 
+     * @param informationUrl the url
+     */
     public void setInformationUrl(String informationUrl) {
         this.informationUrl = informationUrl;
     }
 
+    /**
+     * Returns the tags.
+     * 
+     * @return the tags
+     */
     public String getTags() {
         return tags;
     }
 
+    /**
+     * Sets the tags.
+     * 
+     * @param tags the tags
+     */
     public void setTags(String tags) {
         this.tags = tags;
     }
 
+    /**
+     * Returns the file size.
+     * 
+     * @return the size in bytes
+     */
     public String getFileSize() {
         return fileSize;
     }
 
+    /**
+     * Sets the file size.
+     * 
+     * @param fileSize the size in bytes
+     */
     public void setFileSize(String fileSize) {
         this.fileSize = fileSize;
     }
 
+    /**
+     * Returns the download url.
+     * 
+     * @return the url
+     */
     public String getDownloadUrl() {
         return downloadUrl;
     }
 
+    /**
+     * Sets the download url.
+     * 
+     * @param downloadUrl the url
+     */
     public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
     }
 
+    /**
+     * Returns the conflicting OXPs.
+     * 
+     * @return the oxp specifier
+     */
     public String getConflictOxps() {
         return conflictOxps;
     }
 
+    /**
+     * Sets the conflicting OXPs.
+     * 
+     * @param conflictOxps the OXP specifier
+     */
     public void setConflictOxps(String conflictOxps) {
         this.conflictOxps = conflictOxps;
     }
 
+    /**
+     * Returns the maximum Oolite version.
+     * 
+     * @return the version specifier
+     */
     public String getMaximumOoliteVersion() {
         return maximumOoliteVersion;
     }
 
+    /**
+     * Sets the maximum Oolite version.
+     * 
+     * @param maximumOoliteVersion the version specifier
+     */
     public void setMaximumOoliteVersion(String maximumOoliteVersion) {
         this.maximumOoliteVersion = maximumOoliteVersion;
     }
