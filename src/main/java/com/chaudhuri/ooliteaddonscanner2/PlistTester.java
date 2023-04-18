@@ -95,6 +95,12 @@ public class PlistTester {
         
     }
 
+    /**
+     * Main entry point for the batch version of the plist tester.
+     * 
+     * @param args command line arguments
+     * @throws Exception something went wrong
+     */
     public static void main(String[] args) throws Exception {
         log.debug("main(...)");
         if (args.length >0) {

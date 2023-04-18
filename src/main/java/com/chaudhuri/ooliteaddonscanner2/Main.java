@@ -56,7 +56,8 @@ import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
 
 /**
- *
+ * Main entry point for the scanner.
+ * 
  * @author hiran
  */
 public class Main {
@@ -68,7 +69,7 @@ public class Main {
     public static final String OXP_PATH_SCRIPTS = "Scripts/";
 
     /** Reads a file into a string, assuming UTF-8 encoding
-     * and fixing linefeeds
+     * and fixing linefeeds.
      * 
      * @param in
      * @return 
@@ -168,7 +169,8 @@ public class Main {
         return new ByteArrayInputStream(bos.toByteArray());
     }
 
-    /** Download oolite, unpack and scan for ships and equipment
+    /** 
+     * Download oolite, unpack and scan for ships and equipment.
      * 
      * @param registry 
      */
@@ -534,6 +536,12 @@ public class Main {
         }
     }
     
+    /**
+     * Main entry point to run the scanner.
+     * 
+     * @param args command line arguments
+     * @throws Exception something went wrong
+     */
     public static void main(String[] args) throws Exception {
         log.info("Starting {} {} {}", Main.class.getPackage().getImplementationVendor(), Main.class.getPackage().getImplementationTitle(),  Main.class.getPackage().getImplementationVersion());
 

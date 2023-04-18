@@ -43,7 +43,7 @@ public class PlistTest extends javax.swing.JFrame {
     private File watchedFile;
     
     /**
-     * Creates new form PlistTest
+     * Creates new form PlistTest.
      */
     public PlistTest() {
         initComponents();

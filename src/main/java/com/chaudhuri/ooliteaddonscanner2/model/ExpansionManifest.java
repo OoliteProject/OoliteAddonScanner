@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Resembles an expansion's manifest.
  *
  * @author hiran
  */
@@ -29,14 +30,27 @@ public class ExpansionManifest {
     
     private List<String> warnings;
     
+    /**
+     * Creates a new ExpansionManifest.
+     */
     public ExpansionManifest() {
         warnings = new ArrayList<>();
     }
 
+    /**
+     * Returns the author.
+     * 
+     * @return the author
+     */
     public String getAuthor() {
         return author;
     }
 
+    /**
+     * Sets the author.
+     * 
+     * @param author the author
+     */
     public void setAuthor(String author) {
         this.author = author;
     }

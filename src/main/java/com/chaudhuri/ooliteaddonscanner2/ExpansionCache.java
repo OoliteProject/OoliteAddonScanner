@@ -221,7 +221,9 @@ public class ExpansionCache {
         }
     }
     
-    /** Ensure we have the resource  in the cache and it is recent enough.
+    /** 
+     * Ensure we have the resource  in the cache and it is recent enough.
+     * Recent enough means the age is less than MAX_AGE.
      * 
      * @param url
      * @throws MalformedURLException
@@ -248,6 +250,14 @@ public class ExpansionCache {
         doDownload(u, localFile);
     }
     
+    /**
+     * Return the plugin's input stream.
+     * If the file is not cached or too old it will be automatically downloaded.
+     * 
+     * @param url the download url of the file
+     * @return the inputstream (to the cached file on disk)
+     * @throws IOException something went wrong
+     */
     public InputStream getPluginInputStream(String url) throws IOException {
         log.debug("getPluginInputStream({})", url);
         

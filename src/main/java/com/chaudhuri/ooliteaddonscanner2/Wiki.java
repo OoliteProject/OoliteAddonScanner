@@ -29,15 +29,25 @@ public class Wiki {
     
     private static Map<String, String> wikiPageCache = new TreeMap<>();
     private static Set<String> wikiPageMisses = new TreeSet<>();
-    
+
+    /**
+     * Runnable to perform Wiki checks in background threads.
+     */
     public static class WikiCheck implements Runnable {
         
         private Wikiworthy ww;
         
+        /**
+         * Creates a new WikiCheck.
+         * @param ww the object to check
+         */
         public WikiCheck(Wikiworthy ww) {
             this.ww = ww;
         }
 
+        /**
+         * Performs the actual check, hopefully on a background thread.
+         */
         @Override
         public void run() {
             checkWikiPage(ww);
@@ -51,6 +61,12 @@ public class Wiki {
     private Wiki() {
     }
     
+    /**
+     * Returns the URL to a Wiki page with the given name.
+     * 
+     * @param name the name of the page
+     * @return the url to the page
+     */
     public static String getPageUrl(String name) {
         final String base = "http://wiki.alioth.net/index.php/";
         // this uses too much of + escaping
@@ -63,6 +79,12 @@ public class Wiki {
                         .replace("]", "%5D");
     }
     
+    /**
+     * Checks whether a wiki page exists.
+     * The result will be added as warnings into the wikiworthy.
+     * 
+     * @param wikiworthy the wikiworty to check
+     */
     public static void checkWikiPage(Wikiworthy wikiworthy) {
         log.debug("checkWikiPage({})", wikiworthy);
 
@@ -108,6 +130,12 @@ public class Wiki {
         }
     }
     
+    /**
+     * Checks whether a wiki page exists. This method speeds up by caching the results.
+     * 
+     * @param name name of the wiki page
+     * @return url of the wiki page - if it exists. Null otherwise.
+     */
     public static String wikiPageFor(String name) {
         log.debug("wikiPageFor({})", name);
 

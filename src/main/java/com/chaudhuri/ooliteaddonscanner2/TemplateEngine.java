@@ -15,7 +15,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * A template angine to process Apache FreeMarker templates.
+ * 
  * @author hiran
  */
 public class TemplateEngine {
@@ -23,6 +24,9 @@ public class TemplateEngine {
     
     private Configuration cfg;
 
+    /**
+     * Creates a new TemplateEngine.
+     */
     public TemplateEngine() {
         log.debug("TemplateEngine()");
         
@@ -35,6 +39,16 @@ public class TemplateEngine {
         cfg.setFallbackOnNullLoopVariable(false);
     }
     
+    /**
+     * Processes data according to a template and writes the result to file.
+     * 
+     * @param data the data to process
+     * @param templatename the template
+     * @param outfile the file to store the result in
+     * @throws IOException something went wrong
+     * @throws TemplateException something went wrong
+     * @throws TemplateEngineException something went wrong
+     */
     public void process(Object data, String templatename, File outfile) throws IOException, TemplateException, TemplateEngineException {
         log.debug("process({}, {})", data, templatename);
     
