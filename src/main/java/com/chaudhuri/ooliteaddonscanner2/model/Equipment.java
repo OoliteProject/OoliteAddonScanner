@@ -127,7 +127,7 @@ public class Equipment implements Wikiworthy {
     /**
      * Returns the name.
      * 
-     * @return the name
+     * @return the name - or, if not set the identifier
      */
     public String getName() {
         if (name == null || "null".equals(name) || "".equals(name)) {

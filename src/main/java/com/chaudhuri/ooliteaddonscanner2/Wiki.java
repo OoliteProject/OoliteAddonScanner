@@ -68,6 +68,10 @@ public class Wiki {
      * @return the url to the page
      */
     public static String getPageUrl(String name) {
+        if (name == null) {
+            throw new IllegalArgumentException("parameter must not be null");
+        }
+        
         final String base = "http://wiki.alioth.net/index.php/";
         // this uses too much of + escaping
         //return base + URLEncoder.encode(name, Charset.forName("utf-8"));
