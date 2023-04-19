@@ -30,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 public class ExpansionCache {
     private static final Logger log = LogManager.getLogger(ExpansionCache.class);
 
-    private static final File DEFAULT_CACHE_DIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
+    static final File DEFAULT_CACHE_DIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
     
     protected File cacheDIR;
     

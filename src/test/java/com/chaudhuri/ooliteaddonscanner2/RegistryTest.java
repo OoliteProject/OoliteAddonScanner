@@ -1,6 +1,4 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/UnitTests/JUnit5TestClass.java to edit this template
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
@@ -13,6 +11,8 @@ import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author hiran
  */
 public class RegistryTest {
+    private static final Logger log = LogManager.getLogger();
     
     public RegistryTest() {
     }
@@ -66,7 +67,24 @@ public class RegistryTest {
      */
     @Test
     public void testAddExpansion_Expansion() {
-        System.out.println("addExpansion");
+        log.info("addExpansion");
+        
+        Registry registry = new Registry();
+        assertNotNull(registry.getExpansions());
+        assertEquals(0, registry.getExpansions().size());
+        
+        Expansion expansion = new Expansion();
+        try {
+            registry.addExpansion(expansion);
+            fail("Expected exception but caught none.");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+        
+        expansion.setIdentifier("blah");
+        registry.addExpansion(expansion);
+        assertNotNull(registry.getExpansions());
+        assertEquals(1, registry.getExpansions().size());
     }
 
     /**
