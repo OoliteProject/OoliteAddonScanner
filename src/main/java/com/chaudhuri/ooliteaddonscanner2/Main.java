@@ -463,9 +463,10 @@ public class Main {
     }
     
     private static void printIndex(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
-        registry.setProperty("ImplementationVendor", Main.class.getPackage().getImplementationVendor());
-        registry.setProperty("ImplementationTitle", Main.class.getPackage().getImplementationTitle());
-        registry.setProperty("ImplementationVersion", Main.class.getPackage().getImplementationVersion());
+        log.debug("printIndex(...)");
+        registry.setProperty("ImplementationVendor", String.valueOf(Main.class.getPackage().getImplementationVendor()));
+        registry.setProperty("ImplementationTitle", String.valueOf(Main.class.getPackage().getImplementationTitle()));
+        registry.setProperty("ImplementationVersion", String.valueOf(Main.class.getPackage().getImplementationVersion()));
         templateEngine.process(registry, "index.ftlh", new File(outputdir, "index.html"));
         templateEngine.process(registry, "indexExpansionsByName.ftlh", new File(outputdir, "indexExpansionsByName.html"));
         templateEngine.process(registry, "indexEquipmentByName.ftlh", new File(outputdir, "indexEquipmentByName.html"));
