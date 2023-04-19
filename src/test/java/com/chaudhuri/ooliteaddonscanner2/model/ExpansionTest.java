@@ -443,6 +443,23 @@ public class ExpansionTest {
         assertNotNull(expansion.getWarnings());
         assertEquals(1, expansion.getWarnings().size());
         assertEquals("blah", expansion.getWarnings().get(0));
+        
+        ExpansionManifest manifest = new ExpansionManifest();
+        expansion.setManifest(manifest);
+        
+        Equipment equipment = new Equipment();
+        equipment.setIdentifier("equipment1");
+        equipment.addWarning("equipment warning");
+        expansion.addEquipment(equipment);
+        
+        Ship ship = new Ship();
+        ship.setIdentifier("ship1");
+        ship.addWarning("ship warning");
+        expansion.addShip(ship);
+        
+        assertNotNull(expansion.getWarnings());
+        assertEquals(3, expansion.getWarnings().size());
+        assertEquals("blah", expansion.getWarnings().get(0));
     }
 
 }

@@ -73,12 +73,14 @@ public class ShipTest {
         Ship ship = new Ship();
         assertNotNull(ship.getFeatures());
         assertEquals(0, ship.getFeatures().size());
+        assertFalse(ship.hasFeature("name"));
         
         ship.addFeature("name", "content");
         assertNotNull(ship.getFeatures());
         assertEquals(1, ship.getFeatures().size());
         assertEquals("name", ship.getFeatures().keySet().iterator().next());
         assertEquals("content", ship.getFeature("name"));
+        assertTrue(ship.hasFeature("name"));
     }
 
     /**
@@ -154,6 +156,12 @@ public class ShipTest {
         assertFalse(ship.isTemplate());
 
         ship.addFeature("is_template", "1");
+        assertTrue(ship.isTemplate());
+        
+        ship.addFeature("is_template", "yes");
+        assertTrue(ship.isTemplate());
+        
+        ship.addFeature("is_template", "true");
         assertTrue(ship.isTemplate());
         
     }
