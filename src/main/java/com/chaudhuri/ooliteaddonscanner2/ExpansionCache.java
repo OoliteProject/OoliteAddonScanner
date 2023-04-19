@@ -29,8 +29,10 @@ import org.apache.logging.log4j.Logger;
  */
 public class ExpansionCache {
     private static final Logger log = LogManager.getLogger(ExpansionCache.class);
+
+    public static File DEFAULT_CACHE_DIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
     
-    protected static File cacheDIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
+    protected File cacheDIR;
     
     /** Time after which we try to update the cache entry. */
     private static final long MAX_AGE = 30L * 86400L * 1000L; // 7 days ago
@@ -42,6 +44,15 @@ public class ExpansionCache {
      * Creates a new ExpansionCache.
      */
     public ExpansionCache() {
+        this(DEFAULT_CACHE_DIR);
+    }
+    
+    /**
+     * Creates a new ExpansionCache.
+     */
+    public ExpansionCache(File cacheDir) {
+        cacheDIR = cacheDir;
+        
         if (!cacheDIR.exists()) {
             log.info("Creating cache directory {}", cacheDIR);
             cacheDIR.mkdirs();
@@ -108,7 +119,7 @@ public class ExpansionCache {
      * Downloads a manifest from the github Oolite repository.
      * 
      * @param tag the tag to search for
-     * @return the manifest found
+     * @return the manifest found, as it is returned by Genson
      * @throws IOException something went wrong
      */
     public Map<String, Object> getOoliteManifest(String tag) throws IOException {

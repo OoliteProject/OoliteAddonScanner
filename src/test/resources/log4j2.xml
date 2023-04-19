@@ -7,10 +7,12 @@
     </Appenders>
     <Loggers>
         <!-- error, warn, info, debug, trace -->
-    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCache"/>
+    <Logger level="debug" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCache"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Main"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.model.ExpansionTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Registry"/>
-    <Logger level="debug" name="com.chaudhuri.ooliteaddonscanner2.Wiki"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Wiki"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.WikiTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.XMLPlistParser"/>
     <Root level="TRACE">
       <AppenderRef ref="Console"/>

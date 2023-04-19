@@ -551,8 +551,8 @@ public class Main {
         options.addOption("u", "url", true, "URL for downloading the expansions list");
         CommandLine commandline = new DefaultParser().parse(options, args);
         
-        String cachePath = commandline.getOptionValue("c", ExpansionCache.cacheDIR.getAbsolutePath());
-        ExpansionCache.cacheDIR = new File(cachePath);
+        String cachePath = commandline.getOptionValue("c", ExpansionCache.DEFAULT_CACHE_DIR.getAbsolutePath());
+        File cacheDIR = new File(cachePath);
         
         String urlStr = commandline.getOptionValue("u", "http://addons.oolite.space/api/1.0/overview");
         String outputDirStr = commandline.getOptionValue("o", "target/OoliteExpansionIndex");
@@ -569,7 +569,7 @@ public class Main {
         log.info("Want to read {}", data.getAbsolutePath());
 
         Registry registry = new Registry();
-        ExpansionCache cache = new ExpansionCache();
+        ExpansionCache cache = new ExpansionCache(cacheDIR);
         TemplateEngine templateEngine = new TemplateEngine();
         
         try {
