@@ -99,8 +99,23 @@ public class EquipmentTest {
         {
             Equipment equipment = new Equipment();
             assertNull(equipment.getName());
+            equipment.setIdentifier("ide");
+            assertEquals("ide", equipment.getName());
             equipment.setName("something");
             assertEquals("something", equipment.getName());
+        }
+        {
+            Equipment equipment = new Equipment();
+            assertNull(equipment.getName());
+            equipment.setName("");
+            assertNull(equipment.getName());
+        }
+        {
+            Equipment equipment = new Equipment();
+            assertNull(equipment.getName());
+            equipment.setName(null);
+            equipment.setIdentifier("ide");
+            assertEquals("ide", equipment.getName());
         }
     }
 
@@ -183,5 +198,15 @@ public class EquipmentTest {
         equipment.putFeature("visible", "wrong");
         assertTrue(equipment.isVisible(), "Visibility set wrongly");
     }
-    
+
+    @Test
+    public void testIsPrimeable() {
+        log.info("testIsPrimeable()");
+        
+        Equipment equipment = new Equipment();
+        assertFalse(equipment.isPrimeable());
+        
+        equipment.putFeature("script", "somescript");
+        assertTrue(equipment.isPrimeable());
+    }
 }

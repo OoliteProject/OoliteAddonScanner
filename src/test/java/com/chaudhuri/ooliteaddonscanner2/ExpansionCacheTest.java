@@ -25,11 +25,21 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ExpansionCacheTest {
     private static final Logger log = LogManager.getLogger();
     
+    private static File tempCacheDir;
+    
     public ExpansionCacheTest() {
     }
     
     @BeforeAll
     public static void setUpClass() {
+        TreeMap<String, String> props = new TreeMap(System.getProperties());
+        for (String key: props.keySet()) {
+            log.info("{}->{}", key, System.getProperty(key));
+        }
+        log.info("cwd: {}", new File(".").getAbsolutePath());
+
+        tempCacheDir = new File("target/testCacheDir");
+        tempCacheDir.mkdirs();
     }
     
     @AfterAll
@@ -83,26 +93,20 @@ public class ExpansionCacheTest {
     @Test
     public void testUpdate_List() throws Exception {
         System.out.println("update");
-
-        TreeMap<String, String> props = new TreeMap(System.getProperties());
-        for (String key: props.keySet()) {
-            log.info("{}->{}", key, System.getProperty(key));
-        }
-        log.info("cwd: {}", new File(".").getAbsolutePath());
-
-        File tempCacheDir = new File("target/testCacheDir");
-        tempCacheDir.mkdirs();
         
         File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
         testCache.delete();
         testCache.mkdirs();
+
+        File downloaded = new File(testCache, "github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip");
         
         ExpansionCache cache = new ExpansionCache(testCache);
         List<String> urls = new ArrayList<>();
         urls.add("https://github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip");
+
+
+        assertFalse(downloaded.exists(), "Unexpected file " + downloaded.getAbsolutePath());
         cache.update(urls);
-        
-        File downloaded = new File(testCache, "github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip");
         assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
     }
 
@@ -111,7 +115,19 @@ public class ExpansionCacheTest {
      */
     @Test
     public void testUpdate_String() throws Exception {
-        System.out.println("update");
+        log.info("testUpdate_String");
+
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+
+        File downloaded = new File(testCache, "github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip");
+        
+        ExpansionCache cache = new ExpansionCache(testCache);
+
+        assertFalse(downloaded.exists());
+        cache.update("https://github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip");
+        assertTrue(downloaded.exists());
     }
 
     /**
@@ -119,7 +135,20 @@ public class ExpansionCacheTest {
      */
     @Test
     public void testGetPluginInputStream() throws Exception {
-        System.out.println("getPluginInputStream");
+        log.info("getPluginInputStream");
+
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+
+        File downloaded = new File(testCache, "github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip");
+        
+        ExpansionCache cache = new ExpansionCache(testCache);
+        assertFalse(downloaded.exists());
+        // the file will be downloaded implicitly
+        assertNotNull(cache.getPluginInputStream("https://github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip"));
+        assertTrue(downloaded.exists());
+        
     }
 
     /**
@@ -128,6 +157,21 @@ public class ExpansionCacheTest {
     @Test
     public void testInvalidate() throws Exception {
         System.out.println("invalidate");
+
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+
+        File downloaded = new File(testCache, "github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip");
+        
+        ExpansionCache cache = new ExpansionCache(testCache);
+        assertFalse(downloaded.exists());
+        // the file will be downloaded implicitly
+        assertNotNull(cache.getPluginInputStream("https://github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip"));
+        assertTrue(downloaded.exists());
+        
+        cache.invalidate("https://github.com/OoliteProject/oolite-debug-console/archive/refs/tags/v1.6.zip");
+        assertFalse(downloaded.exists());
     }
     
 }

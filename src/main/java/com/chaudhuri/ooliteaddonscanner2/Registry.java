@@ -588,7 +588,11 @@ public class Registry {
      * @param value the value
      */
     public void setProperty(String key, String value) {
-        properties.setProperty(key, value);
+        try {
+            properties.setProperty(key, value);
+        } catch (NullPointerException e) {
+            throw new NullPointerException(String.format("Could not set property %s to %s", key, value));
+        }
     }
 
     /**
