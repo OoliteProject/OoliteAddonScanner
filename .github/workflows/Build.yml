@@ -41,7 +41,7 @@ jobs:
     - name: Build with Maven
       run: |
         mvn versions:set "-DnewVersion=${{ env.GITVERSION_SEMVER }}"
-        mvn -B package --file pom.xml
+        mvn -B package -e --file pom.xml
         
     - name: Check status
       run: |
