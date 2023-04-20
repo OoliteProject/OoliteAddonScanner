@@ -70,6 +70,13 @@ public class TemplateEngineTest {
         } catch (TemplateNotFoundException e) {
             log.debug("caught expected exception", e);
         }
+        try {
+            engine.process(expansion, "ship.ftlh", outFile);
+            fail("How come the template was processed?");
+        } catch (TemplateEngineException e) {
+            log.debug("caught expected exception", e);
+        }
+
         engine.process(data, "ship.ftlh", outFile);
         assertTrue(outFile.exists());
     }

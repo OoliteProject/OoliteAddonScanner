@@ -256,6 +256,38 @@ public class Main {
         }
     }
     
+    /**
+     * 
+     * @param cache
+     * @param expansion
+     * @return true when successful, false otherwise
+     */
+    private static void readShipModels(ExpansionCache cache, Expansion expansion) {
+        try {
+            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownloadUrl())));
+
+            // parse all the models we can get, then distribute over ships
+            ZipEntry zentry = null;
+            while ((zentry = zin.getNextEntry()) != null) {
+                if (zentry.getName().startsWith("Models/") && zentry.getName().length() > "Models/.dat".length() && zentry.getName().endsWith(".dat")) {
+                    log.info("Found model {}!{}", expansion.getDownloadUrl(), zentry.getName());
+
+                    try {
+                        parseModel(getZipEntryStream(zin), expansion.getDownloadUrl() + "!" + zentry.getName());
+                    } catch (Exception e) {
+                        log.warn("Could not parse model "+expansion.getDownloadUrl() + "!" + zentry.getName()+": "+e.getMessage());
+                        expansion.addWarning("Could not parse model "+expansion.getDownloadUrl() + "!" + zentry.getName()+": "+e.getMessage());
+                    }
+                }
+            }
+
+            // TODO: distribute models over ships. not yet implemented
+        } catch (Exception e) {
+            log.error("Incomplete Index: Could not read expansion {}", expansion, e);
+            expansion.addWarning("Could not read expansion: "+e.getMessage());
+        }
+    }
+    
     /** Traverse the registry, find the ship data files and read them from the cache.
      * 
      */
@@ -265,30 +297,7 @@ public class Main {
         int countFailure = 0;
 
         for (Expansion expansion: registry.getExpansions()) {
-            try {
-                ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownloadUrl())));
-
-                // parse all the models we can get, then distribute over ships
-                ZipEntry zentry = null;
-                while ((zentry = zin.getNextEntry()) != null) {
-                    if (zentry.getName().startsWith("Models/") && zentry.getName().length() > "Models/.dat".length() && zentry.getName().endsWith(".dat")) {
-                        log.info("Found model {}!{}", expansion.getDownloadUrl(), zentry.getName());
-
-                        try {
-                            parseModel(getZipEntryStream(zin), expansion.getDownloadUrl() + "!" + zentry.getName());
-                            countSuccess++;
-                        } catch (Exception e) {
-                            expansion.addWarning("Could not parse model "+expansion.getDownloadUrl() + "!" + zentry.getName()+": "+e.getMessage());
-                            countFailure++;
-                        }
-                    }
-                }
-
-                // TODO: distribute models over ships. not yet implemented
-            } catch (Exception e) {
-                log.error("Incomplete Index: Could not read expansion {}", expansion, e);
-                expansion.addWarning("Could not download: "+e.getMessage());
-            }
+            readShipModels(cache, expansion);
         }
         
         log.info("Parsed {} models successfully and failed on {} models", countSuccess, countFailure);
