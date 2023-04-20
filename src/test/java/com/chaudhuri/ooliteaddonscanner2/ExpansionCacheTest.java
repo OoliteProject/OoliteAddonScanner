@@ -55,6 +55,19 @@ public class ExpansionCacheTest {
     @AfterEach
     public void tearDown() {
     }
+    
+    @Test
+    public void testCreateExpansionCache() throws IOException {
+        File testDir = new File("target/test/ExpansionCacheTest");
+        testDir.mkdirs();
+        
+        File cacheDir = File.createTempFile("expansionCache", ".dir", testDir);
+        cacheDir.delete();
+        
+        assertFalse(cacheDir.exists());
+        ExpansionCache cache = new ExpansionCache(cacheDir);
+        assertTrue(cacheDir.exists());
+    }
 
     /**
      * Test of getOoliteManifest method, of class ExpansionCache.

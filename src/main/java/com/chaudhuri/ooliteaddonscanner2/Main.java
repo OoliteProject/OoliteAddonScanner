@@ -68,13 +68,14 @@ public class Main {
     public static final String HTML_EXTENSION = ".html";
     public static final String OXP_PATH_SCRIPTS = "Scripts/";
 
-    /** Reads a file into a string, assuming UTF-8 encoding
+    /** Reads a file into a string, assuming the JVM's default charset encoding
      * and fixing linefeeds.
+     * @see https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/nio/charset/Charset.html#defaultCharset()
      * 
      * @param in
      * @return 
      */
-    private static String readToString(InputStream in) {
+    static String readToString(InputStream in) {
         Scanner sc = new Scanner(in);
         
         StringBuilder sb = new StringBuilder();
@@ -276,7 +277,7 @@ public class Main {
                         parseModel(getZipEntryStream(zin), expansion.getDownloadUrl() + "!" + zentry.getName());
                     } catch (Exception e) {
                         log.warn("Could not parse model "+expansion.getDownloadUrl() + "!" + zentry.getName()+": "+e.getMessage());
-                        expansion.addWarning("Could not parse model "+expansion.getDownloadUrl() + "!" + zentry.getName()+": "+e.getMessage());
+                        expansion.addWarning(String.format("Could not parse model %s!%s: %s", expansion.getDownloadUrl(), zentry.getName(), e.getMessage()));
                     }
                 }
             }
@@ -291,7 +292,7 @@ public class Main {
     /** Traverse the registry, find the ship data files and read them from the cache.
      * 
      */
-    private static void readShipModels(ExpansionCache cache, Registry registry) throws IOException {
+    private static void readShipModels(ExpansionCache cache, Registry registry) {
         log.debug("readShipModels({}, {})", cache, registry);
         int countSuccess = 0;
         int countFailure = 0;
