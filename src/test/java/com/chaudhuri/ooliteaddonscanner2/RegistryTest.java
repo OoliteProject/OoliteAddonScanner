@@ -180,7 +180,29 @@ public class RegistryTest {
      */
     @Test
     public void testGetExpansionsByName() {
-        System.out.println("getExpansionsByName");
+        log.info("getExpansionsByName");
+        
+        Registry registry = new Registry();
+        Expansion e1 = new Expansion();
+        e1.setIdentifier("C");
+        Expansion e2 = new Expansion();
+        e2.setIdentifier("B");
+        Expansion e3 = new Expansion();
+        e3.setIdentifier("A");
+        registry.addExpansion(e1);
+        registry.addExpansion(e2);
+        registry.addExpansion(e3);
+        
+        List<Expansion> list = null;
+        list = registry.getExpansions();
+        assertEquals(e1, list.get(0));
+        assertEquals(e2, list.get(1));
+        assertEquals(e3, list.get(2));
+
+        list = registry.getExpansionsByName();
+        assertEquals(e1, list.get(0));
+        assertEquals(e2, list.get(1));
+        assertEquals(e3, list.get(2));
     }
 
     /**

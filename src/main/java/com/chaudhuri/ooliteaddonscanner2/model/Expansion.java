@@ -289,7 +289,11 @@ public class Expansion implements Wikiworthy {
      * @return the title
      */
     public String getName() {
-        return getTitle();
+        if (title != null) {
+            return title;
+        } else {
+            return identifier;
+        }
     }
 
     /** Sets the title aka the name of the OXP.

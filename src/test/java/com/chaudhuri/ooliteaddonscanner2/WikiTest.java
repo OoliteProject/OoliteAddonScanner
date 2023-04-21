@@ -111,16 +111,15 @@ public class WikiTest {
             expansion.setIdentifier("neverexisted");
             Wiki.checkWikiPage(expansion);
             assertEquals(1,  expansion.getWarnings().size());
-            assertEquals("Wiki check failed: java.lang.IllegalArgumentException: parameter must not be null", expansion.getWarnings().get(0));
+            assertEquals("http://wiki.alioth.net/index.php/neverexisted -> 404 Not Found", expansion.getWarnings().get(0));
             assertNull(expansion.getAsWikipage());
         }
         {
             Expansion expansion = new Expansion();
             expansion.setIdentifier("Nexus");
             Wiki.checkWikiPage(expansion);
-            assertEquals(1,  expansion.getWarnings().size());
-            assertEquals("Wiki check failed: java.lang.IllegalArgumentException: parameter must not be null", expansion.getWarnings().get(0));
-            assertNull(expansion.getAsWikipage());
+            assertEquals(0,  expansion.getWarnings().size());
+            assertEquals("http://wiki.alioth.net/index.php/Nexus", expansion.getAsWikipage());
         }
         
         {

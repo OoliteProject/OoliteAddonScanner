@@ -144,7 +144,7 @@
                 <tr><td>Download URL</td><td><a href="${ download_url!"" }">${ download_url!"n/a"}</a></td></tr>
                 <tr><td>License</td><td>${ license!"n/a"}</td></tr>
                 <tr><td>File Size</td><td>${ file_size!"n/a" }</td></tr>
-                <tr><td>Upload date</td><td>${ upload_date }</td></tr>
+                <tr><td>Upload date</td><td>${ upload_date!"n/a" }</td></tr>
             </table>
         </#if>
         </a>
