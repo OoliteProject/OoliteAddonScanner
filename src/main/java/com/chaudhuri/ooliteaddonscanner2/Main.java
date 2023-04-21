@@ -334,78 +334,7 @@ public class Main {
             ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(oxp.getDownloadUrl())));
             ZipEntry zentry = null;
             while ((zentry = zin.getNextEntry()) != null) {
-
-                if ("Config/equipment.plist".equals(zentry.getName())) {
-                    log.trace("parsing equipment of {}", oxp.getDownloadUrl());
-                    InputStream in = getZipEntryStream(zin);
-                    String url = String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName());
-                    readEquipment(url, in, registry, oxp);
-
-                } else if("Config/shipdata.plist".equals(zentry.getName())) {
-                    try {
-                        log.trace("parsing shipdata of {}", oxp.getDownloadUrl());
-                        readShips(String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName()), getZipEntryStream(zin), registry, oxp);
-                    } catch (Exception e) {
-                        oxp.addWarning(String.format("%s: %s at %s!%s", e.getClass().getName(), e.getMessage(), oxp.getDownloadUrl(), zentry.getName()));
-                    }
-
-                } else if("manifest.plist".equals(zentry.getName())) {
-                    log.trace("parsing manifest from {}", oxp.getDownloadUrl());
-                    InputStream in = getZipEntryStream(zin);
-                    in.mark(10);
-
-                    Scanner sc = new Scanner(in);
-                    if (XML_HEADER.equals(sc.next())) {
-                        log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
-                        in.reset();
-
-                        List<Object> manifest = XMLPlistParser.parseList(in, null);
-                        if (manifest.size() != 1) {
-                            throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
-                        }
-                        oxp.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
-                    } else {
-                        in.reset();
-                        PlistParser.DictionaryContext dc = parsePlistDictionary(in, oxp.getDownloadUrl()+"!"+zentry.getName());
-                        oxp.setManifest(registry.toManifest(dc));
-                    }
-                } else if ("Config/script.js".equals(zentry.getName()) || (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length())) {
-                    String content = readToString(getZipEntryStream(zin));
-                    oxp.addScript(zentry.getName(), content);
-                } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
-                    InputStream in = getZipEntryStream(zin);
-                    in.mark(10);
-
-                    Scanner sc = new Scanner(in);
-                    if (XML_HEADER.equals(sc.next())) {
-                        log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
-                        in.reset();
-                        List<Object> worldscripts = XMLPlistParser.parseList(in, null);
-                        List<Object> scriptlist = (List)worldscripts.get(0);
-                        for (Object worldscript: scriptlist) {
-                            oxp.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
-                        }
-                    } else {
-                        in.reset();
-                        PlistParser.ListContext lc = parsePlistList(in, oxp.getDownloadUrl()+"!"+zentry.getName());
-                        for (PlistParser.ValueContext vc: lc.value()) {
-                            oxp.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
-                        }
-                    }
-                } else {
-                    String name = zentry.getName().toLowerCase();
-                    if(name.contains("read")) {
-                        log.trace("README {}!{}", oxp.getDownloadUrl(), zentry.getName());
-
-                        String r = readToString(getZipEntryStream(zin));                            
-                        oxp.addReadme(zentry.getName(), r);
-
-                    } else if (zentry.getName().startsWith("Config") || zentry.getName().startsWith("config")) {
-                        log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
-                    } else {
-                        log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
-                    }
-                }
+                readOxpEntry(zin, zentry, registry, oxp);
             }
         } catch (EOFException e) {
             log.warn("Incomplete plugin archive for {}", oxp.getDownloadUrl(), e);
@@ -429,6 +358,80 @@ public class Main {
         } catch (Exception e) {
             oxp.addWarning(String.format("Could not access: %s, %s: %s", oxp.getDownloadUrl(), e.getClass().getName(), e.getMessage()));
             log.error("Could not access plugin {}", oxp.getDownloadUrl(), e);
+        }
+    }
+    
+    private static void readOxpEntry(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException, OxpException {
+        if ("Config/equipment.plist".equals(zentry.getName())) {
+            log.trace("parsing equipment of {}", oxp.getDownloadUrl());
+            InputStream in = getZipEntryStream(zin);
+            String url = String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName());
+            readEquipment(url, in, registry, oxp);
+
+        } else if("Config/shipdata.plist".equals(zentry.getName())) {
+            try {
+                log.trace("parsing shipdata of {}", oxp.getDownloadUrl());
+                readShips(String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName()), getZipEntryStream(zin), registry, oxp);
+            } catch (Exception e) {
+                oxp.addWarning(String.format("%s: %s at %s!%s", e.getClass().getName(), e.getMessage(), oxp.getDownloadUrl(), zentry.getName()));
+            }
+
+        } else if("manifest.plist".equals(zentry.getName())) {
+            log.trace("parsing manifest from {}", oxp.getDownloadUrl());
+            InputStream in = getZipEntryStream(zin);
+            in.mark(10);
+
+            Scanner sc = new Scanner(in);
+            if (XML_HEADER.equals(sc.next())) {
+                log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+                in.reset();
+
+                List<Object> manifest = XMLPlistParser.parseList(in, null);
+                if (manifest.size() != 1) {
+                    throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
+                }
+                oxp.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
+            } else {
+                in.reset();
+                PlistParser.DictionaryContext dc = parsePlistDictionary(in, oxp.getDownloadUrl()+"!"+zentry.getName());
+                oxp.setManifest(registry.toManifest(dc));
+            }
+        } else if ("Config/script.js".equals(zentry.getName()) || (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length())) {
+            String content = readToString(getZipEntryStream(zin));
+            oxp.addScript(zentry.getName(), content);
+        } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
+            InputStream in = getZipEntryStream(zin);
+            in.mark(10);
+
+            Scanner sc = new Scanner(in);
+            if (XML_HEADER.equals(sc.next())) {
+                log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+                in.reset();
+                List<Object> worldscripts = XMLPlistParser.parseList(in, null);
+                List<Object> scriptlist = (List)worldscripts.get(0);
+                for (Object worldscript: scriptlist) {
+                    oxp.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
+                }
+            } else {
+                in.reset();
+                PlistParser.ListContext lc = parsePlistList(in, oxp.getDownloadUrl()+"!"+zentry.getName());
+                for (PlistParser.ValueContext vc: lc.value()) {
+                    oxp.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
+                }
+            }
+        } else {
+            String name = zentry.getName().toLowerCase();
+            if(name.contains("read")) {
+                log.trace("README {}!{}", oxp.getDownloadUrl(), zentry.getName());
+
+                String r = readToString(getZipEntryStream(zin));                            
+                oxp.addReadme(zentry.getName(), r);
+
+            } else if (zentry.getName().startsWith("Config") || zentry.getName().startsWith("config")) {
+                log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            } else {
+                log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            }
         }
     }
     
