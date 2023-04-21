@@ -116,7 +116,42 @@ public class RegistryTest {
      */
     @Test
     public void testAddShip_Ship() {
-        System.out.println("addShip");
+        log.info("addShip");
+        
+        Registry registry = new Registry();
+        log.debug("ships in registry: {}", registry.getShips());
+        assertEquals(0, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
+        
+        try {
+            registry.addShip(new Ship());
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+
+        Expansion oxp = new Expansion();
+        
+        Ship ship = new Ship("s1");
+        ship.setExpansion(oxp);
+        registry.addShip(ship);
+        log.debug("ships in registry: {}", registry.getShips());
+        assertEquals(1, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
+        
+        Ship ship2 = new Ship("s2");
+        ship2.setExpansion(oxp);
+        registry.addShip(ship2);
+        log.debug("ships in registry: {}", registry.getShips());
+        assertEquals(2, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
+        
+        Ship ship3 = new Ship("s2");
+        ship3.setExpansion(oxp);
+        registry.addShip(ship3);
+        log.debug("ships in registry: {}", registry.getShips());
+        assertEquals(2, registry.getShips().size());
+        assertEquals(1, registry.getWarnings().size());
     }
 
     /**
@@ -165,14 +200,6 @@ public class RegistryTest {
     @Test
     public void testAddShip_3args_2() {
         System.out.println("addShip");
-    }
-
-    /**
-     * Test of getExpansions method, of class Registry.
-     */
-    @Test
-    public void testGetExpansions() {
-        System.out.println("getExpansions");
     }
 
     /**
@@ -336,5 +363,25 @@ public class RegistryTest {
         } catch (NullPointerException e) {
             log.debug("caught expected exception", e);
         }
+    }
+    
+    @Test
+    public void testOverwriteExpansion() {
+        log.info("testOverwriteExpansion");
+        
+        Registry registry = new Registry();
+        assertEquals(0, registry.getExpansions().size());
+        assertEquals(0, registry.getWarnings().size());
+        
+        Expansion e1 = new Expansion("A");
+        registry.addExpansion(e1);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getWarnings().size());
+        
+        Expansion e2 = new Expansion("A");
+        registry.addExpansion(e2);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(1, registry.getWarnings().size());
+        assertEquals("OXP Overwrite! A (null) and A (null) share same id A", registry.getWarnings().get(0));
     }
 }

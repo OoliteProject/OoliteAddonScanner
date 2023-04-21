@@ -264,6 +264,13 @@ public class Registry {
      * @param ship the ship to add
      */
     public void addShip(Ship ship) {
+        if (ship.getIdentifier() == null) {
+            throw new IllegalArgumentException("Ship must not have null identifier");
+        }
+        if (ship.getExpansion() == null) {
+            throw new IllegalArgumentException("Ship must have expansion reference");
+        }
+        
         if (ships.containsKey(ship.getIdentifier())) {
             addWarning(String.format("Replacing %s/%s with %s/%s", 
                     ships.get(ship.getIdentifier()).getExpansion().getName(), 
@@ -271,6 +278,7 @@ public class Registry {
                     ship.getExpansion().getName(), 
                     ship.getName()));
         }
+        
         ships.put(ship.getIdentifier(), ship);
     }
     

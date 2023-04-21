@@ -51,6 +51,14 @@ public class Expansion implements Wikiworthy {
         this.readmes = new TreeMap<>();
         this.scripts = new TreeMap<>();
     }
+    
+    /**
+     * Creates a new Expansion with identifier.
+     */
+    public Expansion(String identifier) {
+        this();
+        this.identifier = identifier;
+    }
 
     /**
      * Returns the expansion this expansion is connected with.

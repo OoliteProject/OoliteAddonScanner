@@ -465,5 +465,16 @@ public class ExpansionTest {
         assertEquals(3, expansion.getWarnings().size());
         assertEquals("blah", expansion.getWarnings().get(0));
     }
+    
+    @Test
+    public void testCreateExpansion() {
+        log.info("testCreateExpansion");
+        
+        Expansion expansion = new Expansion();
+        assertNull(expansion.getIdentifier());
+        
+        expansion = new Expansion("myoxp");
+        assertEquals("myoxp", expansion.getIdentifier());
+    }
 
 }

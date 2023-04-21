@@ -31,6 +31,14 @@ public class Ship implements Wikiworthy {
     }
 
     /**
+     * Creates a new Ship with identifier.
+     */
+    public Ship(String identifier) {
+        this();
+        this.identifier = identifier;
+    }
+    
+    /**
      * Returns the expansion.
      * 
      * @return the expansion
