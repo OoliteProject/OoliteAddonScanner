@@ -460,6 +460,7 @@ public class Main {
         log.debug("Submitted jobs");
 
         try {
+            // give regular updates on the console while the background threads are processing
             while (!tpe.getQueue().isEmpty()) {
                 Thread.sleep(5000);
                 Instant now = Instant.now();

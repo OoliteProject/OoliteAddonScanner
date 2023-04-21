@@ -9,7 +9,7 @@
                 <td><a target="_blank" href="http://oolite.org/">Oolite Homepage</a></td>
                 <td><a target="_blank" href="http://aegidian.org/bb/">Oolite Forum</a></td>
                 <td><a target="_blank" href="http://wiki.alioth.net/index.php/Oolite_Main_Page">Oolite Wiki</a></td>
-                <td align="right"><small>Page generated: ${.now}<br/>${ properties }</small></td>
+                <td align="right"><small>Page generated: ${.now}<br/>${ properties.ImplementationTitle } ${ properties.ImplementationVersion }</small></td>
             </tr>
         </table>
 
