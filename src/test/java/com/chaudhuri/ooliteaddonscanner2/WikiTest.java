@@ -49,7 +49,7 @@ public class WikiTest {
         System.out.println("getPageUrl");
         
         try {
-            assertEquals("http://wiki.alioth.net/index.php/null", Wiki.getPageUrl(null));
+            Wiki.getPageUrl(null);
             fail("Expected exception but got none.");
         } catch (IllegalArgumentException e) {
             log.debug("Caught expected exception", e);
@@ -58,15 +58,10 @@ public class WikiTest {
         assertEquals("http://wiki.alioth.net/index.php/Dead%20Hunter", Wiki.getPageUrl("Dead Hunter"));
         assertEquals("http://wiki.alioth.net/index.php/Fuzzy-Fred%20of%20the%2020s", Wiki.getPageUrl("Fuzzy-Fred of the 20s"));
     }
-
-    /**
-     * Test of checkWikiPage method, of class Wiki.
-     */
+    
     @Test
-    public void testCheckWikiPage() {
-        System.out.println("checkWikiPage");
-
-                {
+    public void testCheckWikiPage1() {
+        {
             Equipment equipment = new Equipment();
             Wiki.checkWikiPage(equipment);
             assertEquals(1,  equipment.getWarnings().size());
@@ -94,6 +89,15 @@ public class WikiTest {
             assertEquals(0,  equipment.getWarnings().size());
             assertEquals("http://wiki.alioth.net/index.php/Nexus", equipment.getAsWikipage());
         }
+    }
+
+    /**
+     * Test of checkWikiPage method, of class Wiki.
+     */
+    @Test
+    public void testCheckWikiPage() {
+        System.out.println("checkWikiPage");
+
         
         {
             Expansion expansion = new Expansion();

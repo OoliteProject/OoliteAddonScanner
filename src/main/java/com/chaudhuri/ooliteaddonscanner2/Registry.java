@@ -86,49 +86,95 @@ public class Registry {
         for (PlistParser.KeyvaluepairContext kc: dc.keyvaluepair()) {
             log.trace("{}", kc);
 
-            String key = kc.STRING().getText();
-            if (EXPANSION_IDENTIFIER.equals(key)) {
-                oxp.setIdentifier(kc.value().getText());
-            } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
-                oxp.setRequiredOoliteVersion(kc.value().getText());
-            } else if (EXPANSION_TITLE.equals(key)) {
-                oxp.setTitle(kc.value().getText());
-            } else if (EXPANSION_VERSION.equals(key)) {
-                oxp.setVersion(kc.value().getText());
-            } else if (EXPANSION_CATEGORY.equals(key)) {
-                oxp.setCategory(kc.value().getText());
-            } else if (EXPANSION_DESCRIPTION.equals(key)) {
-                oxp.setDescription(kc.value().getText());
-            } else if ("download_url".equals(key)) {
-                oxp.setDownloadUrl(kc.value().getText());
-            } else if (EXPANSION_AUTHOR.equals(key)) {
-                oxp.setAuthor(kc.value().getText());
-            } else if ("file_size".equals(key)) {
-                oxp.setFileSize(kc.value().getText());
-            } else if (EXPANSION_INFORMATION_URL.equals(key)) {
-                oxp.setInformationUrl(kc.value().getText());
-            } else if (EXPANSION_LICENSE.equals(key)) {
-                oxp.setLicense(kc.value().getText());
-            } else if ("upload_date".equals(key)) {
-                oxp.setUploadDate(kc.value().getText());
-            } else if ("tags".equals(key)) {
-                oxp.setTags(kc.value().getText());
-            } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
-                oxp.setRequiresOxps(kc.value().getText());
-            } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
-                oxp.setOptionalOxps(kc.value().getText());
-            } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
-                oxp.setConflictOxps(kc.value().getText());
-            } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
-                oxp.setMaximumOoliteVersion(kc.value().getText());
-            } else {
-                log.warn("Could not process key '{}'", key);
-            }
+            evaluateOxpKeys(kc, oxp);
         }
         
         addExpansion(oxp);
         if (oxp.getLicense() == null || oxp.getLicense().isBlank()) {
             oxp.addWarning("License not specified");
+        }
+    }
+    
+    private static void evaluateOxpKeys(PlistParser.KeyvaluepairContext kc, Expansion oxp) {
+
+        String key = kc.STRING().getText();
+            
+        if (EXPANSION_IDENTIFIER.equals(key)) {
+            oxp.setIdentifier(kc.value().getText());
+        } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
+            oxp.setRequiredOoliteVersion(kc.value().getText());
+        } else if (EXPANSION_TITLE.equals(key)) {
+            oxp.setTitle(kc.value().getText());
+        } else if (EXPANSION_VERSION.equals(key)) {
+            oxp.setVersion(kc.value().getText());
+        } else if (EXPANSION_CATEGORY.equals(key)) {
+            oxp.setCategory(kc.value().getText());
+        } else if (EXPANSION_DESCRIPTION.equals(key)) {
+            oxp.setDescription(kc.value().getText());
+        } else if ("download_url".equals(key)) {
+            oxp.setDownloadUrl(kc.value().getText());
+        } else if (EXPANSION_AUTHOR.equals(key)) {
+            oxp.setAuthor(kc.value().getText());
+        } else if ("file_size".equals(key)) {
+            oxp.setFileSize(kc.value().getText());
+        } else if (EXPANSION_INFORMATION_URL.equals(key)) {
+            oxp.setInformationUrl(kc.value().getText());
+        } else if (EXPANSION_LICENSE.equals(key)) {
+            oxp.setLicense(kc.value().getText());
+        } else if ("upload_date".equals(key)) {
+            oxp.setUploadDate(kc.value().getText());
+        } else if ("tags".equals(key)) {
+            oxp.setTags(kc.value().getText());
+        } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
+            oxp.setRequiresOxps(kc.value().getText());
+        } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
+            oxp.setOptionalOxps(kc.value().getText());
+        } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
+            oxp.setConflictOxps(kc.value().getText());
+        } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
+            oxp.setMaximumOoliteVersion(kc.value().getText());
+        } else {
+            log.warn("Could not process key '{}'", key);
+        }
+    }
+    
+    private static void evaluateOxpKeys(PlistParser.KeyvaluepairContext kc, ExpansionManifest em) {
+        String key = kc.STRING().getText();
+        if (EXPANSION_IDENTIFIER.equals(key)) {
+            em.setIdentifier(kc.value().getText());
+        } else if (EXPANSION_AUTHOR.equals(key)) {
+            em.setAuthor(kc.value().getText());
+        } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
+            em.setConflictOxps(kc.value().getText());
+        } else if (EXPANSION_DESCRIPTION.equals(key)) {
+            em.setDescription(kc.value().getText());
+        } else if ("download_url".equals(key)) {
+            em.setDownloadUrl(kc.value().getText());
+        } else if (EXPANSION_CATEGORY.equals(key)) {
+            em.setCategory(kc.value().getText());
+        } else if ("file_size".equals(key)) {
+            em.setFileSize(kc.value().getText());
+        } else if (EXPANSION_INFORMATION_URL.equals(key)) {
+            em.setInformationUrl(kc.value().getText());
+        } else if (EXPANSION_LICENSE.equals(key)) {
+            em.setLicense(kc.value().getText());
+        } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
+            em.setMaximumOoliteVersion(kc.value().getText());
+        } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
+            em.setOptionalOxps(kc.value().getText());
+        } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
+            em.setRequiredOoliteVersion(kc.value().getText());
+        } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
+            em.setRequiresOxps(kc.value().getText());
+        } else if ("tags".equals(key)) {
+            em.setTags(kc.value().getText());
+        } else if (EXPANSION_TITLE.equals(key)) {
+            em.setTitle(kc.value().getText());
+        } else if (EXPANSION_VERSION.equals(key)) {
+            em.setVersion(kc.value().getText());
+        } else {
+            log.trace("Unknown key {}->{} at {}", key, kc.value().getText(), kc.getStart().getTokenSource().getSourceName());
+            em.addWarning(String.format("Unknown key '%s' at %s", key, kc.getStart().getTokenSource().getSourceName()));
         }
     }
     
@@ -505,43 +551,7 @@ public class Registry {
         ExpansionManifest em = new ExpansionManifest();
         
         for (PlistParser.KeyvaluepairContext kc: dc.keyvaluepair()) {
-            String key = kc.STRING().getText();
-            if (EXPANSION_IDENTIFIER.equals(key)) {
-                em.setIdentifier(kc.value().getText());
-            } else if (EXPANSION_AUTHOR.equals(key)) {
-                em.setAuthor(kc.value().getText());
-            } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
-                em.setConflictOxps(kc.value().getText());
-            } else if (EXPANSION_DESCRIPTION.equals(key)) {
-                em.setDescription(kc.value().getText());
-            } else if ("download_url".equals(key)) {
-                em.setDownloadUrl(kc.value().getText());
-            } else if (EXPANSION_CATEGORY.equals(key)) {
-                em.setCategory(kc.value().getText());
-            } else if ("file_size".equals(key)) {
-                em.setFileSize(kc.value().getText());
-            } else if (EXPANSION_INFORMATION_URL.equals(key)) {
-                em.setInformationUrl(kc.value().getText());
-            } else if (EXPANSION_LICENSE.equals(key)) {
-                em.setLicense(kc.value().getText());
-            } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
-                em.setMaximumOoliteVersion(kc.value().getText());
-            } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
-                em.setOptionalOxps(kc.value().getText());
-            } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
-                em.setRequiredOoliteVersion(kc.value().getText());
-            } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
-                em.setRequiresOxps(kc.value().getText());
-            } else if ("tags".equals(key)) {
-                em.setTags(kc.value().getText());
-            } else if (EXPANSION_TITLE.equals(key)) {
-                em.setTitle(kc.value().getText());
-            } else if (EXPANSION_VERSION.equals(key)) {
-                em.setVersion(kc.value().getText());
-            } else {
-                log.trace("Unknown key {}->{} at {}", key, kc.value().getText(), kc.getStart().getTokenSource().getSourceName());
-                em.addWarning(String.format("Unknown key '%s' at %s", key, kc.getStart().getTokenSource().getSourceName()));
-            }
+            evaluateOxpKeys(kc, em);
         }
         return em;
     }
