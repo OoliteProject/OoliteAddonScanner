@@ -119,7 +119,14 @@ public class Registry {
             oxp.setFileSize(kc.value().getText());
         } else if (EXPANSION_INFORMATION_URL.equals(key)) {
             oxp.setInformationUrl(kc.value().getText());
-        } else if (EXPANSION_LICENSE.equals(key)) {
+        } else {
+            evaluateOxpKeys2(kc, oxp);
+        }
+    }
+
+    private static void evaluateOxpKeys2(PlistParser.KeyvaluepairContext kc, Expansion oxp) {
+        String key = kc.STRING().getText();
+        if (EXPANSION_LICENSE.equals(key)) {
             oxp.setLicense(kc.value().getText());
         } else if ("upload_date".equals(key)) {
             oxp.setUploadDate(kc.value().getText());
@@ -140,6 +147,7 @@ public class Registry {
     
     private static void evaluateOxpKeys(PlistParser.KeyvaluepairContext kc, ExpansionManifest em) {
         String key = kc.STRING().getText();
+        
         if (EXPANSION_IDENTIFIER.equals(key)) {
             em.setIdentifier(kc.value().getText());
         } else if (EXPANSION_AUTHOR.equals(key)) {
@@ -154,7 +162,15 @@ public class Registry {
             em.setCategory(kc.value().getText());
         } else if ("file_size".equals(key)) {
             em.setFileSize(kc.value().getText());
-        } else if (EXPANSION_INFORMATION_URL.equals(key)) {
+        } else {
+            evaluateOxpKeys2(kc, em);
+        }
+    }
+    
+    private static void evaluateOxpKeys2(PlistParser.KeyvaluepairContext kc, ExpansionManifest em) {
+        String key = kc.STRING().getText();
+        
+        if (EXPANSION_INFORMATION_URL.equals(key)) {
             em.setInformationUrl(kc.value().getText());
         } else if (EXPANSION_LICENSE.equals(key)) {
             em.setLicense(kc.value().getText());

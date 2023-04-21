@@ -122,12 +122,15 @@ public class RegistryTest {
         log.debug("ships in registry: {}", registry.getShips());
         assertEquals(0, registry.getShips().size());
         assertEquals(0, registry.getWarnings().size());
-        
-        try {
-            registry.addShip(new Ship());
-            fail("expected exception");
-        } catch (IllegalArgumentException e) {
-            log.debug("caught expected exception", e);
+       
+        {
+            Ship ship = new Ship();
+            try {
+                registry.addShip(ship);
+                fail("expected exception");
+            } catch (IllegalArgumentException e) {
+                log.debug("caught expected exception", e);
+            }
         }
 
         Expansion oxp = new Expansion();
