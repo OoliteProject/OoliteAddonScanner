@@ -185,21 +185,26 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion e1 = new Expansion();
         e1.setIdentifier("C");
+        e1.setTitle("A");
         Expansion e2 = new Expansion();
         e2.setIdentifier("B");
+        e2.setTitle("B");
         Expansion e3 = new Expansion();
         e3.setIdentifier("A");
+        e3.setTitle("C");
         registry.addExpansion(e1);
         registry.addExpansion(e2);
         registry.addExpansion(e3);
         
         List<Expansion> list = null;
         list = registry.getExpansions();
-        assertEquals(e1, list.get(0));
+        log.debug("expansions: {}", list);
+        assertEquals(e3, list.get(0));
         assertEquals(e2, list.get(1));
-        assertEquals(e3, list.get(2));
+        assertEquals(e1, list.get(2));
 
         list = registry.getExpansionsByName();
+        log.debug("expansions: {}", list);
         assertEquals(e1, list.get(0));
         assertEquals(e2, list.get(1));
         assertEquals(e3, list.get(2));
