@@ -603,7 +603,11 @@ public class Registry {
      */
     public void setProperty(String key, String value) {
         try {
-            properties.setProperty(key, value);
+            if (value == null) {
+                properties.remove(key);
+            } else {
+                properties.setProperty(key, value);
+            }
         } catch (NullPointerException e) {
             throw new NullPointerException(String.format("Could not set property %s to %s", key, value));
         }

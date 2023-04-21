@@ -243,16 +243,29 @@ public class RegistryTest {
      * Test of addWarning method, of class Registry.
      */
     @Test
-    public void testAddWarning() {
-        System.out.println("addWarning");
-    }
+    public void testAddGetWarning() {
+        log.info("addGetWarning");
+        
+        Registry registry = new Registry();
+        assertNotNull(registry.getWarnings());
+        assertEquals(0, registry.getWarnings().size());
+        
+        registry.addWarning("mywarning");
+        assertEquals(1, registry.getWarnings().size());
+        assertEquals("mywarning", registry.getWarnings().get(0));
+        
+        Expansion expansion = new Expansion();
+        expansion.setIdentifier("myoxp");
+        registry.addExpansion(expansion);
+        assertEquals(1, registry.getWarnings().size());
+        assertEquals("mywarning", registry.getWarnings().get(0));
 
-    /**
-     * Test of getWarnings method, of class Registry.
-     */
-    @Test
-    public void testGetWarnings() {
-        System.out.println("getWarnings");
+        expansion.addWarning("expansion warning");
+        assertEquals(2, registry.getWarnings().size());
+        assertEquals("expansion warning", registry.getWarnings().get(1));
+
+        assertEquals(1, registry.getGlobalWarnings().size());
+        assertEquals("mywarning", registry.getGlobalWarnings().get(0));
     }
 
     /**
@@ -267,24 +280,34 @@ public class RegistryTest {
      * Test of getProperty method, of class Registry.
      */
     @Test
-    public void testGetProperty() {
-        System.out.println("getProperty");
-    }
-
-    /**
-     * Test of setProperty method, of class Registry.
-     */
-    @Test
-    public void testSetProperty() {
-        System.out.println("setProperty");
-    }
-
-    /**
-     * Test of getProperties method, of class Registry.
-     */
-    @Test
     public void testGetProperties() {
-        System.out.println("getProperties");
+        log.info("testGetProperties");
+        
+        Registry registry = new Registry();
+        assertNotNull(registry.getProperties());
+        assertEquals(0, registry.getProperties().size());
     }
     
+    @Test
+    public void testSetGetProperty() {
+        log.info("testSetGetProperty");
+
+        Registry registry = new Registry();
+        assertEquals(0, registry.getProperties().size());
+        assertNull(registry.getProperty("mykey"));
+
+        registry.setProperty("mykey", "myvalue");
+        assertEquals(1, registry.getProperties().size());
+        assertEquals("myvalue", registry.getProperty("mykey"));
+        
+        registry.setProperty("mykey", null);
+        assertNull(registry.getProperty("mykey"));
+
+        try {
+            registry.setProperty(null, "myvalue");
+            fail("expected exception but caught none");
+        } catch (NullPointerException e) {
+            log.debug("caught expected exception", e);
+        }
+    }
 }
