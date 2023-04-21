@@ -61,12 +61,14 @@ public class ExpansionTest {
             assertEquals(0, expansion.getShips().size());
         }
         
-        try {
+        {
             Ship ship = new Ship();
-            expansion.addShip(ship);
-            fail("Expected Exception but got none.");
-        } catch (IllegalArgumentException e) {
-            log.debug("Received expected exception", e);
+            try {
+                expansion.addShip(ship);
+                fail("Expected Exception but got none.");
+            } catch (IllegalArgumentException e) {
+                log.debug("Received expected exception", e);
+            }
         }
         {
             Ship ship = new Ship();
@@ -123,12 +125,14 @@ public class ExpansionTest {
         assertNotNull(expansion.getEquipment());
         assertEquals(0, expansion.getEquipment().size());
 
-        try {
+        {
             Equipment equipment = new Equipment();
-            expansion.addEquipment(equipment);
-            fail("Expected exception but got none");
-        } catch (IllegalArgumentException e) {
-            log.debug("caught expected exception", e);
+            try {
+                expansion.addEquipment(equipment);
+                fail("Expected exception but got none");
+            } catch (IllegalArgumentException e) {
+                log.debug("caught expected exception", e);
+            }
         }
         
         {
