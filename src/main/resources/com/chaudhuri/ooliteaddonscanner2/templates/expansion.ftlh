@@ -124,7 +124,7 @@
                 </tr>
                 <tr>
                     <td>Upload date</td>
-                    <td>${ upload_date }</td>
+                    <td>${ upload_date!"n/a" }</td>
                 </tr>
             </table>
         <#else>
