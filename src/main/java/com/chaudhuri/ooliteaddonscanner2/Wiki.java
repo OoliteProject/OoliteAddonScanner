@@ -104,33 +104,37 @@ public class Wiki {
                     if (wikiworthy instanceof Expansion) {
                         wikiworthy.addWarning(String.format("%s -> %s %s", request.getURI(), response.getStatusLine().getStatusCode(), response.getStatusLine().getReasonPhrase()));
                         
-                        // check whether we have a low-hanging fruit for Expansions
-                        if (wikiworthy instanceof Expansion) {
-                            Expansion expansion = (Expansion)wikiworthy;
-                            
-                            if (String.valueOf(expansion.getInformationUrl()).contains("//wiki.alioth.net/index.php")) {
-                            
-                                RequestBuilder builder2 = RequestBuilder.head(expansion.getInformationUrl());
-                                builder2.setCharset(StandardCharsets.UTF_8);
-                                HttpUriRequest request2 = builder2.build();
-                                try (final CloseableHttpResponse response2 = httpclient.execute(request2)) {
-                                    if (response2.getStatusLine().getStatusCode() == 200) {
-                                        expansion.addWarning("Low hanging fuit: Information URL exists...");
-                                    } else {
-                                        expansion.addWarning("High hanging fruit");
-                                    }
-                                } catch (IOException e) {
-                                    log.warn("Could not check for low hanging fruit", e);
-                                }
-                            
-                            }
-                        }
+                        checkLowHangingFruit(wikiworthy, httpclient);
                     }
                 }
             }
         }
         catch (Exception e) {
             wikiworthy.addWarning(String.format("Wiki check failed: %s: %s", e.getClass().getName(), e.getMessage()));
+        }
+    }
+    
+    private static void checkLowHangingFruit(Wikiworthy wikiworthy, CloseableHttpClient httpclient) {
+        // check whether we have a low-hanging fruit for Expansions
+        if (wikiworthy instanceof Expansion) {
+            Expansion expansion = (Expansion)wikiworthy;
+
+            if (String.valueOf(expansion.getInformationUrl()).contains("//wiki.alioth.net/index.php")) {
+
+                RequestBuilder builder2 = RequestBuilder.head(expansion.getInformationUrl());
+                builder2.setCharset(StandardCharsets.UTF_8);
+                HttpUriRequest request2 = builder2.build();
+                try (final CloseableHttpResponse response2 = httpclient.execute(request2)) {
+                    if (response2.getStatusLine().getStatusCode() == 200) {
+                        expansion.addWarning("Low hanging fuit: Information URL exists...");
+                    } else {
+                        expansion.addWarning("High hanging fruit");
+                    }
+                } catch (IOException e) {
+                    log.warn("Could not check for low hanging fruit", e);
+                }
+
+            }
         }
     }
     
