@@ -377,48 +377,12 @@ public class Main {
             }
 
         } else if("manifest.plist".equals(zentry.getName())) {
-            log.trace("parsing manifest from {}", oxp.getDownloadUrl());
-            InputStream in = getZipEntryStream(zin);
-            in.mark(10);
-
-            Scanner sc = new Scanner(in);
-            if (XML_HEADER.equals(sc.next())) {
-                log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
-                in.reset();
-
-                List<Object> manifest = XMLPlistParser.parseList(in, null);
-                if (manifest.size() != 1) {
-                    throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
-                }
-                oxp.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
-            } else {
-                in.reset();
-                PlistParser.DictionaryContext dc = parsePlistDictionary(in, oxp.getDownloadUrl()+"!"+zentry.getName());
-                oxp.setManifest(registry.toManifest(dc));
-            }
+            readManifest(zin, zentry, registry, oxp);
         } else if ("Config/script.js".equals(zentry.getName()) || (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length())) {
             String content = readToString(getZipEntryStream(zin));
             oxp.addScript(zentry.getName(), content);
         } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
-            InputStream in = getZipEntryStream(zin);
-            in.mark(10);
-
-            Scanner sc = new Scanner(in);
-            if (XML_HEADER.equals(sc.next())) {
-                log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
-                in.reset();
-                List<Object> worldscripts = XMLPlistParser.parseList(in, null);
-                List<Object> scriptlist = (List)worldscripts.get(0);
-                for (Object worldscript: scriptlist) {
-                    oxp.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
-                }
-            } else {
-                in.reset();
-                PlistParser.ListContext lc = parsePlistList(in, oxp.getDownloadUrl()+"!"+zentry.getName());
-                for (PlistParser.ValueContext vc: lc.value()) {
-                    oxp.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
-                }
-            }
+            readScript(zin, zentry, oxp);
         } else {
             String name = zentry.getName().toLowerCase();
             if(name.contains("read")) {
@@ -431,6 +395,50 @@ public class Main {
                 log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
             } else {
                 log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            }
+        }
+    }
+    
+    private static void readManifest(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException, OxpException {
+        log.trace("parsing manifest from {}", oxp.getDownloadUrl());
+        InputStream in = getZipEntryStream(zin);
+        in.mark(10);
+
+        Scanner sc = new Scanner(in);
+        if (XML_HEADER.equals(sc.next())) {
+            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            in.reset();
+
+            List<Object> manifest = XMLPlistParser.parseList(in, null);
+            if (manifest.size() != 1) {
+                throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
+            }
+            oxp.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
+        } else {
+            in.reset();
+            PlistParser.DictionaryContext dc = parsePlistDictionary(in, oxp.getDownloadUrl()+"!"+zentry.getName());
+            oxp.setManifest(registry.toManifest(dc));
+        }
+    }
+    
+    private static void readScript(ZipInputStream zin, ZipEntry zentry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        InputStream in = getZipEntryStream(zin);
+        in.mark(10);
+
+        Scanner sc = new Scanner(in);
+        if (XML_HEADER.equals(sc.next())) {
+            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            in.reset();
+            List<Object> worldscripts = XMLPlistParser.parseList(in, null);
+            List<Object> scriptlist = (List)worldscripts.get(0);
+            for (Object worldscript: scriptlist) {
+                oxp.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
+            }
+        } else {
+            in.reset();
+            PlistParser.ListContext lc = parsePlistList(in, oxp.getDownloadUrl()+"!"+zentry.getName());
+            for (PlistParser.ValueContext vc: lc.value()) {
+                oxp.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
             }
         }
     }
