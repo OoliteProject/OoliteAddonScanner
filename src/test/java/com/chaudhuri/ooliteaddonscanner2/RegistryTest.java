@@ -327,6 +327,10 @@ public class RegistryTest {
         map.put(Registry.EXPANSION_MAXIMUM_OOLITE_VERSION, "maxoolite");
         map.put(Registry.EXPANSION_OPTIONAL_OXPS, "optoxps");
         map.put(Registry.EXPANSION_REQUIRED_OOLITE_VERSION, "reqoolite");
+        map.put(Registry.EXPANSION_REQUIRES_OXPS, "reqoxps");
+        map.put(Registry.EXPANSION_TAGS, "mytags");
+        map.put(Registry.EXPANSION_TITLE, "mytitle");
+        map.put(Registry.EXPANSION_VERSION, "version");
         
         Registry registry = new Registry();
         ExpansionManifest em = registry.toManifest(map);
@@ -341,6 +345,10 @@ public class RegistryTest {
         assertEquals("maxoolite", em.getMaximumOoliteVersion());
         assertEquals("optoxps", em.getOptionalOxps());
         assertEquals("reqoolite", em.getRequiredOoliteVersion());
+        assertEquals("reqoxps", em.getRequiresOxps());
+        assertEquals("mytags", em.getTags());
+        assertEquals("mytitle", em.getTitle());
+        assertEquals("version", em.getVersion());
         assertEquals(1, em.getWarnings().size());
     }
 

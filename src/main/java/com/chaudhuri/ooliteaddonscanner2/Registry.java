@@ -35,6 +35,7 @@ public class Registry {
     public static final String EXPANSION_OPTIONAL_OXPS = "optional_oxps";
     public static final String EXPANSION_REQUIRES_OXPS = "requires_oxps";
     public static final String EXPANSION_TITLE = "title";
+    public static final String EXPANSION_TAGS = "tags";
     public static final String EXPANSION_VERSION = "version";
     public static final String EXPANSION_REQUIRED_OOLITE_VERSION = "required_oolite_version";
     
@@ -130,7 +131,7 @@ public class Registry {
             oxp.setLicense(kc.value().getText());
         } else if ("upload_date".equals(key)) {
             oxp.setUploadDate(kc.value().getText());
-        } else if ("tags".equals(key)) {
+        } else if (EXPANSION_TAGS.equals(key)) {
             oxp.setTags(kc.value().getText());
         } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
             oxp.setRequiresOxps(kc.value().getText());
@@ -182,7 +183,7 @@ public class Registry {
             em.setRequiredOoliteVersion(kc.value().getText());
         } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
             em.setRequiresOxps(kc.value().getText());
-        } else if ("tags".equals(key)) {
+        } else if (EXPANSION_TAGS.equals(key)) {
             em.setTags(kc.value().getText());
         } else if (EXPANSION_TITLE.equals(key)) {
             em.setTitle(kc.value().getText());
@@ -548,7 +549,7 @@ public class Registry {
                 case EXPANSION_REQUIRES_OXPS:
                     em.setRequiresOxps(String.valueOf(entry.getValue()));
                     break;
-                case "tags":
+                case EXPANSION_TAGS:
                     em.setTags(String.valueOf(entry.getValue()));
                     break;
                 case EXPANSION_TITLE:
