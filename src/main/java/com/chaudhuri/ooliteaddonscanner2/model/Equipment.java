@@ -35,6 +35,14 @@ public class Equipment implements Wikiworthy {
     }
 
     /**
+     * Creates a new equipment with identifier.
+     */
+    public Equipment(String identifier) {
+        this();
+        this.identifier = identifier;
+    }
+    
+    /**
      * Returns the expansion.
      * 
      * @return the expansion

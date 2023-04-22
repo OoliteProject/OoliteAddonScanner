@@ -433,6 +433,22 @@ public class RegistryTest {
     @Test
     public void testGetAllByIdentifier() {
         log.info("getAllByIdentifier");
+        
+        Expansion expansion = new Expansion("C");
+        Equipment equipment = new Equipment("B");
+        equipment.setExpansion(expansion);
+        Ship ship = new Ship("A");
+        ship.setExpansion(expansion);
+        
+        Registry registry = new Registry();
+        registry.addExpansion(expansion);
+        registry.addEquipment(equipment);
+        registry.addShip(ship);
+        
+        assertEquals(3, registry.getAllByIdentifier().size());
+        assertEquals(ship, registry.getAllByIdentifier().get(0));
+        assertEquals(equipment, registry.getAllByIdentifier().get(1));
+        assertEquals(expansion, registry.getAllByIdentifier().get(2));
     }
 
     /**
