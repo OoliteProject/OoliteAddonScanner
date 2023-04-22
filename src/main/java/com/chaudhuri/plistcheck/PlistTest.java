@@ -2,8 +2,8 @@
  */
 package com.chaudhuri.plistcheck;
 
-import com.chaudhuri.PlistLexer;
-import com.chaudhuri.PlistParser;
+import com.chaudhuri.plist.PlistLexer;
+import com.chaudhuri.plist.PlistParser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;

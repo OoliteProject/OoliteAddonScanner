@@ -2,8 +2,8 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
-import com.chaudhuri.PlistLexer;
-import com.chaudhuri.PlistParser;
+import com.chaudhuri.plist.PlistLexer;
+import com.chaudhuri.plist.PlistParser;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.channels.Channels;
