@@ -464,6 +464,12 @@ public class ExpansionTest {
         assertNotNull(expansion.getWarnings());
         assertEquals(3, expansion.getWarnings().size());
         assertEquals("blah", expansion.getWarnings().get(0));
+        
+        expansion.setManifest(null);
+
+        assertNotNull(expansion.getWarnings());
+        assertEquals(3, expansion.getWarnings().size());
+        assertEquals("blah", expansion.getWarnings().get(0));
     }
     
     @Test

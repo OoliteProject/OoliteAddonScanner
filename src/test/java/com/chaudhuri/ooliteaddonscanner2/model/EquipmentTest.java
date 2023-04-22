@@ -109,6 +109,8 @@ public class EquipmentTest {
             assertNull(equipment.getName());
             equipment.setName("");
             assertNull(equipment.getName());
+            equipment.setName("null");
+            assertNull(equipment.getName());
         }
         {
             Equipment equipment = new Equipment();
