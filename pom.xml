@@ -291,6 +291,11 @@
                     </execution>                    
                     
                 </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>com/chaudhuri/plist/**/*.class</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>
