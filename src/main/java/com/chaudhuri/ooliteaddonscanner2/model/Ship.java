@@ -118,6 +118,15 @@ public class Ship implements Wikiworthy {
             return identifier;
         }
     }
+    
+    /**
+     * Sets the name.
+     * 
+     * @param name the name
+     */
+    public void setName(String name) {
+        features.put("name", name);
+    }
 
     /**
      * Returns all features.

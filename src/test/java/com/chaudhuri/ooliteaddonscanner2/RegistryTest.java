@@ -11,6 +11,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.TreeMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -132,6 +133,16 @@ public class RegistryTest {
                 log.debug("caught expected exception", e);
             }
         }
+        {
+            Ship ship = new Ship("identity");
+            try {
+                registry.addShip(ship);
+                fail("expected exception");
+            } catch (IllegalArgumentException e) {
+                log.debug("caught expected exception", e);
+            }
+        }
+
 
         Expansion oxp = new Expansion();
         
@@ -257,19 +268,36 @@ public class RegistryTest {
     }
 
     /**
-     * Test of getShips method, of class Registry.
-     */
-    @Test
-    public void testGetShips() {
-        System.out.println("getShips");
-    }
-
-    /**
      * Test of getShipsByName method, of class Registry.
      */
     @Test
     public void testGetShipsByName() {
-        System.out.println("getShipsByName");
+        log.info("getShipsByName");
+        
+        Expansion expansion = new Expansion("myexpansion");
+        Ship s1 = new Ship("1");
+        s1.setExpansion(expansion);
+        s1.setName("C");
+        Ship s2 = new Ship("2");
+        s2.setExpansion(expansion);
+        s2.setName("B");
+        Ship s3 = new Ship("3");
+        s3.setExpansion(expansion);
+        s3.setName("A");
+        
+        Registry registry = new Registry();
+        registry.addShip(s1);
+        registry.addShip(s2);
+        registry.addShip(s3);
+        
+        assertEquals(3, registry.getShips().size());
+        assertEquals("1", registry.getShips().get(0).getIdentifier());
+        assertEquals("2", registry.getShips().get(1).getIdentifier());
+        assertEquals("3", registry.getShips().get(2).getIdentifier());
+        
+        assertEquals("3", registry.getShipsByName().get(0).getIdentifier());
+        assertEquals("2", registry.getShipsByName().get(1).getIdentifier());
+        assertEquals("1", registry.getShipsByName().get(2).getIdentifier());
     }
 
     /**
@@ -285,7 +313,35 @@ public class RegistryTest {
      */
     @Test
     public void testToManifest_Map() {
-        System.out.println("toManifest");
+        log.info("toManifest");
+        
+        Map<String, Object> map = new TreeMap<>();
+        map.put("arbitrary", "what?");
+        map.put(Registry.EXPANSION_AUTHOR, "myauthor");
+        map.put(Registry.EXPANSION_CATEGORY, "mycategory");
+        map.put(Registry.EXPANSION_CONFLICT_OXPS, "conflict");
+        map.put(Registry.EXPANSION_DESCRIPTION, "description");
+        map.put(Registry.EXPANSION_IDENTIFIER, "identifier");
+        map.put(Registry.EXPANSION_INFORMATION_URL, "infourl");
+        map.put(Registry.EXPANSION_LICENSE, "license");
+        map.put(Registry.EXPANSION_MAXIMUM_OOLITE_VERSION, "maxoolite");
+        map.put(Registry.EXPANSION_OPTIONAL_OXPS, "optoxps");
+        map.put(Registry.EXPANSION_REQUIRED_OOLITE_VERSION, "reqoolite");
+        
+        Registry registry = new Registry();
+        ExpansionManifest em = registry.toManifest(map);
+        
+        assertEquals("myauthor", em.getAuthor());
+        assertEquals("mycategory", em.getCategory());
+        assertEquals("conflict", em.getConflictOxps());
+        assertEquals("description", em.getDescription());
+        assertEquals("identifier", em.getIdentifier());
+        assertEquals("infourl", em.getInformationUrl());
+        assertEquals("license", em.getLicense());
+        assertEquals("maxoolite", em.getMaximumOoliteVersion());
+        assertEquals("optoxps", em.getOptionalOxps());
+        assertEquals("reqoolite", em.getRequiredOoliteVersion());
+        assertEquals(1, em.getWarnings().size());
     }
 
     /**
