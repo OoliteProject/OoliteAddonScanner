@@ -305,6 +305,12 @@ public class Registry {
      * @param equipment the equipment
      */
     public void addEquipment(Equipment equipment) {
+        if (equipment.getIdentifier() == null) {
+            throw new IllegalArgumentException("equipment must have identifier");
+        }
+        if (equipment.getExpansion() == null) {
+            throw new IllegalArgumentException("equipment must have expansion");
+        }
         if (this.equipment.containsKey(equipment.getIdentifier())) {
             addWarning(String.format("Replacing %s/%s with %s/%s", 
                     this.equipment.get(equipment.getIdentifier()).getExpansion().getName(), 

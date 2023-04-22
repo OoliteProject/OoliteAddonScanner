@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import org.antlr.v4.runtime.RuleContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -48,22 +49,6 @@ public class RegistryTest {
     }
 
     /**
-     * Test of addExpansions method, of class Registry.
-     */
-    @Test
-    public void testAddExpansions() {
-        System.out.println("addExpansions");
-    }
-
-    /**
-     * Test of addExpansion method, of class Registry.
-     */
-    @Test
-    public void testAddExpansion_PlistParserDictionaryContext() {
-        System.out.println("addExpansion");
-    }
-
-    /**
      * Test of addExpansion method, of class Registry.
      */
     @Test
@@ -86,30 +71,6 @@ public class RegistryTest {
         registry.addExpansion(expansion);
         assertNotNull(registry.getExpansions());
         assertEquals(1, registry.getExpansions().size());
-    }
-
-    /**
-     * Test of addEquipmentList method, of class Registry.
-     */
-    @Test
-    public void testAddEquipmentList_Expansion_List() throws Exception {
-        System.out.println("addEquipmentList");
-    }
-
-    /**
-     * Test of addEquipmentList method, of class Registry.
-     */
-    @Test
-    public void testAddEquipmentList_Expansion_PlistParserListContext() throws Exception {
-        System.out.println("addEquipmentList");
-    }
-
-    /**
-     * Test of addEquipment method, of class Registry.
-     */
-    @Test
-    public void testAddEquipment_Expansion_List() throws Exception {
-        System.out.println("addEquipment");
     }
 
     /**
@@ -169,54 +130,6 @@ public class RegistryTest {
     }
 
     /**
-     * Test of addEquipment method, of class Registry.
-     */
-    @Test
-    public void testAddEquipment_Equipment() {
-        System.out.println("addEquipment");
-    }
-
-    /**
-     * Test of addEquipment method, of class Registry.
-     */
-    @Test
-    public void testAddEquipment_Expansion_PlistParserListContext() throws Exception {
-        System.out.println("addEquipment");
-    }
-
-    /**
-     * Test of addShipList method, of class Registry.
-     */
-    @Test
-    public void testAddShipList_Expansion_Map() {
-        System.out.println("addShipList");
-    }
-
-    /**
-     * Test of addShipList method, of class Registry.
-     */
-    @Test
-    public void testAddShipList_Expansion_PlistParserDictionaryContext() {
-        System.out.println("addShipList");
-    }
-
-    /**
-     * Test of addShip method, of class Registry.
-     */
-    @Test
-    public void testAddShip_3args_1() {
-        System.out.println("addShip");
-    }
-
-    /**
-     * Test of addShip method, of class Registry.
-     */
-    @Test
-    public void testAddShip_3args_2() {
-        System.out.println("addShip");
-    }
-
-    /**
      * Test of getExpansionsByName method, of class Registry.
      */
     @Test
@@ -252,22 +165,6 @@ public class RegistryTest {
     }
 
     /**
-     * Test of getEquipment method, of class Registry.
-     */
-    @Test
-    public void testGetEquipment() {
-        System.out.println("getEquipment");
-    }
-
-    /**
-     * Test of getEquipmentByName method, of class Registry.
-     */
-    @Test
-    public void testGetEquipmentByName() {
-        System.out.println("getEquipmentByName");
-    }
-
-    /**
      * Test of getShipsByName method, of class Registry.
      */
     @Test
@@ -298,14 +195,6 @@ public class RegistryTest {
         assertEquals("3", registry.getShipsByName().get(0).getIdentifier());
         assertEquals("2", registry.getShipsByName().get(1).getIdentifier());
         assertEquals("1", registry.getShipsByName().get(2).getIdentifier());
-    }
-
-    /**
-     * Test of getAllByIdentifier method, of class Registry.
-     */
-    @Test
-    public void testGetAllByIdentifier() {
-        System.out.println("getAllByIdentifier");
     }
 
     /**
@@ -353,14 +242,6 @@ public class RegistryTest {
     }
 
     /**
-     * Test of toManifest method, of class Registry.
-     */
-    @Test
-    public void testToManifest_PlistParserDictionaryContext() {
-        System.out.println("toManifest");
-    }
-
-    /**
      * Test of addWarning method, of class Registry.
      */
     @Test
@@ -387,14 +268,6 @@ public class RegistryTest {
 
         assertEquals(1, registry.getGlobalWarnings().size());
         assertEquals("mywarning", registry.getGlobalWarnings().get(0));
-    }
-
-    /**
-     * Test of getGlobalWarnings method, of class Registry.
-     */
-    @Test
-    public void testGetGlobalWarnings() {
-        System.out.println("getGlobalWarnings");
     }
 
     /**
@@ -451,4 +324,184 @@ public class RegistryTest {
         assertEquals(1, registry.getWarnings().size());
         assertEquals("OXP Overwrite! A (null) and A (null) share same id A", registry.getWarnings().get(0));
     }
+
+    /**
+     * Test of addExpansions method, of class Registry.
+     */
+    @Test
+    public void testAddExpansions() {
+        log.info("addExpansions");
+        
+        Registry registry = new Registry();
+        assertEquals(0, registry.getExpansions().size());
+        
+        Expansion expansion = new Expansion("unique");
+        registry.addExpansion(expansion);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(expansion, registry.getExpansions().get(0));
+        
+    }
+    
+    /**
+     * Test of addEquipment method, of class Registry.
+     */
+    @Test
+    public void testAddEquipment_Equipment() {
+        log.info("addEquipment");
+        
+        Expansion expansion = new Expansion("myoxp");
+        
+        Registry registry = new Registry();
+        assertEquals(0, registry.getEquipment().size());
+        
+        Equipment equipment = new Equipment();
+        try {
+            registry.addEquipment(equipment);
+            fail("expected exception but caught none");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+
+        equipment.setIdentifier("blah");
+        try {
+            registry.addEquipment(equipment);
+            fail("expected exception but caught none");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+        
+        equipment.setExpansion(expansion);
+        registry.addEquipment(equipment);
+        assertEquals(1, registry.getEquipment().size());
+        assertEquals(equipment, registry.getEquipment().get(0));
+
+        Equipment equipment2 = new Equipment();
+        equipment2.setIdentifier("blah2");
+        equipment2.setExpansion(expansion);
+        registry.addEquipment(equipment2);
+        assertEquals(2, registry.getEquipment().size());
+        assertEquals(equipment, registry.getEquipment().get(0));
+        assertEquals(equipment2, registry.getEquipment().get(1));
+
+        Equipment equipment3 = new Equipment();
+        equipment3.setIdentifier("blah");
+        equipment3.setExpansion(expansion);
+        registry.addEquipment(equipment3);
+        assertEquals(2, registry.getEquipment().size());
+        assertEquals(equipment3, registry.getEquipment().get(0));
+        assertEquals(equipment2, registry.getEquipment().get(1));
+    }
+
+    /**
+     * Test of addEquipment method, of class Registry.
+     */
+    @Test
+    public void testAddEquipment_Expansion_PlistParserListContext() throws Exception {
+        log.info("addEquipment");
+    }
+
+    /**
+     * Test of addShipList method, of class Registry.
+     */
+    @Test
+    public void testAddShipList_Expansion_Map() {
+        log.info("addShipList");
+    }
+
+    /**
+     * Test of addShipList method, of class Registry.
+     */
+    @Test
+    public void testAddShipList_Expansion_PlistParserDictionaryContext() {
+        log.info("addShipList");
+    }
+
+    /**
+     * Test of addShip method, of class Registry.
+     */
+    @Test
+    public void testAddShip_3args_1() {
+        log.info("addShip");
+    }
+
+    /**
+     * Test of addShip method, of class Registry.
+     */
+    @Test
+    public void testAddShip_3args_2() {
+        log.info("addShip");
+    }
+
+    /**
+     * Test of getEquipment method, of class Registry.
+     */
+    @Test
+    public void testGetEquipment() {
+        log.info("getEquipment");
+    }
+
+    /**
+     * Test of getEquipmentByName method, of class Registry.
+     */
+    @Test
+    public void testGetEquipmentByName() {
+        log.info("getEquipmentByName");
+    }
+
+    /**
+     * Test of getAllByIdentifier method, of class Registry.
+     */
+    @Test
+    public void testGetAllByIdentifier() {
+        log.info("getAllByIdentifier");
+    }
+
+    /**
+     * Test of getGlobalWarnings method, of class Registry.
+     */
+    @Test
+    public void testGetGlobalWarnings() {
+        log.info("getGlobalWarnings");
+    }
+
+    /**
+     * Test of addExpansion method, of class Registry.
+     */
+    @Test
+    public void testAddExpansion_PlistParserDictionaryContext() {
+        log.info("addExpansion");
+    }
+
+    /**
+     * Test of addEquipmentList method, of class Registry.
+     */
+    @Test
+    public void testAddEquipmentList_Expansion_List() throws Exception {
+        log.info("addEquipmentList");
+    }
+
+    /**
+     * Test of toManifest method, of class Registry.
+     */
+    @Test
+    public void testToManifest_PlistParserDictionaryContext() {
+        log.info("toManifest");
+    }
+
+    /**
+     * Test of addEquipmentList method, of class Registry.
+     */
+    @Test
+    public void testAddEquipmentList_Expansion_PlistParserListContext() throws Exception {
+        log.info("addEquipmentList");
+    }
+
+    /**
+     * Test of addEquipment method, of class Registry.
+     */
+    @Test
+    public void testAddEquipment_Expansion_List() throws Exception {
+        log.info("addEquipment");
+    }
+
 }
