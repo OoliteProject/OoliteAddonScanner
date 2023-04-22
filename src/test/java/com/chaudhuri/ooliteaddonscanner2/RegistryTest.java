@@ -346,8 +346,8 @@ public class RegistryTest {
      * Test of addEquipment method, of class Registry.
      */
     @Test
-    public void testAddEquipment_Equipment() {
-        log.info("addEquipment");
+    public void testAddGetEquipment_Equipment() {
+        log.info("testAddGetEquipment");
         
         Expansion expansion = new Expansion("myoxp");
         
@@ -393,59 +393,38 @@ public class RegistryTest {
     }
 
     /**
-     * Test of addEquipment method, of class Registry.
-     */
-    @Test
-    public void testAddEquipment_Expansion_PlistParserListContext() throws Exception {
-        log.info("addEquipment");
-    }
-
-    /**
-     * Test of addShipList method, of class Registry.
-     */
-    @Test
-    public void testAddShipList_Expansion_Map() {
-        log.info("addShipList");
-    }
-
-    /**
-     * Test of addShipList method, of class Registry.
-     */
-    @Test
-    public void testAddShipList_Expansion_PlistParserDictionaryContext() {
-        log.info("addShipList");
-    }
-
-    /**
-     * Test of addShip method, of class Registry.
-     */
-    @Test
-    public void testAddShip_3args_1() {
-        log.info("addShip");
-    }
-
-    /**
-     * Test of addShip method, of class Registry.
-     */
-    @Test
-    public void testAddShip_3args_2() {
-        log.info("addShip");
-    }
-
-    /**
-     * Test of getEquipment method, of class Registry.
-     */
-    @Test
-    public void testGetEquipment() {
-        log.info("getEquipment");
-    }
-
-    /**
      * Test of getEquipmentByName method, of class Registry.
      */
     @Test
     public void testGetEquipmentByName() {
         log.info("getEquipmentByName");
+        
+        Expansion expansion = new Expansion();
+        
+        Equipment e1 = new Equipment();
+        e1.setIdentifier("1");
+        e1.setExpansion(expansion);
+        Equipment e2 = new Equipment();
+        e2.setIdentifier("2");
+        e2.setExpansion(expansion);
+        Equipment e3 = new Equipment();
+        e3.setIdentifier("3");
+        e3.setExpansion(expansion);
+        
+        Registry registry = new Registry();
+        registry.addEquipment(e1);
+        registry.addEquipment(e2);
+        registry.addEquipment(e3);
+
+        assertEquals(3, registry.getEquipment().size());
+        assertEquals(e1, registry.getEquipment().get(0));
+        assertEquals(e2, registry.getEquipment().get(1));
+        assertEquals(e3, registry.getEquipment().get(2));
+
+        assertEquals(3, registry.getEquipmentByName().size());
+        assertEquals(e1, registry.getEquipmentByName().get(0));
+        assertEquals(e2, registry.getEquipmentByName().get(1));
+        assertEquals(e3, registry.getEquipmentByName().get(2));
     }
 
     /**
@@ -501,6 +480,46 @@ public class RegistryTest {
      */
     @Test
     public void testAddEquipment_Expansion_List() throws Exception {
+        log.info("addEquipment");
+    }
+
+    /**
+     * Test of addShipList method, of class Registry.
+     */
+    @Test
+    public void testAddShipList_Expansion_Map() {
+        log.info("addShipList");
+    }
+
+    /**
+     * Test of addShipList method, of class Registry.
+     */
+    @Test
+    public void testAddShipList_Expansion_PlistParserDictionaryContext() {
+        log.info("addShipList");
+    }
+
+    /**
+     * Test of addShip method, of class Registry.
+     */
+    @Test
+    public void testAddShip_3args_1() {
+        log.info("addShip");
+    }
+
+    /**
+     * Test of addShip method, of class Registry.
+     */
+    @Test
+    public void testAddShip_3args_2() {
+        log.info("addShip");
+    }
+
+    /**
+     * Test of addEquipment method, of class Registry.
+     */
+    @Test
+    public void testAddEquipment_Expansion_PlistParserListContext() throws Exception {
         log.info("addEquipment");
     }
 
