@@ -8,6 +8,8 @@ import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -463,8 +465,42 @@ public class RegistryTest {
      * Test of addExpansion method, of class Registry.
      */
     @Test
-    public void testAddExpansion_PlistParserDictionaryContext() {
+    public void testAddExpansion_PlistParserDictionaryContext() throws IOException {
         log.info("addExpansion");
+
+        Registry registry = new Registry();
+        assertEquals(0, registry.getExpansions().size());
+        {
+            URL url = getClass().getResource("/registryTest/manifest1.plist");
+
+            // parse plist test data
+            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+
+            registry.addExpansion(dc);
+            assertEquals(1, registry.getExpansions().size());
+            assertEquals(1, registry.getWarnings().size());
+        }
+        {
+            URL url = getClass().getResource("/registryTest/manifest2.plist");
+
+            // parse plist test data
+            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+
+            registry.addExpansion(dc);
+            assertEquals(1, registry.getExpansions().size());
+            assertEquals(1, registry.getWarnings().size());
+        }
+        {
+            URL url = getClass().getResource("/registryTest/manifest3.plist");
+
+            // parse plist test data
+            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+
+            registry.addExpansion(dc);
+            assertEquals(1, registry.getExpansions().size());
+            assertEquals(3, registry.getWarnings().size());
+        }
+        log.debug("Registry warnings: {}", registry.getWarnings());
     }
 
     /**

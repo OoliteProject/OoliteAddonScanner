@@ -103,30 +103,6 @@ public class Main {
         registry.addExpansions(lc);
     }
     
-    private static PlistParser prepareParser(InputStream data, String source) throws IOException {
-        ThrowingErrorListener errorListener = new ThrowingErrorListener();
-
-        ReadableByteChannel channel = Channels.newChannel(data);
-        CharStream charStream = CharStreams.fromChannel(channel, StandardCharsets.UTF_8, 4096, CodingErrorAction.REPLACE, source, -1);
-        PlistLexer lexer = new PlistLexer(charStream);
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(errorListener);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        PlistParser parser = new PlistParser(tokenStream);
-        parser.removeErrorListeners();
-        parser.addErrorListener(errorListener);
-        
-        return parser;
-    }
-    
-    private static PlistParser.ListContext parsePlistList(InputStream data, String source) throws IOException {
-        return prepareParser(data, source).list();
-    }
-
-    private static PlistParser.DictionaryContext parsePlistDictionary(InputStream data, String source) throws IOException {
-        return prepareParser(data, source).dictionary();
-    }
-    
     private static void parseModel(InputStream data, String source) throws IOException {
         log.debug("parseModel({}, {})", data, source);
         try {
@@ -234,7 +210,7 @@ public class Main {
             registry.addEquipmentList(oxp, (List)equipmentList.get(0));
         } else {
             in.reset();
-            PlistParser.ListContext lc = parsePlistList(in, url);
+            PlistParser.ListContext lc = PlistParserUtil.parsePlistList(in, url);
             registry.addEquipmentList(oxp, lc);
         }
     }
@@ -252,7 +228,7 @@ public class Main {
             registry.addShipList(oxp, shipList);
         } else {
             in.reset();
-            PlistParser.DictionaryContext dc = parsePlistDictionary(in, url);
+            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, url);
             registry.addShipList(oxp, dc);
         }
     }
@@ -416,7 +392,7 @@ public class Main {
             oxp.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
         } else {
             in.reset();
-            PlistParser.DictionaryContext dc = parsePlistDictionary(in, oxp.getDownloadUrl()+"!"+zentry.getName());
+            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, oxp.getDownloadUrl()+"!"+zentry.getName());
             oxp.setManifest(registry.toManifest(dc));
         }
     }
@@ -436,7 +412,7 @@ public class Main {
             }
         } else {
             in.reset();
-            PlistParser.ListContext lc = parsePlistList(in, oxp.getDownloadUrl()+"!"+zentry.getName());
+            PlistParser.ListContext lc = PlistParserUtil.parsePlistList(in, oxp.getDownloadUrl()+"!"+zentry.getName());
             for (PlistParser.ValueContext vc: lc.value()) {
                 oxp.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
             }
