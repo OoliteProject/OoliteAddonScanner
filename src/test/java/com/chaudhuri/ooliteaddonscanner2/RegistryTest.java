@@ -515,8 +515,15 @@ public class RegistryTest {
      * Test of toManifest method, of class Registry.
      */
     @Test
-    public void testToManifest_PlistParserDictionaryContext() {
+    public void testToManifest_PlistParserDictionaryContext() throws IOException {
         log.info("toManifest");
+        
+        URL url = getClass().getResource("/registryTest/expansionManifest1.plist");
+        PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+        
+        Registry registry = new Registry();
+        ExpansionManifest em = registry.toManifest(dc);
+        assertEquals("oolite.oxp.Alnivel.RoutePlanner", em.getIdentifier());
     }
 
     /**
