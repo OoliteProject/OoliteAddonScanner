@@ -42,7 +42,7 @@ public class ExpansionTest {
      */
     @Test
     public void testGetExpansion() {
-        System.out.println("testGetExpansion");
+        log.info("testGetExpansion");
         
         Expansion expansion = new Expansion();
         assertNull(expansion.getExpansion());
@@ -53,7 +53,7 @@ public class ExpansionTest {
      */
     @Test
     public void testAddShip() {
-        System.out.println("addShip");
+        log.info("addShip");
         
         Expansion expansion = new Expansion();
         {
@@ -85,7 +85,7 @@ public class ExpansionTest {
      */
     @Test
     public void testAddGetReadme() {
-        System.out.println("addReadme");
+        log.info("addReadme");
         
         Expansion expansion = new Expansion();
         assertNotNull(expansion.getReadmes());
@@ -103,7 +103,7 @@ public class ExpansionTest {
      */
     @Test
     public void testToString() {
-        System.out.println("toString, getIdentifier, setIdentifier");
+        log.info("toString, getIdentifier, setIdentifier");
         
         Expansion expansion = new Expansion();
         assertNull(expansion.toString());
@@ -119,7 +119,7 @@ public class ExpansionTest {
      */
     @Test
     public void testAddGetEquipment() {
-        System.out.println("getEquipment");
+        log.info("getEquipment");
         
         Expansion expansion = new Expansion();
         assertNotNull(expansion.getEquipment());
@@ -151,7 +151,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetAuthor() {
-        System.out.println("testSetGetAuthor");
+        log.info("testSetGetAuthor");
         
         Expansion expansion = new Expansion();
         assertNull(expansion.getAuthor());
@@ -165,7 +165,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetCategory() {
-        System.out.println("getCategory");
+        log.info("getCategory");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getCategory());
@@ -179,7 +179,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetConflictOxps() {
-        System.out.println("testSetGetConflictOxps");
+        log.info("testSetGetConflictOxps");
         
         Expansion expansion = new Expansion();
         assertNull(expansion.getConflictOxps());
@@ -193,7 +193,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetVersion() {
-        System.out.println("testSetGetVersion");
+        log.info("testSetGetVersion");
         
         Expansion expansion = new Expansion();
         assertNull(expansion.getVersion());
@@ -207,7 +207,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetUploadDate() {
-        System.out.println("testSetGetUploadDate");
+        log.info("testSetGetUploadDate");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getUploadDate());
@@ -221,7 +221,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetDescription() {
-        System.out.println("testSetGetDescription");
+        log.info("testSetGetDescription");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getDescription());
@@ -235,7 +235,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetDownloadUrl() {
-        System.out.println("testSetGetDownloadUrl");
+        log.info("testSetGetDownloadUrl");
         
         Expansion expansion = new Expansion();
         assertNull(expansion.getDownloadUrl());
@@ -249,7 +249,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetTitle() {
-        System.out.println("testSetGetTitle getName");
+        log.info("testSetGetTitle getName");
         
         Expansion expansion = new Expansion();
         assertNull(expansion.getTitle());
@@ -265,7 +265,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetTags() {
-        System.out.println("testSetGetTags");
+        log.info("testSetGetTags");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getTags());
@@ -279,7 +279,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetFileSize() {
-        System.out.println("testSetGetFileSize");
+        log.info("testSetGetFileSize");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getFileSize());
@@ -293,7 +293,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetInformationUrl() {
-        System.out.println("testSetGetInformationUrl");
+        log.info("testSetGetInformationUrl");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getInformationUrl());
@@ -307,7 +307,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetLicense() {
-        System.out.println("testSetGetLicense");
+        log.info("testSetGetLicense");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getLicense());
@@ -321,7 +321,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetRequiredOoliteVersion() {
-        System.out.println("testSetGetRequiredOoliteVersion");
+        log.info("testSetGetRequiredOoliteVersion");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getRequiredOoliteVersion());
@@ -335,7 +335,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetRequiresOxps() {
-        System.out.println("testSetGetRequiresOxps");
+        log.info("testSetGetRequiresOxps");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getRequiresOxps());
@@ -349,7 +349,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetOptionalOxps() {
-        System.out.println("getOptionalOxps");
+        log.info("getOptionalOxps");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getOptionalOxps());
@@ -363,7 +363,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetMaximumOoliteVersion() {
-        System.out.println("testSetGetMaximumOoliteVersion");
+        log.info("testSetGetMaximumOoliteVersion");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getMaximumOoliteVersion());
@@ -377,7 +377,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetManifest() {
-        System.out.println("testSetGetManifest");
+        log.info("testSetGetManifest");
 
         Expansion expansion = new Expansion();
         ExpansionManifest manifest = new ExpansionManifest();
@@ -394,7 +394,7 @@ public class ExpansionTest {
      */
     @Test
     public void testSetGetAsWikipage() {
-        System.out.println("getAsWikipage");
+        log.info("getAsWikipage");
 
         Expansion expansion = new Expansion();
         assertNull(expansion.getAsWikipage());
@@ -408,7 +408,7 @@ public class ExpansionTest {
      */
     @Test
     public void testGetType() {
-        System.out.println("getType");
+        log.info("getType");
 
         Expansion expansion = new Expansion();
         assertEquals("Expansion", expansion.getType());
@@ -419,7 +419,7 @@ public class ExpansionTest {
      */
     @Test
     public void testAddGetScript() {
-        System.out.println("testAddGetScript");
+        log.info("testAddGetScript");
 
         Expansion expansion = new Expansion();
         assertNotNull(expansion.getScripts());
@@ -437,7 +437,7 @@ public class ExpansionTest {
      */
     @Test
     public void testAddGetWarning() {
-        System.out.println("testAddGetWarning");
+        log.info("testAddGetWarning");
         
         Expansion expansion = new Expansion();
         assertNotNull(expansion.getWarnings());

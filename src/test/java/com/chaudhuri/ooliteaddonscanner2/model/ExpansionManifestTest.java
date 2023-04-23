@@ -3,6 +3,8 @@
 package com.chaudhuri.ooliteaddonscanner2.model;
 
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author hiran
  */
 public class ExpansionManifestTest {
+    private static final Logger log = LogManager.getLogger();
     
     public ExpansionManifestTest() {
     }
@@ -40,7 +43,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetAuthor() {
-        System.out.println("testSetGetAuthor");
+        log.info("testSetGetAuthor");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getAuthor());
@@ -53,7 +56,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetCategory() {
-        System.out.println("getSetCategory");
+        log.info("getSetCategory");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getCategory());
@@ -66,7 +69,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetIdentifier() {
-        System.out.println("setGetIdentifier");
+        log.info("setGetIdentifier");
 
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getIdentifier());
@@ -79,7 +82,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetTitle() {
-        System.out.println("testSetGetTitle");
+        log.info("testSetGetTitle");
 
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getTitle());
@@ -92,7 +95,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetVersion() {
-        System.out.println("testSetGetVersion");
+        log.info("testSetGetVersion");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getVersion());
@@ -106,7 +109,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetDescription() {
-        System.out.println("testSetGetDescription");
+        log.info("testSetGetDescription");
 
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getDescription());
@@ -120,7 +123,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetRequiresOxps() {
-        System.out.println("testSetGetRequiresOxps");
+        log.info("testSetGetRequiresOxps");
 
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getRequiresOxps());
@@ -134,7 +137,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetOptionalOxps() {
-        System.out.println("testSetGetOptionalOxps");
+        log.info("testSetGetOptionalOxps");
 
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getOptionalOxps());
@@ -148,7 +151,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetLicense() {
-        System.out.println("testSetGetLicense");
+        log.info("testSetGetLicense");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getLicense());
@@ -162,7 +165,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetRequiredOoliteVersion() {
-        System.out.println("getRequiredOoliteVersion");
+        log.info("getRequiredOoliteVersion");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getRequiredOoliteVersion());
@@ -176,7 +179,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetInformationUrl() {
-        System.out.println("testSetGetInformationUrl");
+        log.info("testSetGetInformationUrl");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getInformationUrl());
@@ -190,7 +193,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetTags() {
-        System.out.println("testSetGetTags");
+        log.info("testSetGetTags");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getTags());
@@ -204,7 +207,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetFileSize() {
-        System.out.println("testSetGetFileSize");
+        log.info("testSetGetFileSize");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getFileSize());
@@ -218,7 +221,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetDownloadUrl() {
-        System.out.println("testSetGetDownloadUrl");
+        log.info("testSetGetDownloadUrl");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getDownloadUrl());
@@ -232,7 +235,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetConflictOxps() {
-        System.out.println("testSetGetConflictOxps");
+        log.info("testSetGetConflictOxps");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getConflictOxps());
@@ -246,7 +249,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testSetGetMaximumOoliteVersion() {
-        System.out.println("testSetGetMaximumOoliteVersion");
+        log.info("testSetGetMaximumOoliteVersion");
         
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getMaximumOoliteVersion());
@@ -260,7 +263,7 @@ public class ExpansionManifestTest {
      */
     @Test
     public void testAddGetHasWarning() {
-        System.out.println("testAddGetHasWarning");
+        log.info("testAddGetHasWarning");
 
         ExpansionManifest manifest = new ExpansionManifest();
         assertEquals(0, manifest.getWarnings().size());

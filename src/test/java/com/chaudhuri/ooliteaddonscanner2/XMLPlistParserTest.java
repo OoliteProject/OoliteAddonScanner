@@ -5,6 +5,8 @@ package com.chaudhuri.ooliteaddonscanner2;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,7 @@ import org.xml.sax.ErrorHandler;
  * @author hiran
  */
 public class XMLPlistParserTest {
+    private static final Logger log = LogManager.getLogger();
     
     public XMLPlistParserTest() {
     }
@@ -44,7 +47,7 @@ public class XMLPlistParserTest {
      */
     @Test
     public void testSerialize() throws Exception {
-        System.out.println("serialize");
+        log.info("serialize");
     }
 
     /**
@@ -52,7 +55,7 @@ public class XMLPlistParserTest {
      */
     @Test
     public void testParseListOfMaps() throws Exception {
-        System.out.println("parseListOfMaps");
+        log.info("parseListOfMaps");
     }
 
     /**
@@ -60,7 +63,7 @@ public class XMLPlistParserTest {
      */
     @Test
     public void testParseList() throws Exception {
-        System.out.println("parseList");
+        log.info("parseList");
     }
     
 }

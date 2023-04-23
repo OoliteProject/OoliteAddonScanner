@@ -2,6 +2,8 @@
  */
 package com.chaudhuri.ooliteaddonscanner2.model;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,6 +16,7 @@ import org.junit.jupiter.api.Test;
  * @author hiran
  */
 public class ShipTest {
+    private static final Logger log = LogManager.getLogger();
     
     public ShipTest() {
     }
@@ -39,7 +42,7 @@ public class ShipTest {
      */
     @Test
     public void testSetGetExpansion() {
-        System.out.println("testSetGetExpansion");
+        log.info("testSetGetExpansion");
         
         Ship ship = new Ship();
         assertNull(ship.getExpansion());
@@ -54,7 +57,7 @@ public class ShipTest {
      */
     @Test
     public void testSetGetIdentifier() {
-        System.out.println("testSetGetIdentifier");
+        log.info("testSetGetIdentifier");
         
         Ship ship = new Ship();
         assertNull(ship.getIdentifier());
@@ -68,7 +71,7 @@ public class ShipTest {
      */
     @Test
     public void testAddHasGetFeature() {
-        System.out.println("testAddHasGetFeature getFeatures");
+        log.info("testAddHasGetFeature getFeatures");
         
         Ship ship = new Ship();
         assertNotNull(ship.getFeatures());
@@ -88,7 +91,7 @@ public class ShipTest {
      */
     @Test
     public void testGetName() {
-        System.out.println("getName");
+        log.info("getName");
         
         Ship ship = new Ship();
         assertNull(ship.getName());
@@ -105,7 +108,7 @@ public class ShipTest {
      */
     @Test
     public void testSetGetAsWikipage() {
-        System.out.println("testSetGetAsWikipage");
+        log.info("testSetGetAsWikipage");
         
         Ship ship = new Ship();
         assertNull(ship.getAsWikipage());
@@ -119,7 +122,7 @@ public class ShipTest {
      */
     @Test
     public void testGetType() {
-        System.out.println("getType");
+        log.info("getType");
         
         Ship ship = new Ship();
         assertEquals("Ship", ship.getType());
@@ -130,7 +133,7 @@ public class ShipTest {
      */
     @Test
     public void testAddGetWarning() {
-        System.out.println("addWarning");
+        log.info("addWarning");
         
         Ship ship = new Ship();
         assertNotNull(ship.getWarnings());
@@ -147,7 +150,7 @@ public class ShipTest {
      */
     @Test
     public void testIsTemplate() {
-        System.out.println("isTemplate");
+        log.info("isTemplate");
         
         Ship ship = new Ship();
         assertFalse(ship.isTemplate());

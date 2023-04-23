@@ -46,7 +46,7 @@ public class WikiTest {
      */
     @Test
     public void testGetPageUrl() {
-        System.out.println("getPageUrl");
+        log.info("getPageUrl");
         
         try {
             Wiki.getPageUrl(null);
@@ -96,7 +96,7 @@ public class WikiTest {
      */
     @Test
     public void testCheckWikiPage() {
-        System.out.println("checkWikiPage");
+        log.info("checkWikiPage");
 
         
         {
@@ -150,7 +150,7 @@ public class WikiTest {
      */
     @Test
     public void testWikiPageFor() {
-        System.out.println("wikiPageFor");
+        log.info("wikiPageFor");
     }
     
 }

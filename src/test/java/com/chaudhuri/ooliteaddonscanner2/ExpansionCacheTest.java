@@ -71,6 +71,8 @@ public class ExpansionCacheTest {
     
     @Test
     public void testCreateExpansionCache() throws IOException {
+        log.info("testCreateExpansionCache");
+
         File testDir = new File("target/test/ExpansionCacheTest");
         testDir.mkdirs();
         
@@ -87,7 +89,7 @@ public class ExpansionCacheTest {
      */
     @Test
     public void testGetOoliteManifest() throws Exception {
-        System.out.println("getOoliteManifest");
+        log.info("testGetOoliteManifest");
         
         ExpansionCache cache = new ExpansionCache();
         Map<String, Object> m = cache.getOoliteManifest("latest");
@@ -112,7 +114,7 @@ public class ExpansionCacheTest {
      */
     @Test
     public void testUpdate_List() throws Exception {
-        System.out.println("update");
+        log.info("update");
         
         File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
         testCache.delete();
@@ -193,7 +195,7 @@ public class ExpansionCacheTest {
      */
     @Test
     public void testInvalidate() throws Exception {
-        System.out.println("invalidate");
+        log.info("invalidate");
 
         File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
         testCache.delete();

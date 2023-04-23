@@ -294,6 +294,7 @@
                 <configuration>
                     <excludes>
                         <exclude>com/chaudhuri/plist/**/*.class</exclude>
+                        <exclude>com/chaudhuri/plistcheck/PlistTest*.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>

@@ -59,12 +59,4 @@ public class MainTest {
         }
     }
 
-    /**
-     * Test of main method, of class Main.
-     */
-    @Test
-    public void testMain() throws Exception {
-        System.out.println("main");
-    }
-    
 }
