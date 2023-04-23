@@ -123,7 +123,13 @@ public class XMLPlistParser {
             if (n.getNodeType() == Node.ELEMENT_NODE) {
                 if (key == null) {
                     // parse the key
+                    if (!"key".equals(n.getNodeName())) {
+                        throw new IllegalArgumentException("Expected element 'key'");
+                    }
                     key = String.valueOf(parseElement((Element)n));
+                    if ("".equals(key)) {
+                        throw new IllegalArgumentException("Key must not be empty");
+                    }
                 } else {
                     // do something about the value
                     Object value = parseElement((Element)n);
@@ -138,24 +144,28 @@ public class XMLPlistParser {
     
     private static Object parseElement(Element e) {
         log.debug("parseElement({})", e);
-        switch (e.getTagName()) {
-            case "array":
-                return parseArray(e);
-            case "integer":
-                return Integer.parseInt(e.getTextContent());
-            case "real":
-                return Double.parseDouble(e.getTextContent());
-            case "string":
-            case "key":
-                return e.getTextContent();
-            case "dict":
-                return parseDict(e);
-            case "true":
-                return Boolean.TRUE;
-            case "false":
-                return Boolean.FALSE;
-            default:
-                throw new IllegalArgumentException(String.format("Unknown element %s", e.getTagName()));
+        try {
+            switch (e.getTagName()) {
+                case "array":
+                    return parseArray(e);
+                case "integer":
+                    return Integer.parseInt(e.getTextContent());
+                case "real":
+                    return Double.parseDouble(e.getTextContent());
+                case "string":
+                case "key":
+                    return e.getTextContent();
+                case "dict":
+                    return parseDict(e);
+                case "true":
+                    return Boolean.TRUE;
+                case "false":
+                    return Boolean.FALSE;
+                default:
+                    throw new IllegalArgumentException(String.format("Unknown element %s", e.getTagName()));
+            }
+        } catch (IllegalArgumentException ex) {
+            throw new IllegalArgumentException(String.format("Could not parse element %s", e.getNodeName()), ex);
         }
     }
     

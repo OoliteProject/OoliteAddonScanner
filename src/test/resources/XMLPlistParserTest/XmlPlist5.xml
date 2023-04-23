@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- wrong version? -->
+<plist version="1.0">
+    <array>
+        <integer>5</integer>
+        <real>4.7</real>
+        <string/>
+        <key/>
+        <dict/>
+        <true/>
+        <false/>
+    </array>
+    <integer>5</integer>
+    <real>4.7</real>
+    <string/>
+    <key/>
+    <dict>
+        <key>name</key>
+        <string>value</string>
+    </dict>
+    <true/>
+    <false/>
+</plist>
