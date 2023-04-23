@@ -152,6 +152,20 @@ public class XMLPlistParserTest {
             InputStream in = url.openStream();
 
             TestErrorHandler teh = new TestErrorHandler();
+            try {
+                List<Object> list = XMLPlistParser.parseList(in, teh);
+                fail("expected exception");
+            } catch(IllegalArgumentException e) {
+                assertEquals("Could not parse element dict", e.getMessage());
+                assertEquals("Expected element 'key'", e.getCause().getMessage());
+                log.debug("caught expected exception", e);
+            }
+        }
+        {
+            URL url = getClass().getResource("/XMLPlistParserTest/XmlPlist6.xml");
+            InputStream in = url.openStream();
+
+            TestErrorHandler teh = new TestErrorHandler();
 
             List<Object> list = XMLPlistParser.parseList(in, teh);
             assertNotNull(list);
