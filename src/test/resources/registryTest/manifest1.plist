@@ -7,4 +7,6 @@
 	"description" = "Plot a route through multiple systems";
 	"author" = "Alnivel";
 	"information_url" = "https://wiki.alioth.net/index.php?title=Route_Planner_OXP";
+        "download_url" = "https://example.com/downloads/test.oxp";
+        "file_size" = "1572386";
 }
