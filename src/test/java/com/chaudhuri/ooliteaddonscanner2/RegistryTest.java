@@ -454,14 +454,6 @@ public class RegistryTest {
     }
 
     /**
-     * Test of getGlobalWarnings method, of class Registry.
-     */
-    @Test
-    public void testGetGlobalWarnings() {
-        log.info("getGlobalWarnings");
-    }
-
-    /**
      * Test of addExpansion method, of class Registry.
      */
     @Test
