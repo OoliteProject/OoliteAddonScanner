@@ -14,6 +14,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -34,8 +35,9 @@ public class ExpansionCache {
     
     protected File cacheDIR;
     
-    /** Time after which we try to update the cache entry. */
-    private static final long MAX_AGE = 30L * 86400L * 1000L; // 7 days ago
+    /** Time after which we try to update the cache entry. 
+     */
+    private static final Duration MAX_AGE = Duration.parse("P7d"); // 7 days ago
     
     /** Time after which we remove files from the cache. */
     private static final Instant THRESHOLD = Instant.now().minus(180, ChronoUnit.DAYS);
@@ -73,14 +75,16 @@ public class ExpansionCache {
      * @throws IOException something went wrong
      */
     private void deleteIfOlderThanTHRESHOLD(File f) throws IOException {
+        log.debug("deleteIfOlderThanTHRESHOLD({})", f);
+        
         Instant lastModified = Instant.ofEpochMilli(f.lastModified());
 
         BasicFileAttributes attrs = Files.readAttributes(f.toPath(), BasicFileAttributes.class);
-        FileTime time = attrs.lastAccessTime();
+        FileTime time = attrs.lastModifiedTime();
         Instant lastAccessed = time.toInstant();
 
         if (lastModified.isBefore(THRESHOLD) && lastAccessed.isBefore(THRESHOLD)) {
-
+            log.trace("deleting file {}", f);
             Files.delete(f.toPath());
         }
     }
@@ -93,6 +97,7 @@ public class ExpansionCache {
      * @throws IOException 
      */
     private void cleanCache(File dir) throws IOException {
+        log.debug("cleanCache({})", dir);
         if (dir == null) {
             throw new IllegalArgumentException("dir must not be null");
         }
@@ -274,9 +279,9 @@ public class ExpansionCache {
         URL u = new URL(url);
         File localFile = getCachedFile(url);
         
-        long age = System.currentTimeMillis() - localFile.lastModified();
+        Duration age = Duration.between(Instant.ofEpochMilli(localFile.lastModified()), Instant.now());
         
-        if (localFile.exists() && (age < MAX_AGE) ) {
+        if (localFile.exists() && (MAX_AGE.compareTo(age) < 0 ) ) {
             // perform check if there is a newer version online
             Date online = doCheckLastModified(u, 5);
             Date local = new Date(localFile.lastModified());

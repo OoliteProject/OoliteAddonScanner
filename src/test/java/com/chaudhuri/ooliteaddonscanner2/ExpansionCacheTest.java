@@ -5,6 +5,10 @@ package com.chaudhuri.ooliteaddonscanner2;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +38,8 @@ public class ExpansionCacheTest {
     
     @BeforeAll
     public static void setUpClass() {
+        log.warn("setUpClass()");
+
         TreeMap<String, String> props = new TreeMap(System.getProperties());
         for (String key: props.keySet()) {
             log.info("{}->{}", key, System.getProperty(key));
@@ -45,15 +51,22 @@ public class ExpansionCacheTest {
     }
     
     @AfterAll
-    public static void tearDownClass() {
+    public static void tearDownClass() throws IOException {
+        log.warn("tearDownClass()");
+        
+        if (tempCacheDir != null) {
+            Files.deleteIfExists(tempCacheDir.toPath());
+        }
     }
     
     @BeforeEach
     public void setUp() {
+        log.warn("setUp()");
     }
     
     @AfterEach
     public void tearDown() {
+        log.warn("tearDown()");
     }
     
     @Test
@@ -115,6 +128,14 @@ public class ExpansionCacheTest {
         assertFalse(downloaded.exists(), "Unexpected file " + downloaded.getAbsolutePath());
         cache.update(urls);
         assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
+        
+        // now check if we can update the file
+        downloaded.setLastModified(Instant.now().minus(300, ChronoUnit.DAYS).getEpochSecond());
+        assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
+        cache.update(urls);
+        assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
+        Instant lastModified = Instant.ofEpochMilli(downloaded.lastModified());
+        assertTrue(Duration.between(lastModified, Instant.now()).toSeconds() < 2);
     }
 
     /**
@@ -135,6 +156,15 @@ public class ExpansionCacheTest {
         assertFalse(downloaded.exists());
         cache.update(testDownload);
         assertTrue(downloaded.exists());
+
+        // now check if we can update the file.
+        // TODO: We may want to place an absolute date here
+        downloaded.setLastModified(Instant.now().minus(600, ChronoUnit.DAYS).toEpochMilli());
+        assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
+        cache.update(testDownload);
+        assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
+        Instant lastModified = Instant.ofEpochMilli(downloaded.lastModified());
+        assertTrue(Duration.between(lastModified, Instant.now()).toSeconds() < 2, String.format("File last accessed %s", lastModified));
     }
 
     /**
@@ -180,5 +210,43 @@ public class ExpansionCacheTest {
         cache.invalidate(testDownload);
         assertFalse(downloaded.exists());
     }
+    
+    @Test
+    public void testCleanCache() throws IOException {
+        log.info("testCleanCache");
+        
+        // create cache structure with young and old file
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        log.info("cache in {} because of {}", testCache, tempCacheDir);
+
+        File oldfile = new File(testCache, "server1/old.file");
+        Files.createDirectories(oldfile.getParentFile().toPath());
+        Files.createFile(oldfile.toPath());
+        oldfile.setLastModified(Instant.now().minus(300, ChronoUnit.DAYS).toEpochMilli());
+        
+        File youngfile = new File(testCache, "server2/downloads/young.file");
+        Files.createDirectories(youngfile.getParentFile().toPath());
+        Files.createFile(youngfile.toPath());
+        youngfile.setLastModified(Instant.now().minus(10, ChronoUnit.DAYS).toEpochMilli());
+        
+        File emptyDir = new File(testCache, "server3/downloads");
+        Files.createDirectories(emptyDir.toPath());
+        
+        // check that both files are there
+        assertTrue(oldfile.isFile());
+        assertTrue(youngfile.isFile());
+        assertTrue(emptyDir.isDirectory());
+
+        // instantiate ExpansionCache - it will purge on startup
+        ExpansionCache cache = new ExpansionCache(testCache);
+        
+        // check that only the young file is left
+        assertFalse(oldfile.isFile());
+        assertTrue(youngfile.isFile());
+        assertFalse(emptyDir.isDirectory());
+    }
+    
     
 }
