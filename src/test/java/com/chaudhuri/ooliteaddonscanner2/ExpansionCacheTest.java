@@ -252,9 +252,9 @@ public class ExpansionCacheTest {
         ExpansionCache cache = new ExpansionCache(testCache);
         
         // check that only the young file is left
-        assertFalse(oldfile.isFile());
-        assertTrue(youngfile.isFile());
-        assertFalse(emptyDir.isDirectory());
+        assertFalse(oldfile.isFile(), "old file should be cleaned up but is not");
+        assertTrue(youngfile.isFile(), "young file should still exist but does not");
+        assertFalse(emptyDir.isDirectory(), "emtpy directory should have been cleaned away but is not");
     }
     
     
