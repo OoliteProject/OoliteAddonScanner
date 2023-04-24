@@ -21,6 +21,12 @@ import org.antlr.v4.runtime.CommonTokenStream;
 public class PlistParserUtil {
     
     /**
+     * Prevent instances from getting created.
+     */
+    private PlistParserUtil() {
+    }
+    
+    /**
      * Creates a parser prepared with throwing ErrorListener to read from
      * the given InputStream.
      * 
