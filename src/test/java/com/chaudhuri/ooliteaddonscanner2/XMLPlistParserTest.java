@@ -2,6 +2,7 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
+import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.xml.sax.ErrorHandler;
+import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -85,26 +87,91 @@ public class XMLPlistParserTest {
                 Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(url.openStream(), null);
                 fail("expected exception but caught none");
             } catch (IllegalArgumentException e) {
+                assertEquals("Not exactly one map in document?", e.getMessage());
+                log.debug("caught expected exception", e);
+            }
+        }
+        {        
+            URL url = getClass().getResource("/XMLPlistParserTest/XmlPlist1.xml");
+            TestErrorHandler teh = new TestErrorHandler();
+            try {
+                Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(url.openStream(), null);
+                fail("expected exception but caught none");
+            } catch (IllegalArgumentException e) {
+                assertEquals("Expected root node plist", e.getMessage());
+                log.debug("caught expected exception", e);
+            }
+        }
+        {        
+            URL url = getClass().getResource("/XMLPlistParserTest/XmlPlist2.xml");
+            TestErrorHandler teh = new TestErrorHandler();
+            try {
+                Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(url.openStream(), null);
+                fail("expected exception but caught none");
+            } catch (IllegalArgumentException e) {
+                assertEquals("Expected plist 1.0 format", e.getMessage());
                 log.debug("caught expected exception", e);
             }
         }
     }
     
     private static class TestErrorHandler implements ErrorHandler {
+        private static final Logger log = LogManager.getLogger();
 
         @Override
         public void warning(SAXParseException saxpe) throws SAXException {
-            log.error("warning({})", saxpe);
+            log.info("warning({})", saxpe);
         }
 
         @Override
         public void error(SAXParseException saxpe) throws SAXException {
-            log.error("error({})", saxpe);
+            log.info("error({})", saxpe);
         }
 
         @Override
         public void fatalError(SAXParseException saxpe) throws SAXException {
-            log.error("fatalError({})", saxpe);
+            log.info("fatalError({})", saxpe);
+        }
+        
+    }
+    
+    private static class TestLocator implements Locator {
+        
+        private String publicId;
+        private String systemId;
+        private int lineNumber;
+        private int columnNumber;
+
+        public TestLocator(String publicId, String systemId, int lineNumber, int columnNumber) {
+            this.publicId = publicId;
+            this.systemId = systemId;
+            this.lineNumber = lineNumber;
+            this.columnNumber = columnNumber;
+        }
+        
+        public TestLocator(String systemId, int lineNumber) {
+            this.systemId = systemId;
+            this.lineNumber = lineNumber;
+        }
+        
+        @Override
+        public String getPublicId() {
+            return publicId;
+        }
+
+        @Override
+        public String getSystemId() {
+            return systemId;
+        }
+
+        @Override
+        public int getLineNumber() {
+            return lineNumber;
+        }
+
+        @Override
+        public int getColumnNumber() {
+            return columnNumber;
         }
         
     }
@@ -202,6 +269,23 @@ public class XMLPlistParserTest {
                 log.debug("caught expected exception", e);
             }
         }
+    }
+    
+    @Test
+    public void testErrorHandler() throws SAXException {
+        
+        Expansion expansion = new Expansion();
+        XMLPlistParser.MySaxErrorHandler eh = new XMLPlistParser.MySaxErrorHandler(expansion);
+        assertEquals(0, expansion.getWarnings().size());
+        
+        eh.warning(new SAXParseException("Warning", new TestLocator("testcase", 1)));
+        assertEquals(1, expansion.getWarnings().size());
+
+        eh.error(new SAXParseException("Error", new TestLocator("testcase", 2)));
+        assertEquals(2, expansion.getWarnings().size());
+
+        eh.fatalError(new SAXParseException("Fatal", new TestLocator("testcase", 3)));
+        assertEquals(3, expansion.getWarnings().size());
     }
     
 }
