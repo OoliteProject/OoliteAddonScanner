@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- wrong version -->
+<plist version="0.7">
+    <dict>
+        <key>name</key>
+        <string>myname</string>
+    </dict>
+    <!--
+    Seems our parseListOfMaps wants only one map.
+    <dict>
+        <key>id</key>
+        <string>myid</string>
+    </dict>
+    <dict>
+        <key>customer</key>
+        <string>1664-586</string>
+    </dict>
+    <dict>
+        <key>serial</key>
+        <string>875846</string>
+    </dict>-->
+</plist>

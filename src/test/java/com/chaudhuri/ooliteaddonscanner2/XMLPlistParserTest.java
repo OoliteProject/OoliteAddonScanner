@@ -71,6 +71,23 @@ public class XMLPlistParserTest {
     @Test
     public void testParseListOfMaps() throws Exception {
         log.info("parseListOfMaps");
+        
+        {        
+            URL url = getClass().getResource("/XMLPlistParserTest/XmlPlist8.xml");
+            TestErrorHandler teh = new TestErrorHandler();
+            Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(url.openStream(), teh);
+            assertNotNull(listOfMaps);
+        }
+        {        
+            URL url = getClass().getResource("/XMLPlistParserTest/XmlPlist9.xml");
+            TestErrorHandler teh = new TestErrorHandler();
+            try {
+                Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(url.openStream(), null);
+                fail("expected exception but caught none");
+            } catch (IllegalArgumentException e) {
+                log.debug("caught expected exception", e);
+            }
+        }
     }
     
     private static class TestErrorHandler implements ErrorHandler {
@@ -170,6 +187,20 @@ public class XMLPlistParserTest {
             List<Object> list = XMLPlistParser.parseList(in, teh);
             assertNotNull(list);
             assertEquals(8, list.size());
+        }
+        {
+            URL url = getClass().getResource("/XMLPlistParserTest/XmlPlist7.xml");
+            InputStream in = url.openStream();
+
+            TestErrorHandler teh = new TestErrorHandler();
+
+            try {
+                List<Object> list = XMLPlistParser.parseList(in, teh);
+                fail("expected exception but caught none");
+            } catch (IllegalArgumentException e) {
+                assertEquals("Could not parse element dict", e.getMessage());
+                log.debug("caught expected exception", e);
+            }
         }
     }
     
