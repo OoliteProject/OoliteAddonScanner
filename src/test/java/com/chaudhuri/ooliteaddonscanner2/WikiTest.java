@@ -151,6 +151,24 @@ public class WikiTest {
     @Test
     public void testWikiPageFor() {
         log.info("wikiPageFor");
+
+        try {
+            String result = Wiki.wikiPageFor(null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+
+        assertEquals("http://wiki.alioth.net/index.php/", Wiki.wikiPageFor(""));
+        assertEquals("http://wiki.alioth.net/index.php/bobo", Wiki.wikiPageFor("bobo"));
+        assertEquals("http://wiki.alioth.net/index.php/Bobo", Wiki.wikiPageFor("Bobo"));
+        assertEquals("http://wiki.alioth.net/index.php/Bobo%20Deluxe", Wiki.wikiPageFor("Bobo Deluxe"));
+        assertEquals("http://wiki.alioth.net/index.php/Nexus", Wiki.wikiPageFor("Nexus"));
+        assertEquals("http://wiki.alioth.net/index.php/nonexistant%20page$blue", Wiki.wikiPageFor("nonexistant page$blue"));
+
+        assertEquals("http://wiki.alioth.net/index.php/Bobo", Wiki.wikiPageFor("Bobo"));
+        assertEquals("http://wiki.alioth.net/index.php/Bobo?blue+re&bobo", Wiki.wikiPageFor("Bobo?blue+re&bobo"));
+        
     }
     
 }

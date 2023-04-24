@@ -146,7 +146,10 @@ public class Wiki {
      */
     public static String wikiPageFor(String name) {
         log.debug("wikiPageFor({})", name);
-
+        
+        if (name == null) {
+            throw new IllegalArgumentException("name must not be null");
+        }
         if (wikiPageMisses.contains(name)) {
             // we already found out this page is missing
             return null;
@@ -171,10 +174,16 @@ public class Wiki {
                     read = rin.read(buffer);
                 }
                 log.trace("wiki={}", sb);
-                wikiPageCache.put(name, urlStr);
+                if (sb.toString().contains("There is currently no text in this page.")) {
+                    // page does not exist, the wiki is offering to create that page
+                    wikiPageMisses.add(name);
+                    return null;
+                } else {                
+                    wikiPageCache.put(name, urlStr);
+                    return urlStr;
+                }
             }
             
-            return urlStr;
         } catch (Exception e) {
             wikiPageMisses.add(name);
             log.trace("Cannot find url {}", urlStr, e);
