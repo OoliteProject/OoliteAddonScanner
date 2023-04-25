@@ -635,6 +635,30 @@ public class RegistryTest {
     @Test
     public void testAddEquipment_Expansion_PlistParserListContext() throws Exception {
         log.info("addEquipment");
+        
+        Registry registry = new Registry();
+        try {
+            registry.addEquipment(null, (PlistParser.ListContext)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+
+        Expansion expansion = new Expansion();
+
+        try {
+            registry.addEquipment(expansion, (PlistParser.ListContext)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+        
+        URL url = getClass().getResource("/registryTest/equipment2.plist");
+
+        // parse plist test data
+        PlistParser.ListContext lc = PlistParserUtil.parsePlistList(url.openStream(), url.toString());
+        registry.addEquipment(expansion, (PlistParser.ListContext)lc);
+        assertEquals(1, registry.getEquipment().size());
     }
 
 }

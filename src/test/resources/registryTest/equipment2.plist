@@ -1,0 +1,19 @@
+(
+    2,
+    500,
+    "Bulk Cargo Processor",
+    "EQ_BULK_CARGO_PROCESSOR",
+    "Primable equipment that allows pilots to quickly dump or destroy all of a particular cargo type.",
+    {
+        "available_to_all" = yes;
+        "available_to_NPCs" = no;
+        "available_to_player" = yes;
+        "damage_probability" = 1.0;
+        "script" = "bulkcargoprocessor.js";
+        "script_info" = {
+                "equipment_space" = 0.5; // value in tons
+                "equipment_weight" = 0.5; // value in tons
+        };
+        "visible" = yes; // listed on the F5F5 screen.
+    }
+)
