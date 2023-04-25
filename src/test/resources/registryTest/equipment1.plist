@@ -1,0 +1,47 @@
+(
+    (
+	10,
+	20000,
+	"Fuel Collector",
+	"EQ_FRAME_FUEL_COLLECTOR",
+	"Device that retrieves fuel",
+	{
+            "available_to_all" = yes;
+            "incompatible_with_equipment" = "EQ_DUMMY";
+            "requires_equipment" = "EQ_FUEL_SCOOPS";
+	}
+    ),
+    (
+        2,
+        500,
+        "Bulk Cargo Processor",
+        "EQ_BULK_CARGO_PROCESSOR",
+        "Primable equipment that allows pilots to quickly dump or destroy all of a particular cargo type.",
+        {
+            "available_to_all" = yes;
+            "available_to_NPCs" = no;
+            "available_to_player" = yes;
+            "damage_probability" = 1.0;
+            "script" = "bulkcargoprocessor.js";
+            "script_info" = {
+                    "equipment_space" = 0.5; // value in tons
+                    "equipment_weight" = 0.5; // value in tons
+            };
+            "visible" = yes; // listed on the F5F5 screen.
+        }
+    ),
+    (
+        0,
+        100,
+        "Remove Bulk Cargo Processor",
+        "EQ_BULK_CARGO_PROCESSOR_REMOVAL",
+        "Removes the Bulk Cargo Processor.",
+        {
+            "available_to_all" = true;
+            "available_to_NPCs" = false;
+            "available_to_player" = true;
+            "requires_equipment" = "EQ_BULK_CARGO_PROCESSOR";
+            "visible" = false; // listed on the F5F5 screen.          
+        }
+    )
+)

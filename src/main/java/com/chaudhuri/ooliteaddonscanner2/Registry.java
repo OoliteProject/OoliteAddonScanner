@@ -63,6 +63,11 @@ public class Registry {
      */
     public void addExpansions(PlistParser.ListContext lc) {
         log.debug("addExpansions({})", lc);
+        
+        if (lc == null) {
+            throw new IllegalArgumentException("lc must not be null");
+        }
+        
         // we expect a list of dictionaries, nothing else
         
         for (PlistParser.ValueContext vc: lc.value()) {
@@ -232,12 +237,21 @@ public class Registry {
      */
     public void addEquipmentList(Expansion expansion, PlistParser.ListContext lc) throws RegistryException {
         log.debug("addEquipmentList({}, {})", expansion, lc);
+        if (expansion == null) {
+            throw new IllegalArgumentException("expansion must not be null");
+        }
         if (lc==null) {
             throw new IllegalArgumentException("ListContext must not be null");
         }
         
+        // for each equipment
         for (PlistParser.ValueContext vc: lc.value()) {
-            addEquipment(expansion, vc.list());
+            
+            // the equipment is a list by itself
+            log.warn(vc.getText());
+            if (vc.list() != null) {
+                addEquipment(expansion, vc.list());
+            }
         }
     }
     
@@ -329,6 +343,13 @@ public class Registry {
      */
     public void addEquipment(Expansion expansion, PlistParser.ListContext lc) throws RegistryException {
         log.debug("addEquipment({}, {})", expansion, lc);
+        if (expansion == null) {
+            throw new IllegalArgumentException("expansion must not be null");
+        }
+        if (lc == null) {
+            throw new IllegalArgumentException("lc must not be null");
+        }
+        
         Equipment eq = new Equipment();
         eq.setExpansion(expansion);
 

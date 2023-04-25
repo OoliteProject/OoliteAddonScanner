@@ -345,6 +345,69 @@ public class RegistryTest {
     }
     
     /**
+     * Test adding a list of expansions.
+     */
+    @Test
+    public void testAddExpansion_ListContext() throws IOException {
+        log.info("testAddExpansion_ListContext");
+        
+        Registry registry = new Registry();
+        assertEquals(0, registry.getExpansions().size());
+        try {
+            registry.addExpansions(null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+        
+        {
+            URL url = getClass().getResource("/registryTest/manifest4.plist");
+
+            // parse plist test data
+            PlistParser.ListContext lc = PlistParserUtil.parsePlistList(url.openStream(), url.toString());
+
+            registry.addExpansions(lc);
+            log.info("{}", registry.getWarnings());
+            assertEquals(3, registry.getExpansions().size());
+            assertEquals(0, registry.getWarnings().size());
+        }
+    }
+
+    @Test
+    public void testAddEquipmentList_Expansion_ListContext() throws IOException, RegistryException {
+        log.info("testAddEquipmentList_Expansion_ListContext");
+        
+        Registry registry = new Registry();
+        try {
+            registry.addEquipmentList(null, (PlistParser.ListContext)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+
+        URL url = getClass().getResource("/registryTest/equipment1.plist");
+
+        // parse plist test data
+        PlistParser.ListContext lc = PlistParserUtil.parsePlistList(url.openStream(), url.toString());
+        try {
+            registry.addEquipmentList(null, (PlistParser.ListContext)lc);
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+
+        Expansion expansion = new Expansion();
+
+        try {
+            registry.addEquipmentList(expansion, (PlistParser.ListContext)null);
+        } catch (IllegalArgumentException e) {
+            log.debug("caught expected exception", e);
+        }
+        
+        registry.addEquipmentList(expansion, (PlistParser.ListContext)lc);
+        assertEquals(3, registry.getEquipment().size());
+    }
+    
+    /**
      * Test of addEquipment method, of class Registry.
      */
     @Test
