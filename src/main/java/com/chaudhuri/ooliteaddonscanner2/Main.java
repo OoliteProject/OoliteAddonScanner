@@ -203,9 +203,8 @@ public class Main {
         if (XML_HEADER.equals(sc.next())) {
             log.trace("Parsing {}", url);
             in.reset();
-            
             List<Object> equipmentList = XMLPlistParser.parseList(in, null);
-            
+            oxp.addWarning("Found XML equipment list");
             log.info("Parsed {} ({} items of equipment)", oxp.getName(), equipmentList.size());
             registry.addEquipmentList(oxp, (List)equipmentList.get(0));
         } else {
@@ -292,7 +291,7 @@ public class Main {
      * @param registry 
      */
     private static void readOxps(ExpansionCache cache, Registry registry) {
-        log.debug("readManifests({}, {})", cache, registry);
+        log.debug("readOxps({}, {})", cache, registry);
         
         int i = 0;
         int total = registry.getExpansions().size();

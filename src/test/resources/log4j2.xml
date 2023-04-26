@@ -21,8 +21,8 @@
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.TemplateEngineTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Verifier"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.VerifierTest"/>
-    <Logger level="trace" name="com.chaudhuri.ooliteaddonscanner2.Wiki"/>
-    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.WikiTest"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.Wiki"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.WikiTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.XMLPlistParser"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.XMLPlistParserTest"/>
     <Root level="TRACE">

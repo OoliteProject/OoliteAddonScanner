@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <array>
+        <array>
+            <integer>0</integer>
+            <integer>12500</integer>
+            <string>Personal Fireworks</string>
+            <string>EQ_FIREWORKS</string>
+            <string>Have you just become ELITE? Have you smashed the biggest party of Thargoids ever? Or have you any other reason to celebrate? Here's the way to do it! A display of fireworks will be arranged solely for you by the station master right in front of the station. Just launch and enjoy your personal fireworks!</string>
+            <dict>
+                <key>available_to_all</key>
+                <true/>
+            </dict>
+        </array>
+        <array>
+            <integer>99</integer>
+            <integer>7500</integer>
+            <string>Portable Fireworks</string>
+            <string>EQ_FIREWORKS_MINE</string>
+            <string>Enjoyed your fireworks? This is the portable version. Just carry one of these pylon-mounted devices with you and use it whenever you feel like celebrating! It is launched like a mine, has no destructive power, and is used purely for displays of joy.</string>
+            <dict>
+                <key>available_to_all</key>
+                <true/>
+                <key>requires_empty_pylon</key>
+                <true/>
+            </dict>
+        </array>
+        <array>
+            <integer>99</integer>
+            <integer>5000</integer>
+            <string>Fireworks Missile</string>
+            <string>EQ_FIREWORKS_MISSILE</string>
+            <string>The Fireworks Missile is a blank missile fitted with smaller blanks. It has no destructive power, and is used purely for displays of joy.</string>
+            <dict>
+                <key>available_to_all</key>
+                <true/>
+                <key>requires_empty_pylon</key>
+                <true/>
+            </dict>
+        </array>
+    </array>
+</plist>
