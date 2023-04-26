@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.io.TempDir;
 
 /**
  *
@@ -30,6 +32,7 @@ public class ExpansionCacheTest {
     private static final Logger log = LogManager.getLogger();
     
     private static File tempCacheDir;
+    
     private static final String testDownload = "https://dlcdn.apache.org//commons/cli/binaries/commons-cli-1.5.0-bin.tar.gz";
     private static final String testDownloadPath = "dlcdn.apache.org//commons/cli/binaries/commons-cli-1.5.0-bin.tar.gz";
     
@@ -55,7 +58,7 @@ public class ExpansionCacheTest {
         log.warn("tearDownClass()");
         
         if (tempCacheDir != null) {
-            Files.deleteIfExists(tempCacheDir.toPath());
+            FileUtils.deleteDirectory(tempCacheDir);
         }
     }
     
