@@ -248,7 +248,7 @@ public class Registry {
         for (PlistParser.ValueContext vc: lc.value()) {
             
             // the equipment is a list by itself
-            log.warn(vc.getText());
+            log.trace("ValueContext: {}", vc.getText());
             if (vc.list() != null) {
                 addEquipment(expansion, vc.list());
             }
@@ -262,6 +262,13 @@ public class Registry {
      */
     public void addEquipment(Expansion expansion, List<Map<String, Object>> list) throws RegistryException {
         log.debug("addEquipment({}, {})", expansion, list);
+        if (expansion == null) {
+            throw new IllegalArgumentException("expansion must not be null");
+        }
+        if (list == null) {
+            throw new IllegalArgumentException("list must not be null");
+        }
+        
         Equipment eq = new Equipment();
         eq.setExpansion(expansion);
 
@@ -441,6 +448,15 @@ public class Registry {
      */
     public void addShip(Expansion expansion, String identifier, PlistParser.DictionaryContext dc) {
         log.debug("addShip({}, {}, {})", expansion, identifier, dc);
+        if (expansion == null) {
+            throw new IllegalArgumentException("expansion must not be null");
+        }
+        if (identifier == null) {
+            throw new IllegalArgumentException("identifier must not be null");
+        }
+        if (dc == null) {
+            throw new IllegalArgumentException("dc must not be null");
+        }
         
         Ship ship = new Ship();
         ship.setExpansion(expansion);
