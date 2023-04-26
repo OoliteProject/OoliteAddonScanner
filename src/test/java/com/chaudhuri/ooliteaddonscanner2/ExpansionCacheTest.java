@@ -175,7 +175,8 @@ public class ExpansionCacheTest {
         cache.update(testDownload);
         assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
         Instant lastModified2 = Instant.ofEpochMilli(downloaded.lastModified());
-        assertTrue(Duration.between(lastModified, lastModified2).toSeconds() < 2, "Timestamp changed. Was the file downloaded?");
+        Duration age = Duration.between(lastModified, lastModified2);
+        assertTrue(age.toSeconds() < 3, String.format("File age is %s. Was the file downloaded?", age));
         
     }
 

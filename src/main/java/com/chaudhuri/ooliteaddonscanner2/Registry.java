@@ -23,7 +23,8 @@ import org.apache.logging.log4j.Logger;
  */
 public class Registry {
     private static final Logger log = LogManager.getLogger(Registry.class);
-    
+
+    private static final String EXCEPTION_EXPANSION_MUST_NOT_BE_NULL = "expansion must not be null";
     public static final String EXPANSION_AUTHOR = "author";
     public static final String EXPANSION_CATEGORY = "category";
     public static final String EXPANSION_CONFLICT_OXPS = "conflict_oxps";
@@ -238,7 +239,7 @@ public class Registry {
     public void addEquipmentList(Expansion expansion, PlistParser.ListContext lc) throws RegistryException {
         log.debug("addEquipmentList({}, {})", expansion, lc);
         if (expansion == null) {
-            throw new IllegalArgumentException("expansion must not be null");
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         if (lc==null) {
             throw new IllegalArgumentException("ListContext must not be null");
@@ -263,7 +264,7 @@ public class Registry {
     public void addEquipment(Expansion expansion, List<Map<String, Object>> list) throws RegistryException {
         log.debug("addEquipment({}, {})", expansion, list);
         if (expansion == null) {
-            throw new IllegalArgumentException("expansion must not be null");
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         if (list == null) {
             throw new IllegalArgumentException("list must not be null");
@@ -351,7 +352,7 @@ public class Registry {
     public void addEquipment(Expansion expansion, PlistParser.ListContext lc) throws RegistryException {
         log.debug("addEquipment({}, {})", expansion, lc);
         if (expansion == null) {
-            throw new IllegalArgumentException("expansion must not be null");
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         if (lc == null) {
             throw new IllegalArgumentException("lc must not be null");
@@ -449,7 +450,7 @@ public class Registry {
     public void addShip(Expansion expansion, String identifier, PlistParser.DictionaryContext dc) {
         log.debug("addShip({}, {}, {})", expansion, identifier, dc);
         if (expansion == null) {
-            throw new IllegalArgumentException("expansion must not be null");
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         if (identifier == null) {
             throw new IllegalArgumentException("identifier must not be null");
