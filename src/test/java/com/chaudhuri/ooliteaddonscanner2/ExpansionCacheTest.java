@@ -41,7 +41,7 @@ public class ExpansionCacheTest {
     
     @BeforeAll
     public static void setUpClass() {
-        log.warn("setUpClass()");
+        log.debug("setUpClass()");
 
         TreeMap<String, String> props = new TreeMap(System.getProperties());
         for (String key: props.keySet()) {
@@ -55,7 +55,7 @@ public class ExpansionCacheTest {
     
     @AfterAll
     public static void tearDownClass() throws IOException {
-        log.warn("tearDownClass()");
+        log.debug("tearDownClass()");
         
         if (tempCacheDir != null) {
             FileUtils.deleteDirectory(tempCacheDir);
@@ -64,12 +64,12 @@ public class ExpansionCacheTest {
     
     @BeforeEach
     public void setUp() {
-        log.warn("setUp()");
+        log.debug("setUp()");
     }
     
     @AfterEach
     public void tearDown() {
-        log.warn("tearDown()");
+        log.debug("tearDown()");
     }
     
     @Test
@@ -93,8 +93,11 @@ public class ExpansionCacheTest {
     @Test
     public void testGetOoliteManifest() throws Exception {
         log.info("testGetOoliteManifest");
+
+        File testDir = new File("target/test/ExpansionCacheTest");
+        testDir.mkdirs();
         
-        ExpansionCache cache = new ExpansionCache();
+        ExpansionCache cache = new ExpansionCache(testDir);
         Map<String, Object> m = cache.getOoliteManifest("latest");
         assertNotNull(m);
         assertEquals(18, m.size());

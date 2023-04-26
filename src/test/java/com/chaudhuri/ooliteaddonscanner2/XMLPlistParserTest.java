@@ -245,7 +245,7 @@ public class XMLPlistParserTest {
                 fail("expected exception");
             } catch(IllegalArgumentException e) {
                 assertEquals("Could not parse element dict", e.getMessage());
-                assertEquals("Expected element 'key'", e.getCause().getMessage());
+                assertEquals("Expected element 'key', found k", e.getCause().getMessage());
                 log.debug("caught expected exception", e);
             }
         }

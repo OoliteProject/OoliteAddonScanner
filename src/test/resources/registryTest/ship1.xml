@@ -2,84 +2,94 @@
 <!-- here we have a typical ship list. It is a dictionary of ships. -->
 <plist version="1.0">
     <dict>
-
-	"cobra3-miner-player" =
-	{
-		aft_eject_position = "0.0 -17.0 -40.0";
-		custom_views =
-		(
-			{
-				view_description = "Rear View";
-				view_orientation = "1.0 0.0 0.0 0.0";
-				view_position = "0.0 30.0 -380.0";
-				weapon_facing = "FORWARD";
-			},
-			{
+        <key>cobra3-miner-player</key>
+        <dict>
+            <key>aft_eject_position</key>
+            <string>0.0 -17.0 -40.0</string>
+            <key>custom_views</key>
+            <array>
+                <dict>
+                    <key>view_description</key>
+                    <string>Rear View</string>
+                    <key>view_orientation</key>
+                    <string>1.0 0.0 0.0 0.0</string>
+                    <key>view_position</key>
+                    <string>0.0 30.0 -380.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
 				view_description = "Rear Right View";
 				view_orientation = "0.9239 0.0 0.3827 0.0";
 				view_position = "251.42 30.0 -251.42";
 				weapon_facing = "FORWARD";
-			},
-			{
+                </dict>
+                <dict>
 				view_description = "Right View";
 				view_orientation = "0.7071 0.0 0.7071 0.0";
 				view_position = "350.0 30.0 0.0";
 				weapon_facing = "FORWARD";
-			},
-			{
+                </dict>
+                <dict>
 				view_description = "Front Right View";
 				view_orientation = "0.3827 0.0 0.9239 0.0";
 				view_position = "251.42 30.0 251.42";
 				weapon_facing = "FORWARD";
-			},
-			{
+                </dict>
+                <dict>
 				view_description = "Front View";
 				view_orientation = "0.0 0.0 1.0 0.0";
 				view_position = "0.0 30.0 350.0";
 				weapon_facing = "FORWARD";
-			},
-			{
+                </dict>
+                <dict>
 				view_description = "Front Left View";
 				view_orientation = "0.3827 0.0 -0.9239 0.0";
 				view_position = "-251.42 30.0 251.42";
 				weapon_facing = "FORWARD";
-			},
-			{
+                </dict>
+                <dict>
 				view_description = "Left View";
 				view_orientation = "0.7071 0.0 -0.7071 0.0";
 				view_position = "-350.0 30.0 0.0";
 				weapon_facing = "FORWARD";
-			},
-			{
+                </dict>
+                <dict>
 				view_description = "Rear Left View";
 				view_orientation = "0.9239 0.0 -0.3827 0.0";
 				view_position = "-251.42 30.0 -251.42";
 				weapon_facing = "FORWARD";
-			},
-			{
+                </dict>
+                <dict>
 				view_description = "Top View";
 				view_orientation = "-0.7071 0.7071 0.0 0.0";
 				view_position = "0.0 420.0 0.0";
 				weapon_facing = "FORWARD";
-			},
-			{
+                </dict>
+                <dict>
 				view_description = "Bottom View";
 				view_orientation = "0.0 0.0 0.7071 0.7071";
 				view_position = "0.0 -420.0 0.0";
 				weapon_facing = "FORWARD";
-			}
-		);	
-		energy_recharge_rate = 3;	
-		exhaust = (		
-			"10.7601 6.3008 -31.8587  6.3 5.6 9.0",
-			"-10.7601 6.3008 -31.8587 6.3 5.6 9.0"
-			);
-		extra_cargo = 0;
-		frangible = "false";
-		forward_weapon_type = "WEAPON_MINING_LASER";
-		laser_color = "whiteColor";
-		materials = 
-		{ 
+                </dict>
+            </array>
+            <key>energy_recharge_rate</key>
+            <integer>3</integer>
+            <key>exhaust</key>
+            <array>
+                <string>10.7601 6.3008 -31.8587  6.3 5.6 9.0</string>
+                <string>-10.7601 6.3008 -31.8587 6.3 5.6 9.0</string>
+            </array>
+            <key>extra_cargo</key>
+            <integer>0</integer>
+            <key>frangible</key>
+            <string>false</string>
+            <key>forward_weapon_type</key>
+            <string>WEAPON_MINING_LASER</string>
+            <key>laser_color</key>
+            <string>whiteColor</string>
+            <key>materials</key>
+            <dict>
 			"minercobra_diffuse.png" = 
 			{ 
 				diffuse_map = "minercobra_diffuse.png"; 
@@ -88,7 +98,7 @@
 				emission_map = { name = "griff_minercobra_mk3_mainhull_normal.png"; extract_channel = "a"; }; 
 				emission_modulate_color = (0.9926, 0.9686, 0.7325); 
 			}; 
-		};
+            </dict>
 		max_cargo = 75;
 		max_energy = 192;
 		max_flight_pitch = 1;
@@ -138,7 +148,7 @@
 		weapon_position_aft = "0.0 0.0 -32.5";
 		weapon_position_port = "-40.0 2.17 -4.33";
 		weapon_position_starboard = "40.0 2.17 -4.33";	
-	};
+        </dict>
 	
 	"griff_normalmapped_minercobra_mkIII_front_gun_player" = 
 	{

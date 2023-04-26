@@ -397,6 +397,12 @@ public class Registry {
      */
     public void addShipList(Expansion expansion, Map<String, Object> shipList) {
         log.debug("addShipList({}, {})", expansion, shipList);
+        if (expansion == null) {
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
+        }
+        if (shipList == null) {
+            throw new IllegalArgumentException("shipList must not be null");
+        }
 
         for (Map.Entry<String, Object> entry: shipList.entrySet()) {
             addShip(expansion, entry.getKey(), (Map<String, Object>)entry.getValue());
@@ -428,6 +434,10 @@ public class Registry {
      */
     public void addShip(Expansion expansion, String identifier, Map<String, Object> data) {
         log.debug("addShip({}, {}, {})", expansion, identifier, data);
+        
+        if (expansion == null) {
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
+        }
 
         Ship ship = new Ship();
         ship.setExpansion(expansion);

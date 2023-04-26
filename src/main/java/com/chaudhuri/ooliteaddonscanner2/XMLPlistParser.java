@@ -124,7 +124,7 @@ public class XMLPlistParser {
                 if (key == null) {
                     // parse the key
                     if (!"key".equals(n.getNodeName())) {
-                        throw new IllegalArgumentException("Expected element 'key'");
+                        throw new IllegalArgumentException(String.format("Expected element 'key', found %s", n.getNodeName()));
                     }
                     key = String.valueOf(parseElement((Element)n));
                     if ("".equals(key)) {
@@ -216,7 +216,33 @@ public class XMLPlistParser {
         
         return result.get(0);
     }
+    
+    private static Document parseInputStream(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        if(eh != null) {
+            db.setErrorHandler(eh);
+        }
+        return db.parse(in);
+    }
 
+    /** Parses an XML file, checks it is a plist/dict and returns the map of values
+     * found.
+     * 
+     * @param in
+     * @param eh
+     * @return
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     * @throws TransformerException 
+     */
+    public static Map<String, Object> parseDictionary(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+        Document doc = parseInputStream(in, eh);
+        Element plist = doc.getDocumentElement();
+        return parseDict((Element)plist.getElementsByTagName("dict").item(0));
+    }
+    
     /** Parses an XML file, checks it is a plist and returns the list of values
      * found.
      * 
@@ -231,12 +257,7 @@ public class XMLPlistParser {
     public static List<Object> parseList(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
         log.debug("parseList({})", in);
         
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        if(eh != null) {
-            db.setErrorHandler(eh);
-        }
-        Document doc = db.parse(in);
+        Document doc = parseInputStream(in, eh);
         Element plist = doc.getDocumentElement();
         if (!"plist".equals(plist.getNodeName())) {
             throw new IllegalArgumentException("Expected root node plist");

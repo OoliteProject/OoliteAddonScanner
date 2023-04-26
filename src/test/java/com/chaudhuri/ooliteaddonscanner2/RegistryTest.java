@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import org.antlr.v4.runtime.RuleContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +25,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -590,19 +593,35 @@ public class RegistryTest {
     }
 
     /**
-     * Test of addEquipment method, of class Registry.
-     */
-    @Test
-    public void testAddEquipment_Expansion_List() throws Exception {
-        log.info("addEquipment");
-    }
-
-    /**
      * Test of addShipList method, of class Registry.
      */
     @Test
-    public void testAddShipList_Expansion_Map() {
+    public void testAddShipList_Expansion_Map() throws IOException, ParserConfigurationException, SAXException, TransformerException {
         log.info("addShipList");
+        
+        Registry registry = new Registry();
+        try {
+            registry.addShipList(null, (Map)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("expansion must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+        
+        Expansion expansion = new Expansion("testexpansion");
+        
+        try {
+            registry.addShipList(expansion, (Map)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("shipList must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+        
+        URL url = getClass().getResource("/registryTest/ship1.xml");
+        Map<String, Object> map = XMLPlistParser.parseDictionary(url.openStream(), null);
+        registry.addShipList(expansion, map);
+        assertEquals(1, registry.getShips().size());
     }
 
     /**

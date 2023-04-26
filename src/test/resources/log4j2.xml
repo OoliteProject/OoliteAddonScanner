@@ -7,8 +7,8 @@
     </Appenders>
     <Loggers>
         <!-- error, warn, info, debug, trace -->
-    <Logger level="debug" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCache"/>
-    <Logger level="debug" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCacheTest"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCache"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCacheTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Main"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.model.EquipmentTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.model.ExpansionTest"/>
