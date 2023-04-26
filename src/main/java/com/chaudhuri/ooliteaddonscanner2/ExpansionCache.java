@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
@@ -115,9 +116,12 @@ public class ExpansionCache {
         }
         
         if (!dir.getAbsolutePath().equals(cacheDIR.getAbsolutePath()) && dir.listFiles().length <= 2) {
-            log.warn("Remove empty directory {}", dir.getAbsolutePath());
-            log.warn("contents: {}", dir.listFiles());
-            Files.delete(dir.toPath());
+            log.info("Remove empty directory {}", dir.getAbsolutePath());
+            try {
+                Files.delete(dir.toPath());
+            } catch (DirectoryNotEmptyException e) {
+                log.warn("Could not delete {} due to contents: {}", dir, dir.listFiles(), e);
+            }
         }
     }
     
