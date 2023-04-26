@@ -116,6 +116,7 @@ public class ExpansionCache {
         
         if (!dir.getAbsolutePath().equals(cacheDIR.getAbsolutePath()) && dir.listFiles().length <= 2) {
             log.warn("Remove empty directory {}", dir.getAbsolutePath());
+            log.warn("contents: {}", dir.listFiles());
             Files.delete(dir.toPath());
         }
     }
