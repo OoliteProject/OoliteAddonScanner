@@ -19,58 +19,94 @@
                     <string>FORWARD</string>
                 </dict>
                 <dict>
-				view_description = "Rear Right View";
-				view_orientation = "0.9239 0.0 0.3827 0.0";
-				view_position = "251.42 30.0 -251.42";
-				weapon_facing = "FORWARD";
+                    <key>view_description</key>
+                    <string>Rear Right View</string>
+                    <key>view_orientation</key>
+                    <string>0.9239 0.0 0.3827 0.0</string>
+                    <key>view_position</key>
+                    <string>251.42 30.0 -251.42</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
                 </dict>
                 <dict>
-				view_description = "Right View";
-				view_orientation = "0.7071 0.0 0.7071 0.0";
-				view_position = "350.0 30.0 0.0";
-				weapon_facing = "FORWARD";
+                    <key>view_description</key>
+                    <string>Right View</string>
+                    <key>view_orientation</key>
+                    <string>0.7071 0.0 0.7071 0.0</string>
+                    <key>view_position</key>
+                    <string>350.0 30.0 0.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
                 </dict>
                 <dict>
-				view_description = "Front Right View";
-				view_orientation = "0.3827 0.0 0.9239 0.0";
-				view_position = "251.42 30.0 251.42";
-				weapon_facing = "FORWARD";
+                    <key>view_description</key>
+                    <string>Front Right View</string>
+                    <key>view_orientation</key>
+                    <string>0.3827 0.0 0.9239 0.0</string>
+                    <key>view_position</key>
+                    <string>251.42 30.0 251.42</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
                 </dict>
                 <dict>
-				view_description = "Front View";
-				view_orientation = "0.0 0.0 1.0 0.0";
-				view_position = "0.0 30.0 350.0";
-				weapon_facing = "FORWARD";
+                    <key>view_description</key>
+                    <string>Front View</string>
+                    <key>view_orientation</key>
+                    <string>0.0 0.0 1.0 0.0</string>
+                    <key>view_position</key>
+                    <string>0.0 30.0 350.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
                 </dict>
                 <dict>
-				view_description = "Front Left View";
-				view_orientation = "0.3827 0.0 -0.9239 0.0";
-				view_position = "-251.42 30.0 251.42";
-				weapon_facing = "FORWARD";
+                    <key>view_description</key>
+                    <string>Front Left View</string>
+                    <key>view_orientation</key>
+                    <string>0.3827 0.0 -0.9239 0.0</string>
+                    <key>view_position</key>
+                    <string>-251.42 30.0 251.42</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
                 </dict>
                 <dict>
-				view_description = "Left View";
-				view_orientation = "0.7071 0.0 -0.7071 0.0";
-				view_position = "-350.0 30.0 0.0";
-				weapon_facing = "FORWARD";
+                    <key>view_description</key>
+                    <string>Left View</string>
+                    <key>view_orientation</key>
+                    <string>0.7071 0.0 -0.7071 0.0</string>
+                    <key>view_position</key>
+                    <string>-350.0 30.0 0.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
                 </dict>
                 <dict>
-				view_description = "Rear Left View";
-				view_orientation = "0.9239 0.0 -0.3827 0.0";
-				view_position = "-251.42 30.0 -251.42";
-				weapon_facing = "FORWARD";
+                    <key>view_description</key>
+                    <string>Rear Left View</string>
+                    <key>view_orientation</key>
+                    <string>0.9239 0.0 -0.3827 0.0</string>
+                    <key>view_position</key>
+                    <string>-251.42 30.0 -251.42</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
                 </dict>
                 <dict>
-				view_description = "Top View";
-				view_orientation = "-0.7071 0.7071 0.0 0.0";
-				view_position = "0.0 420.0 0.0";
-				weapon_facing = "FORWARD";
+                    <key>view_description</key>
+                    <string>Top View</string>
+                    <key>view_orientation</key>
+                    <string>-0.7071 0.7071 0.0 0.0</string>
+                    <key>view_position</key>
+                    <string>0.0 420.0 0.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
                 </dict>
                 <dict>
-				view_description = "Bottom View";
-				view_orientation = "0.0 0.0 0.7071 0.7071";
-				view_position = "0.0 -420.0 0.0";
-				weapon_facing = "FORWARD";
+                    <key>view_description</key>
+                    <string>Bottom View</string>
+                    <key>view_orientation</key>
+                    <string>0.0 0.0 0.7071 0.7071</string>
+                    <key>view_position</key>
+                    <string>0.0 -420.0 0.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
                 </dict>
             </array>
             <key>energy_recharge_rate</key>
