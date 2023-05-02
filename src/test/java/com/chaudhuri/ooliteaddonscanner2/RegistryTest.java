@@ -574,14 +574,6 @@ public class RegistryTest {
     }
 
     /**
-     * Test of addEquipmentList method, of class Registry.
-     */
-    @Test
-    public void testAddEquipmentList_Expansion_PlistParserListContext() throws Exception {
-        log.info("addEquipmentList");
-    }
-
-    /**
      * Test of addShipList method, of class Registry.
      */
     @Test
