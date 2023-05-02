@@ -75,34 +75,42 @@ public class VerifierTest {
     @Test
     public void testVerify_Expansion() {
         log.info("testVerify_Expansion");
-        {
-            Expansion expansion = new Expansion();
-            assertEquals(0, expansion.getWarnings().size());
-            Verifier.verify(expansion);
-            assertEquals(0, expansion.getWarnings().size());
-        }
-        {
-            Expansion expansion = new Expansion();
-            expansion.setDescription("one");
-            ExpansionManifest manifest = new ExpansionManifest();
-            manifest.setDescription("two");
-            expansion.setManifest(manifest);
-            
-            assertEquals(0, expansion.getWarnings().size());
-            Verifier.verify(expansion);
-            assertEquals(1, expansion.getWarnings().size());
-        }
-        {
-            Expansion expansion = new Expansion();
-            expansion.setIdentifier("one");
-            ExpansionManifest manifest = new ExpansionManifest();
-            manifest.setIdentifier("two");
-            expansion.setManifest(manifest);
-            
-            assertEquals(0, expansion.getWarnings().size());
-            Verifier.verify(expansion);
-            assertEquals(1, expansion.getWarnings().size());
-        }
+        Expansion expansion = new Expansion();
+        assertEquals(0, expansion.getWarnings().size());
+        Verifier.verify(expansion);
+        assertEquals(0, expansion.getWarnings().size());
+    }
+        
+    /**
+     * Test of verify method, of class Verifier.
+     */
+    @Test
+    public void testVerify_Expansion2() {
+        Expansion expansion = new Expansion();
+        expansion.setDescription("one");
+        ExpansionManifest manifest = new ExpansionManifest();
+        manifest.setDescription("two");
+        expansion.setManifest(manifest);
+
+        assertEquals(0, expansion.getWarnings().size());
+        Verifier.verify(expansion);
+        assertEquals(1, expansion.getWarnings().size());
+    }
+
+    /**
+     * Test of verify method, of class Verifier.
+     */
+    @Test
+    public void testVerify_Expansion3() {
+        Expansion expansion = new Expansion();
+        expansion.setIdentifier("one");
+        ExpansionManifest manifest = new ExpansionManifest();
+        manifest.setIdentifier("two");
+        expansion.setManifest(manifest);
+
+        assertEquals(0, expansion.getWarnings().size());
+        Verifier.verify(expansion);
+        assertEquals(1, expansion.getWarnings().size());
     }
 
     /**
@@ -209,12 +217,83 @@ public class VerifierTest {
     @Test
     public void testVerify_Registry() {
         log.info("testVerify_Registry");
-        {
-            Registry registry = new Registry();
-            assertEquals(0, registry.getWarnings().size());
-            Verifier.verify(registry);
-            assertEquals(0, registry.getWarnings().size());
-        }
+        Registry registry = new Registry();
+        assertEquals(0, registry.getWarnings().size());
+        Verifier.verify(registry);
+        assertEquals(0, registry.getWarnings().size());
+    }
+    
+    /**
+     * Test of verify method, of class Verifier.
+     */
+    @Test
+    public void testVerify_Registry2() { // test expansion
+        log.info("testVerify_Registry2");
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion("identifier");
+        expansion.setTitle("title");
+        expansion.setCategory("n");
+        expansion.setAuthor("n");
+        expansion.setVersion("n");
+        expansion.setTags("n");
+        expansion.setRequiredOoliteVersion("n");
+        expansion.setMaximumOoliteVersion("n");
+        registry.addExpansion(expansion);
+        assertEquals(0, registry.getWarnings().size());
+        
+        Verifier.verify(registry);
+        log.info("warnings: {}", registry.getWarnings());
+        assertEquals(8, registry.getWarnings().size());
+        assertEquals("Identifier mismatch between OXP Manifest and Expansion Manager at character position 0001 (LATIN SMALL LETTER I vs LATIN SMALL LETTER N)", registry.getWarnings().get(0));
+        assertEquals("Title mismatch between OXP Manifest and Expansion Manager at character position 0001 (LATIN SMALL LETTER T vs LATIN SMALL LETTER N)", registry.getWarnings().get(1));
+        assertEquals("Category mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(2));
+        assertEquals("Author mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(3));
+        assertEquals("Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(4));
+        assertEquals("Tags mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(5));
+        assertEquals("Required Oolite Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(6));
+        assertEquals("Maximum Oolite Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(7));
+    }
+    
+    /**
+     * Test of verify method, of class Verifier.
+     */
+    @Test
+    public void testVerify_Registry3() { // test equipment
+        log.info("testVerify_Registry3");
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion("identifier");
+        registry.addExpansion(expansion);
+        Equipment equipment = new Equipment("identifier");
+        equipment.setExpansion(expansion);
+        expansion.addEquipment(equipment);
+        registry.addEquipment(equipment);
+        assertEquals(0, registry.getWarnings().size());
+        
+        Verifier.verify(registry);
+        log.info("warnings: {}", registry.getWarnings());
+        assertEquals(1, registry.getWarnings().size());
+        assertEquals("Identifier mismatch between OXP Manifest and Expansion Manager at character position 0001 (LATIN SMALL LETTER I vs LATIN SMALL LETTER N)", registry.getWarnings().get(0));
+    }
+    
+    /**
+     * Test of verify method, of class Verifier.
+     */
+    @Test
+    public void testVerify_Registry4() {
+        log.info("testVerify_Registry3");
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion("identifier");
+        registry.addExpansion(expansion);
+        Ship ship = new Ship("identifier");
+        ship.setExpansion(expansion);
+        expansion.addShip(ship);
+        registry.addShip(ship);
+        assertEquals(0, registry.getWarnings().size());
+        
+        Verifier.verify(registry);
+        log.info("warnings: {}", registry.getWarnings());
+        assertEquals(1, registry.getWarnings().size());
+        assertEquals("Identifier mismatch between OXP Manifest and Expansion Manager at character position 0001 (LATIN SMALL LETTER I vs LATIN SMALL LETTER N)", registry.getWarnings().get(0));
     }
     
     @Test
