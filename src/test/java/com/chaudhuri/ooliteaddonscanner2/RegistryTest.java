@@ -7,16 +7,13 @@ import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
-import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.TreeMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
-import org.antlr.v4.runtime.RuleContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -706,4 +703,84 @@ public class RegistryTest {
         assertEquals(1, registry.getEquipment().size());
     }
 
+    @Test
+    public void testAddEquipment_Expansion_List() throws IOException, ParserConfigurationException, SAXException, RegistryException {
+        log.info("testAddEquipment_Expansion_List");
+        
+        Registry registry = new Registry();
+        try {
+            registry.addEquipment((Expansion)null, (List<Map<String, Object>>)null);
+            fail("Expected exception.");
+        } catch (IllegalArgumentException e) {
+            assertEquals("expansion must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    @Test
+    public void testAddEquipment_Expansion_List2() throws IOException, ParserConfigurationException, SAXException, RegistryException {
+        log.info("testAddEquipment_Expansion_List2");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion();
+        try {
+            registry.addEquipment(expansion, (List<Map<String, Object>>)null);
+            fail("Expected exception.");
+        } catch (IllegalArgumentException e) {
+            assertEquals("list must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    @Test
+    public void testAddEquipment_Expansion_List3() throws IOException, ParserConfigurationException, SAXException, TransformerException, RegistryException {
+        log.info("testAddEquipment_Expansion_List3");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion();
+        URL url = getClass().getResource("/registryTest/equipment1.xml");
+        List<Map<String, Object>> list = (List<Map<String, Object>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+
+        try {
+            registry.addEquipment(expansion, list);
+            fail("Exception expected");
+        } catch (RegistryException e) {
+            assertEquals("Could not evaluate expansion null equipment [[[0, 12500, Personal Fireworks, EQ_FIREWORKS, Have you just become ELITE? Have you smashed the biggest party of Thargoids ever? Or have you any other reason to celebrate? Here's the way to do it! A display of fireworks will be arranged solely for you by the station master right in front of the station. Just launch and enjoy your personal fireworks!, {available_to_all=true}], [99, 7500, Portable Fireworks, EQ_FIREWORKS_MINE, Enjoyed your fireworks? This is the portable version. Just carry one of these pylon-mounted devices with you and use it whenever you feel like celebrating! It is launched like a mine, has no destructive power, and is used purely for displays of joy., {available_to_all=true, requires_empty_pylon=true}], [99, 5000, Fireworks Missile, EQ_FIREWORKS_MISSILE, The Fireworks Missile is a blank missile fitted with smaller blanks. It has no destructive power, and is used purely for displays of joy., {available_to_all=true, requires_empty_pylon=true}]]]", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    @Test
+    public void testAddEquipment_Expansion_List4() throws IOException, ParserConfigurationException, SAXException, TransformerException, RegistryException {
+        log.info("testAddEquipment_Expansion_List4");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion();
+        URL url = getClass().getResource("/registryTest/equipment1.xml");
+        List<List<Map<String, Object>>> list = (List<List<Map<String, Object>>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+
+        try {
+            registry.addEquipment(expansion, list.get(0));
+            fail("Exception expected");
+        } catch (RegistryException e) {
+            assertEquals("Could not evaluate expansion null equipment [[0, 12500, Personal Fireworks, EQ_FIREWORKS, Have you just become ELITE? Have you smashed the biggest party of Thargoids ever? Or have you any other reason to celebrate? Here's the way to do it! A display of fireworks will be arranged solely for you by the station master right in front of the station. Just launch and enjoy your personal fireworks!, {available_to_all=true}], [99, 7500, Portable Fireworks, EQ_FIREWORKS_MINE, Enjoyed your fireworks? This is the portable version. Just carry one of these pylon-mounted devices with you and use it whenever you feel like celebrating! It is launched like a mine, has no destructive power, and is used purely for displays of joy., {available_to_all=true, requires_empty_pylon=true}], [99, 5000, Fireworks Missile, EQ_FIREWORKS_MISSILE, The Fireworks Missile is a blank missile fitted with smaller blanks. It has no destructive power, and is used purely for displays of joy., {available_to_all=true, requires_empty_pylon=true}]]", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    @Test
+    public void testAddEquipment_Expansion_List5() throws IOException, ParserConfigurationException, SAXException, TransformerException, RegistryException {
+        log.info("testAddEquipment_Expansion_List5");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion();
+        URL url = getClass().getResource("/registryTest/equipment1.xml");
+        List<List<List<Map<String, Object>>>> list = (List<List<List<Map<String, Object>>>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getWarnings().size());
+        registry.addEquipment(expansion, list.get(0).get(0));
+        assertEquals(1, registry.getEquipment().size());
+        assertEquals(0, registry.getWarnings().size());
+    }
 }
