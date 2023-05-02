@@ -417,6 +417,12 @@ public class Registry {
      */
     public void addShipList(Expansion expansion, PlistParser.DictionaryContext dc) {
         log.debug("addShipList({}, {})", expansion, dc);
+        if (expansion == null) {
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
+        }
+        if (dc == null) {
+            throw new IllegalArgumentException("dc must not be null");
+        }
         
         for (PlistParser.KeyvaluepairContext kc: dc.keyvaluepair()) {
             String key = kc.STRING().getText(); // ship identifier

@@ -237,7 +237,7 @@ public class XMLPlistParser {
      * @throws IOException
      * @throws TransformerException 
      */
-    public static Map<String, Object> parseDictionary(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+    public static Map<String, Object> parseDictionary(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException {
         Document doc = parseInputStream(in, eh);
         Element plist = doc.getDocumentElement();
         return parseDict((Element)plist.getElementsByTagName("dict").item(0));

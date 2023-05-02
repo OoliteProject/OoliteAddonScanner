@@ -621,15 +621,41 @@ public class RegistryTest {
         URL url = getClass().getResource("/registryTest/ship1.xml");
         Map<String, Object> map = XMLPlistParser.parseDictionary(url.openStream(), null);
         registry.addShipList(expansion, map);
-        assertEquals(1, registry.getShips().size());
+        assertEquals(3, registry.getShips().size());
     }
 
     /**
      * Test of addShipList method, of class Registry.
      */
     @Test
-    public void testAddShipList_Expansion_PlistParserDictionaryContext() {
+    public void testAddShipList_Expansion_PlistParserDictionaryContext() throws IOException {
         log.info("addShipList");
+        
+        Registry registry = new Registry();
+
+        try {
+            registry.addShipList(null, (PlistParser.DictionaryContext)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("expansion must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+        
+        Expansion expansion = new Expansion("testAddShipListExpansion");
+
+        try {
+            registry.addShipList(expansion, (PlistParser.DictionaryContext)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("dc must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+
+        URL url = getClass().getResource("/registryTest/ship1.plist");
+        PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+        registry.addShipList(expansion, dc);
+        
+        assertEquals(3, registry.getShips().size());
     }
 
     /**
