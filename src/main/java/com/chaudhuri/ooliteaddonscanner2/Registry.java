@@ -225,6 +225,13 @@ public class Registry {
      */
     public void addEquipmentList(Expansion expansion, List<List<Map<String, Object>>> list) throws RegistryException {
         log.debug("addEquipmentList({}, {})", expansion, list);
+        if (expansion==null) {
+            throw new IllegalArgumentException("expansion must not be null");
+        }
+        if (list==null) {
+            throw new IllegalArgumentException("list must not be null");
+        }
+        
         for (List<Map<String, Object>> vc: list) {
             addEquipment(expansion, vc);
         }
