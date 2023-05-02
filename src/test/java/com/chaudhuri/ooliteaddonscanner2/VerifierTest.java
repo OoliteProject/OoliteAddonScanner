@@ -238,12 +238,20 @@ public class VerifierTest {
         expansion.setTags("n");
         expansion.setRequiredOoliteVersion("n");
         expansion.setMaximumOoliteVersion("n");
+        expansion.setRequiresOxps("n");
+        expansion.setOptionalOxps("n");
+        expansion.setConflictOxps("n");
+        expansion.setInformationUrl("n");
+        expansion.addScript("myscript1", "normal");
+        expansion.addScript("myscript2", " fetch ");
+        expansion.addScript("myscript3", " url ");
+        expansion.addScript("myscript4", " xmlhttprequest ");
         registry.addExpansion(expansion);
         assertEquals(0, registry.getWarnings().size());
         
         Verifier.verify(registry);
         log.info("warnings: {}", registry.getWarnings());
-        assertEquals(8, registry.getWarnings().size());
+        assertEquals(15, registry.getWarnings().size());
         assertEquals("Identifier mismatch between OXP Manifest and Expansion Manager at character position 0001 (LATIN SMALL LETTER I vs LATIN SMALL LETTER N)", registry.getWarnings().get(0));
         assertEquals("Title mismatch between OXP Manifest and Expansion Manager at character position 0001 (LATIN SMALL LETTER T vs LATIN SMALL LETTER N)", registry.getWarnings().get(1));
         assertEquals("Category mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(2));
@@ -252,6 +260,13 @@ public class VerifierTest {
         assertEquals("Tags mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(5));
         assertEquals("Required Oolite Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(6));
         assertEquals("Maximum Oolite Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(7));
+        assertEquals("Required Expansions mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(8));
+        assertEquals("Optional Expansions mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(9));
+        assertEquals("Conflict Expansions mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(10));
+        assertEquals("Information URL mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(11));
+        assertEquals("JavaScript with fetch", registry.getWarnings().get(12));
+        assertEquals("JavaScript with url", registry.getWarnings().get(13));
+        assertEquals("JavaScript with xmlhttprequest", registry.getWarnings().get(14));
     }
     
     /**
