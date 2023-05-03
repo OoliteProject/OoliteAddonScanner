@@ -693,7 +693,7 @@ public class RegistryTest {
         
         Registry registry = new Registry();
         try {
-            registry.addEquipment((Expansion)null, (List<Map<String, Object>>)null);
+            registry.addEquipment((Expansion)null, (List<Object>)null);
             fail("Expected exception.");
         } catch (IllegalArgumentException e) {
             assertEquals("expansion must not be null", e.getMessage());
@@ -708,7 +708,7 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         try {
-            registry.addEquipment(expansion, (List<Map<String, Object>>)null);
+            registry.addEquipment(expansion, (List<Object>)null);
             fail("Expected exception.");
         } catch (IllegalArgumentException e) {
             assertEquals("list must not be null", e.getMessage());
@@ -723,7 +723,7 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         URL url = getClass().getResource("/registryTest/equipment1.xml");
-        List<Map<String, Object>> list = (List<Map<String, Object>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+        List<Object> list = (List<Object>)XMLPlistParser.parseList(url.openStream(), null);
 
         try {
             registry.addEquipment(expansion, list);
@@ -741,7 +741,7 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         URL url = getClass().getResource("/registryTest/equipment1.xml");
-        List<List<Map<String, Object>>> list = (List<List<Map<String, Object>>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+        List<List<Object>> list = (List<List<Object>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
 
         try {
             registry.addEquipment(expansion, list.get(0));
@@ -759,7 +759,7 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         URL url = getClass().getResource("/registryTest/equipment1.xml");
-        List<List<List<Map<String, Object>>>> list = (List<List<List<Map<String, Object>>>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+        List<List<List<Object>>> list = (List<List<List<Object>>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
 
         assertEquals(0, registry.getEquipment().size());
         assertEquals(0, registry.getWarnings().size());
@@ -777,7 +777,7 @@ public class RegistryTest {
         
         Registry registry = new Registry();
         try {
-            registry.addEquipmentList(null, (List<List<Map<String, Object>>>)null);
+            registry.addEquipmentList(null, (List<List<Object>>)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             assertEquals("expansion must not be null", e.getMessage());
@@ -795,7 +795,7 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         try {
-            registry.addEquipmentList(expansion, (List<List<Map<String, Object>>>)null);
+            registry.addEquipmentList(expansion, (List<List<Object>>)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             assertEquals("list must not be null", e.getMessage());
@@ -813,14 +813,99 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         URL url = getClass().getResource("/registryTest/equipment1.xml");
-        List<List<Map<String, Object>>> list = (List<List<Map<String, Object>>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+        List<List<List<Object>>> list = (List<List<List<Object>>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+        assertEquals(1, list.size());
+        assertEquals(3, list.get(0).size());
+
+        registry.addEquipmentList(expansion, list.get(0));
+        assertEquals(3, registry.getEquipment().size());
+    }
+
+    @Test
+    public void testAddShip_Expansion_String_Map() {
+        Registry registry = new Registry();
         try {
-            registry.addEquipmentList(expansion, list);
+            registry.addShip((Expansion)null, (String)null, (Map<String, Object>)null);
             fail("expected exception");
-        } catch (RegistryException e) {
-            assertEquals("Could not evaluate expansion null equipment [[0, 12500, Personal Fireworks, EQ_FIREWORKS, Have you just become ELITE? Have you smashed the biggest party of Thargoids ever? Or have you any other reason to celebrate? Here's the way to do it! A display of fireworks will be arranged solely for you by the station master right in front of the station. Just launch and enjoy your personal fireworks!, {available_to_all=true}], [99, 7500, Portable Fireworks, EQ_FIREWORKS_MINE, Enjoyed your fireworks? This is the portable version. Just carry one of these pylon-mounted devices with you and use it whenever you feel like celebrating! It is launched like a mine, has no destructive power, and is used purely for displays of joy., {available_to_all=true, requires_empty_pylon=true}], [99, 5000, Fireworks Missile, EQ_FIREWORKS_MISSILE, The Fireworks Missile is a blank missile fitted with smaller blanks. It has no destructive power, and is used purely for displays of joy., {available_to_all=true, requires_empty_pylon=true}]]", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            assertEquals("expansion must not be null", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
 
+    @Test
+    public void testAddShip_Expansion_String_Map2() {
+        log.info("testAddShip_Expansion_String_Map2");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion();
+        try {
+            registry.addShip(expansion, (String)null, (Map<String, Object>)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("identifier must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+    
+    @Test
+    public void testAddShip_Expansion_String_Map3() {
+        log.info("testAddShip_Expansion_String_Map3");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion();
+        String identifier = "identifier";
+        try {
+            registry.addShip(expansion, identifier, (Map<String, Object>)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("data must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+    
+    @Test
+    public void testAddShip_Expansion_String_DictionaryContext() {
+        log.info("testAddShip_Expansion_String_DictionaryContext");
+        
+        Registry registry = new Registry();
+        try {
+            registry.addShip((Expansion)null, (String)null, (PlistParser.DictionaryContext)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("expansion must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+    
+    @Test
+    public void testAddShip_Expansion_String_DictionaryContext2() {
+        log.info("testAddShip_Expansion_String_DictionaryContext2");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion();
+        try {
+            registry.addShip(expansion, (String)null, (PlistParser.DictionaryContext)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("identifier must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+    
+    @Test
+    public void testAddShip_Expansion_String_DictionaryContext3() {
+        log.info("testAddShip_Expansion_String_DictionaryContext3");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion();
+        String identifier = "identifier";
+        try {
+            registry.addShip(expansion, identifier, (PlistParser.DictionaryContext)null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("dc must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
 }

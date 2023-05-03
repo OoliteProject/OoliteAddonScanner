@@ -223,7 +223,7 @@ public class Registry {
      * @param expansion
      * @param lc 
      */
-    public void addEquipmentList(Expansion expansion, List<List<Map<String, Object>>> list) throws RegistryException {
+    public void addEquipmentList(Expansion expansion, List<List<Object>> list) throws RegistryException {
         log.debug("addEquipmentList({}, {})", expansion, list);
         if (expansion==null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
@@ -232,7 +232,7 @@ public class Registry {
             throw new IllegalArgumentException("list must not be null");
         }
         
-        for (List<Map<String, Object>> vc: list) {
+        for (List<Object> vc: list) {
             addEquipment(expansion, vc);
         }
     }
@@ -268,7 +268,7 @@ public class Registry {
      * @param expansion
      * @param lc 
      */
-    public void addEquipment(Expansion expansion, List<Map<String, Object>> list) throws RegistryException {
+    public void addEquipment(Expansion expansion, List<Object> list) throws RegistryException {
         log.debug("addEquipment({}, {})", expansion, list);
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
@@ -288,7 +288,7 @@ public class Registry {
             eq.setDescription(String.valueOf(list.get(4)));
 
             if(list.size()>5) {
-                Map<String, Object> dict = list.get(5);
+                Map<String, Object> dict = (Map<String, Object>)list.get(5);
                 for (Map.Entry<String, Object> entry: dict.entrySet()) {
                     eq.putFeature(entry.getKey(), String.valueOf(entry.getValue()));
                 }
@@ -447,9 +447,14 @@ public class Registry {
      */
     public void addShip(Expansion expansion, String identifier, Map<String, Object> data) {
         log.debug("addShip({}, {}, {})", expansion, identifier, data);
-        
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
+        }
+        if (identifier == null) {
+            throw new IllegalArgumentException("identifier must not be null");
+        }
+        if (data == null) {
+            throw new IllegalArgumentException("data must not be null");
         }
 
         Ship ship = new Ship();
