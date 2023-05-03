@@ -640,22 +640,6 @@ public class RegistryTest {
     }
 
     /**
-     * Test of addShip method, of class Registry.
-     */
-    @Test
-    public void testAddShip_3args_1() {
-        log.info("addShip");
-    }
-
-    /**
-     * Test of addShip method, of class Registry.
-     */
-    @Test
-    public void testAddShip_3args_2() {
-        log.info("addShip");
-    }
-
-    /**
      * Test of addEquipment method, of class Registry.
      */
     @Test
