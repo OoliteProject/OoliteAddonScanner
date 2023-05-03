@@ -39,24 +39,4 @@ public class MainTest {
     public void tearDown() {
     }
     
-    @Test
-    public void testReadToString() {
-        log.info("testReadToString");
-        
-        {   // linefeeds ok
-            
-            String expected = "mytest\n";
-            InputStream in = new ByteArrayInputStream(expected.getBytes());
-            String read = Main.readToString(in);
-            assertEquals(expected, read);
-        }
-        {   // linefeed missing
-            
-            String expected = "mytest";
-            InputStream in = new ByteArrayInputStream(expected.getBytes());
-            String read = Main.readToString(in);
-            assertEquals(expected+"\n", read);
-        }
-    }
-
 }

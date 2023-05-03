@@ -26,6 +26,7 @@ import java.net.ConnectException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.Charset;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -51,6 +52,8 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.Options;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -68,25 +71,6 @@ public class Main {
     public static final String HTML_EXTENSION = ".html";
     public static final String OXP_PATH_SCRIPTS = "Scripts/";
 
-    /** Reads a file into a string, assuming the JVM's default charset encoding
-     * and fixing linefeeds.
-     * @see https://docs.oracle.com/en/java/javase/19/docs/api/java.base/java/nio/charset/Charset.html#defaultCharset()
-     * 
-     * @param in
-     * @return 
-     */
-    static String readToString(InputStream in) {
-        Scanner sc = new Scanner(in);
-        
-        StringBuilder sb = new StringBuilder();
-        while (sc.hasNext()) {
-            sb.append(sc.nextLine()).append("\n");
-        }
-        sc.close();
-        
-        return sb.toString();
-    }
-    
     private static void readExpansionsList(File data, Registry registry) throws IOException {
         ThrowingErrorListener errorListener = new ThrowingErrorListener();
 
@@ -354,8 +338,11 @@ public class Main {
         } else if("manifest.plist".equals(zentry.getName())) {
             readManifest(zin, zentry, registry, oxp);
         } else if ("Config/script.js".equals(zentry.getName()) || (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length())) {
-            String content = readToString(getZipEntryStream(zin));
-            oxp.addScript(zentry.getName(), content);
+            StringBuilder sb = new StringBuilder();
+            try (StringBuilderWriter sbw = new StringBuilderWriter(sb)) {
+                IOUtils.copy(getZipEntryStream(zin), sbw, Charset.defaultCharset());
+            }
+            oxp.addScript(zentry.getName(), sb.toString());
         } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
             readScript(zin, zentry, oxp);
         } else {
@@ -363,8 +350,11 @@ public class Main {
             if(name.contains("read")) {
                 log.trace("README {}!{}", oxp.getDownloadUrl(), zentry.getName());
 
-                String r = readToString(getZipEntryStream(zin));                            
-                oxp.addReadme(zentry.getName(), r);
+                StringBuilder sb = new StringBuilder();
+                try (StringBuilderWriter sbw = new StringBuilderWriter(sb)) {
+                    IOUtils.copy(getZipEntryStream(zin), sbw, Charset.defaultCharset());
+                }
+                oxp.addReadme(zentry.getName(), sb.toString());
 
             } else if (zentry.getName().startsWith("Config") || zentry.getName().startsWith("config")) {
                 log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
