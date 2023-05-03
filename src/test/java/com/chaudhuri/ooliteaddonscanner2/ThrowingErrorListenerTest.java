@@ -100,7 +100,7 @@ public class ThrowingErrorListenerTest {
 
         @Override
         public String[] getTokenNames() {
-            throw new UnsupportedOperationException("getTokenNames() not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            return new String[]{"zero", "one", "two"};
         }
 
         @Override
@@ -153,8 +153,8 @@ public class ThrowingErrorListenerTest {
         try {
             tel.syntaxError(recognizer, offendingSymbol, 0, 0, null, null);
             fail("expected exception");
-        } catch (UnsupportedOperationException e) {
-            assertEquals("getTokenNames() not supported yet.", e.getMessage());
+        } catch (ParseCancellationException e) {
+            assertEquals("line 0:0 [@-1,0:0='<no text>',<0>,0:-1] null", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
