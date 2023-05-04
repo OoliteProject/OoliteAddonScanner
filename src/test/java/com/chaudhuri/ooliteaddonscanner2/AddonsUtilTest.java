@@ -5,8 +5,10 @@ package com.chaudhuri.ooliteaddonscanner2;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.NoSuchFileException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -54,6 +56,41 @@ public class AddonsUtilTest {
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             assertEquals("data must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readExpansionsList method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadExpansionsList2() throws Exception {
+        log.info("readExpansionsList2");
+
+        File data = new File("nonexistent_file");
+        try {
+            AddonsUtil.readExpansionsList(data, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("registry must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readExpansionsList method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadExpansionsList3() throws Exception {
+        log.info("readExpansionsList3");
+
+        File data = new File("nonexistent_file");
+        Registry registry = new Registry();
+        try {
+            AddonsUtil.readExpansionsList(data, registry);
+            fail("expected exception");
+        } catch (NoSuchFileException e) {
+            assertEquals("nonexistent_file", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }

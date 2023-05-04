@@ -48,6 +48,9 @@ import org.xml.sax.SAXException;
  */
 public class AddonsUtil {
     private static final Logger log = LogManager.getLogger();
+    
+    private static final String EXCEPTION_OXP_MUST_NOT_BE_NULL = "oxp must not be null";
+    private static final String EXCEPTION_REGISTRY_MUST_NOT_BE_NULL = "registry must not be null";
 
     /**
      * Prevent instances being created.
@@ -68,7 +71,7 @@ public class AddonsUtil {
             throw new IllegalArgumentException("data must not be null");
         }
         if (registry == null) {
-            throw new IllegalArgumentException("registry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
         
         ThrowingErrorListener errorListener = new ThrowingErrorListener();
@@ -328,7 +331,7 @@ public class AddonsUtil {
     public static void readShipModels(ExpansionCache cache, Registry registry) {
         log.debug("readShipModels({}, {})", cache, registry);
         if (registry == null) {
-            throw new IllegalArgumentException("registry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
         
         int countSuccess = 0;
@@ -351,7 +354,7 @@ public class AddonsUtil {
     public static void readOxps(ExpansionCache cache, Registry registry) {
         log.debug("readOxps({}, {})", cache, registry);
         if (registry == null) {
-            throw new IllegalArgumentException("registry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
         
         int i = 0;
@@ -375,7 +378,7 @@ public class AddonsUtil {
     public static void readOxp(ExpansionCache cache, Registry registry, Expansion oxp) {
         log.debug("readOxp(...)");
         if (oxp == null) {
-            throw new IllegalArgumentException("oxp must not be null");
+            throw new IllegalArgumentException(EXCEPTION_OXP_MUST_NOT_BE_NULL);
         }
         
         try {
@@ -489,13 +492,10 @@ public class AddonsUtil {
     public static void readManifest(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException, OxpException {
         log.debug("readManifest(...)");
         if (oxp == null) {
-            throw new IllegalArgumentException("oxp must not be null");
+            throw new IllegalArgumentException(EXCEPTION_OXP_MUST_NOT_BE_NULL);
         }
         
         log.trace("parsing manifest from {}", oxp.getDownloadUrl());
-        if (oxp == null) {
-            throw new IllegalArgumentException("oxp must not be null");
-        }
         
         InputStream in = AddonsUtil.getZipEntryStream(zin);
         in.mark(10);
