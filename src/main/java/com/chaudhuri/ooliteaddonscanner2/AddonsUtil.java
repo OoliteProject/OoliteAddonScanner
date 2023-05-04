@@ -3,6 +3,7 @@
 package com.chaudhuri.ooliteaddonscanner2;
 
 import static com.chaudhuri.ooliteaddonscanner2.Main.OOLITE_CORE;
+import static com.chaudhuri.ooliteaddonscanner2.Main.OXP_PATH_SCRIPTS;
 import static com.chaudhuri.ooliteaddonscanner2.Main.XML_HEADER;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
@@ -10,13 +11,17 @@ import com.chaudhuri.plist.ModelLexer;
 import com.chaudhuri.plist.ModelParser;
 import com.chaudhuri.plist.PlistLexer;
 import com.chaudhuri.plist.PlistParser;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.nio.charset.Charset;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -30,6 +35,8 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
@@ -48,6 +55,13 @@ public class AddonsUtil {
     private AddonsUtil() {
     }
     
+    /**
+     * Reads the list of expansions from a file and adds it to the registry.
+     * 
+     * @param data the file to read
+     * @param registry the registry to store the data
+     * @throws IOException something went wrong
+     */
     public static void readExpansionsList(File data, Registry registry) throws IOException {
         ThrowingErrorListener errorListener = new ThrowingErrorListener();
 
@@ -64,6 +78,13 @@ public class AddonsUtil {
         registry.addExpansions(lc);
     }
     
+    /**
+     * Reads a ship model and reports problems.
+     * 
+     * @param data the model data to read
+     * @param source the source of the model data (such that it can be used in error messages)
+     * @throws IOException something went wrong
+     */
     public static void parseModel(InputStream data, String source) throws IOException {
         log.debug("parseModel({}, {})", data, source);
         try {
@@ -87,11 +108,12 @@ public class AddonsUtil {
     }
 
     /**
+     * Copies a ZIP file entry into a memory buffer and returns it for reading.
+     * This allows the file to be re-read if need be.
      * 
-     * @param zin
-     * @param ze
-     * @return
-     * @throws IOException 
+     * @param zin The zip inputstream to read from
+     * @return the re-readable memory based InputStream
+     * @throws IOException something went wrong
      * 
      */
     public static InputStream getZipEntryStream(ZipInputStream zin) throws IOException {
@@ -107,6 +129,18 @@ public class AddonsUtil {
         return new ByteArrayInputStream(bos.toByteArray());
     }
     
+    /**
+     * Reads a list of ships from a given InputStream and adds it to the registry.
+     * 
+     * @param url the (human understandable) url the file came from
+     * @param in the InputStream to read
+     * @param registry the registry to store found data
+     * @param oxp the expansion to add the found ships to
+     * @throws IOException something went wrong
+     * @throws ParserConfigurationException something went wrong
+     * @throws SAXException something went wrong
+     * @throws TransformerException something went wrong
+     */
     public static void readShips(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         in.mark(10);
 
@@ -125,6 +159,18 @@ public class AddonsUtil {
         }
     }
     
+    /**
+     * Reads a list of equipment from a given InputStream and adds it to the registry.
+     * 
+     * @param url the (human understandable) url the file came from
+     * @param in the InputStream to read
+     * @param registry the registry to store found data
+     * @param oxp the expansion to add the found equipment to
+     * @throws IOException something went wrong
+     * @throws ParserConfigurationException something went wrong
+     * @throws SAXException something went wrong
+     * @throws TransformerException something went wrong
+     */
     public static void readEquipment(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException {
         in.mark(10);
 
@@ -192,4 +238,250 @@ public class AddonsUtil {
             }
         }
     }
+
+    /**
+     * 
+     * @param cache
+     * @param expansion
+     * @return true when successful, false otherwise
+     */
+    public static void readShipModels(ExpansionCache cache, Expansion expansion) {
+        try {
+            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownloadUrl())));
+
+            // parse all the models we can get, then distribute over ships
+            ZipEntry zentry = null;
+            while ((zentry = zin.getNextEntry()) != null) {
+                if (zentry.getName().startsWith("Models/") && zentry.getName().length() > "Models/.dat".length() && zentry.getName().endsWith(".dat")) {
+                    log.info("Found model {}!{}", expansion.getDownloadUrl(), zentry.getName());
+                    
+                    readModel(AddonsUtil.getZipEntryStream(zin), expansion, zentry.getName());
+                }
+            }
+
+            // TODO: distribute models over ships. not yet implemented
+        } catch (Exception e) {
+            log.error("Incomplete Index: Could not read expansion {}", expansion, e);
+            expansion.addWarning("Could not read expansion: "+e.getMessage());
+        }
+    }
+    
+    /**
+     * Reads a (ship) model from a given inputstream.
+     * 
+     * @param in the input stream to read
+     * @param expansion the expansion to add warnings
+     * @param zname the name of the file within the expansion
+     */
+    public static void readModel(InputStream in, Expansion expansion, String zname) {
+        try {
+            AddonsUtil.parseModel(in, expansion.getDownloadUrl() + "!" + zname);
+        } catch (Exception e) {
+            log.warn("Could not parse model {}!{}: {}", expansion.getDownloadUrl(), zname, e.getMessage());
+            expansion.addWarning(String.format("Could not parse model %s!%s: %s", expansion.getDownloadUrl(), zname, e.getMessage()));
+        }
+    }
+    
+    /** 
+     * Traverse the registry, find the ship data files and read them from the cache.
+     */
+    public static void readShipModels(ExpansionCache cache, Registry registry) {
+        log.debug("readShipModels({}, {})", cache, registry);
+        int countSuccess = 0;
+        int countFailure = 0;
+
+        for (Expansion expansion: registry.getExpansions()) {
+            readShipModels(cache, expansion);
+        }
+        
+        log.info("Parsed {} models successfully and failed on {} models", countSuccess, countFailure);
+    }
+    
+    /** reads all OXPs that the registry knows about. Which means it opens
+     * all the zip files and parses files like manifest.plist, equipment.plist
+     * or shipdata.plist. The result is stored back in the registry again.
+     * 
+     * @param cache
+     * @param registry 
+     */
+    public static void readOxps(ExpansionCache cache, Registry registry) {
+        log.debug("readOxps({}, {})", cache, registry);
+        
+        int i = 0;
+        int total = registry.getExpansions().size();
+        
+        for(Expansion oxp: registry.getExpansions()) {
+            i++;
+            log.info("Reading expansions ({}/{})...", i, total);
+            
+            readOxp(cache, registry, oxp);
+        }
+    }
+
+    /**
+     * Reads an expansion and adds it's items to the registry.
+     * 
+     * @param cache the cache to retrieve the file from
+     * @param registry the registry to add the found data
+     * @param oxp the oxp to report errors
+     */
+    public static void readOxp(ExpansionCache cache, Registry registry, Expansion oxp) {
+        try {
+            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(oxp.getDownloadUrl())));
+            ZipEntry zentry = null;
+            while ((zentry = zin.getNextEntry()) != null) {
+                readOxpEntry(zin, zentry, registry, oxp);
+            }
+        } catch (EOFException e) {
+            log.warn("Incomplete plugin archive for {}", oxp.getDownloadUrl(), e);
+            try {
+                cache.invalidate(oxp.getDownloadUrl());
+                log.warn("Evicted from cache.");
+            } catch (Exception ex) {
+                log.error("Could not cleanup cache for {}", oxp.getDownloadUrl(), ex);
+            }
+            System.exit(1);
+        } catch (ConnectException e) {
+            String s = String.format("Could not download %s, %s: %s", oxp.getDownloadUrl(), e.getClass().getName(), e.getMessage());
+            oxp.addWarning(s);
+            log.error(s);
+            try {
+                cache.invalidate(oxp.getDownloadUrl());
+                log.warn("Evicted from cache.");
+            } catch (Exception ex) {
+                log.error("Could not cleanup cache for {}", oxp.getDownloadUrl(), ex);
+            }
+        } catch (Exception e) {
+            oxp.addWarning(String.format("Could not access: %s, %s: %s", oxp.getDownloadUrl(), e.getClass().getName(), e.getMessage()));
+            log.error("Could not access plugin {}", oxp.getDownloadUrl(), e);
+        }
+    }
+    
+    /**
+     * Reads the file content of an OXP zip file and adds the found data to
+     * the registry.
+     * 
+     * @param zin the OXP Zip InputStream
+     * @param zentry the entry to read
+     * @param registry the registry to add the found data
+     * @param oxp the OXP to report errors
+     * @throws IOException something went wrong
+     * @throws RegistryException something went wrong
+     * @throws SAXException something went wrong
+     * @throws TransformerException something went wrong
+     * @throws ParserConfigurationException something went wrong
+     * @throws OxpException something went wrong
+     */
+    public static void readOxpEntry(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException, OxpException {
+        if ("Config/equipment.plist".equals(zentry.getName())) {
+            log.trace("parsing equipment of {}", oxp.getDownloadUrl());
+            InputStream in = AddonsUtil.getZipEntryStream(zin);
+            String url = String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName());
+            AddonsUtil.readEquipment(url, in, registry, oxp);
+
+        } else if("Config/shipdata.plist".equals(zentry.getName())) {
+            try {
+                log.trace("parsing shipdata of {}", oxp.getDownloadUrl());
+                AddonsUtil.readShips(String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName()), AddonsUtil.getZipEntryStream(zin), registry, oxp);
+            } catch (Exception e) {
+                oxp.addWarning(String.format("%s: %s at %s!%s", e.getClass().getName(), e.getMessage(), oxp.getDownloadUrl(), zentry.getName()));
+            }
+
+        } else if("manifest.plist".equals(zentry.getName())) {
+            readManifest(zin, zentry, registry, oxp);
+        } else if ("Config/script.js".equals(zentry.getName()) || (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length())) {
+            StringBuilder sb = new StringBuilder();
+            try (StringBuilderWriter sbw = new StringBuilderWriter(sb)) {
+                IOUtils.copy(AddonsUtil.getZipEntryStream(zin), sbw, Charset.defaultCharset());
+            }
+            oxp.addScript(zentry.getName(), sb.toString());
+        } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
+            readScript(zin, zentry, oxp);
+        } else {
+            String name = zentry.getName().toLowerCase();
+            if(name.contains("read")) {
+                log.trace("README {}!{}", oxp.getDownloadUrl(), zentry.getName());
+
+                StringBuilder sb = new StringBuilder();
+                try (StringBuilderWriter sbw = new StringBuilderWriter(sb)) {
+                    IOUtils.copy(AddonsUtil.getZipEntryStream(zin), sbw, Charset.defaultCharset());
+                }
+                oxp.addReadme(zentry.getName(), sb.toString());
+
+            } else if (zentry.getName().startsWith("Config") || zentry.getName().startsWith("config")) {
+                log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            } else {
+                log.trace("skipping {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            }
+        }
+    }
+    
+    /**
+     * Reads an OXP manifest from the OXP.
+     * 
+     * @param zin the OXP Zip Inputstream to read
+     * @param zentry the zip entry to read from zin
+     * @param registry the registry to add the found data
+     * @param oxp the OXP to report errors
+     * @throws IOException something went wrong
+     * @throws ParserConfigurationException something went wrong
+     * @throws SAXException something went wrong
+     * @throws TransformerException something went wrong
+     * @throws OxpException something went wrong
+     */
+    public static void readManifest(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException, OxpException {
+        log.trace("parsing manifest from {}", oxp.getDownloadUrl());
+        InputStream in = AddonsUtil.getZipEntryStream(zin);
+        in.mark(10);
+
+        Scanner sc = new Scanner(in);
+        if (XML_HEADER.equals(sc.next())) {
+            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            in.reset();
+
+            List<Object> manifest = XMLPlistParser.parseList(in, null);
+            if (manifest.size() != 1) {
+                throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
+            }
+            oxp.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
+        } else {
+            in.reset();
+            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, oxp.getDownloadUrl()+"!"+zentry.getName());
+            oxp.setManifest(registry.toManifest(dc));
+        }
+    }
+
+    /**
+     * Reads a script file from an OXP Zip file.
+     * 
+     * @param zin the OXP Zip Input Stream
+     * @param zentry the entry to read from zin
+     * @param oxp the OXP to add found data and report errors
+     * @throws IOException something went wrong
+     * @throws ParserConfigurationException something went wrong
+     * @throws SAXException something went wrong
+     * @throws TransformerException something went wrong
+     */
+    public static void readScript(ZipInputStream zin, ZipEntry zentry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        InputStream in = AddonsUtil.getZipEntryStream(zin);
+        in.mark(10);
+
+        Scanner sc = new Scanner(in);
+        if (XML_HEADER.equals(sc.next())) {
+            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            in.reset();
+            List<Object> worldscripts = XMLPlistParser.parseList(in, null);
+            List<Object> scriptlist = (List)worldscripts.get(0);
+            for (Object worldscript: scriptlist) {
+                oxp.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
+            }
+        } else {
+            in.reset();
+            PlistParser.ListContext lc = PlistParserUtil.parsePlistList(in, oxp.getDownloadUrl()+"!"+zentry.getName());
+            for (PlistParser.ValueContext vc: lc.value()) {
+                oxp.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
+            }
+        }
+    }
+    
 }
