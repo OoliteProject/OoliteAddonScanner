@@ -168,6 +168,17 @@ public class AddonsUtilTest {
     }
 
     /**
+     * Test of parseModel method, of class AddonsUtil.
+     */
+    @Test
+    public void testParseModel3() throws Exception {
+        System.out.println("parseModel3");
+        InputStream data = new FileInputStream("src/test/resources/AddonsUtilTest/icourier.dat");
+        String source = "";
+        AddonsUtil.parseModel(data, source);
+    }
+
+    /**
      * Test of getZipEntryStream method, of class AddonsUtil.
      */
     @Test
