@@ -4,6 +4,8 @@ package com.chaudhuri.ooliteaddonscanner2;
 
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.NoSuchFileException;
 import java.util.zip.ZipEntry;
@@ -144,6 +146,23 @@ public class AddonsUtilTest {
             fail("expected exception");
         } catch(IllegalArgumentException e) {
             assertEquals("data must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of parseModel method, of class AddonsUtil.
+     */
+    @Test
+    public void testParseModel2() throws Exception {
+        System.out.println("parseModel2");
+        InputStream data = new FileInputStream("src/test/data/empty_file");
+        String source = "";
+        try {
+            AddonsUtil.parseModel(data, source);
+            fail("expected exception");
+        } catch(IOException e) {
+            assertEquals("Could not parse ", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
