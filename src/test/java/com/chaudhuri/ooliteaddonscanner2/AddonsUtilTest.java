@@ -176,6 +176,7 @@ public class AddonsUtilTest {
         InputStream data = new FileInputStream("src/test/resources/AddonsUtilTest/icourier.dat");
         String source = "";
         AddonsUtil.parseModel(data, source);
+        assertTrue(true, "we did not reach here. Why?");
     }
 
     /**
@@ -192,6 +193,29 @@ public class AddonsUtilTest {
             assertEquals("zin must not be null", e.getMessage());
             log.debug("caught expected exception", e);
         }
+    }
+
+    /**
+     * Test of getZipEntryStream method, of class AddonsUtil.
+     */
+    @Test
+    public void testGetZipEntryStream2() throws Exception {
+        System.out.println("getZipEntryStream2");
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/empty_file"));
+        InputStream result = AddonsUtil.getZipEntryStream(zin);
+        assertEquals(0, result.available());
+    }
+
+    /**
+     * Test of getZipEntryStream method, of class AddonsUtil.
+     */
+    @Test
+    public void testGetZipEntryStream3() throws Exception {
+        log.info("getZipEntryStream3");
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/resources/AddonsUtilTest/icourier.zip"));
+        ZipEntry entry = zin.getNextEntry();
+        InputStream result = AddonsUtil.getZipEntryStream(zin);
+        assertEquals(27245, result.available());
     }
 
     /**
