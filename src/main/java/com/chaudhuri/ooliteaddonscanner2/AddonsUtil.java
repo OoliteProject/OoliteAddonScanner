@@ -63,6 +63,14 @@ public class AddonsUtil {
      * @throws IOException something went wrong
      */
     public static void readExpansionsList(File data, Registry registry) throws IOException {
+        log.debug("readExpansionsList(...)");
+        if (data == null) {
+            throw new IllegalArgumentException("data must not be null");
+        }
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
+        
         ThrowingErrorListener errorListener = new ThrowingErrorListener();
 
         CharStream charStream = CharStreams.fromPath(data.toPath());
@@ -87,6 +95,10 @@ public class AddonsUtil {
      */
     public static void parseModel(InputStream data, String source) throws IOException {
         log.debug("parseModel({}, {})", data, source);
+        if (data == null) {
+            throw new IllegalArgumentException("data must not be null");
+        }
+        
         try {
             ThrowingErrorListener errorListener = new ThrowingErrorListener();
 
@@ -117,6 +129,11 @@ public class AddonsUtil {
      * 
      */
     public static InputStream getZipEntryStream(ZipInputStream zin) throws IOException {
+        log.debug("getZipEntryStream(...)");
+        if (zin == null) {
+            throw new IllegalArgumentException("zin must not be null");
+        }
+        
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         byte[] buffer = new byte[4096];
         int read = 0;
@@ -142,6 +159,11 @@ public class AddonsUtil {
      * @throws TransformerException something went wrong
      */
     public static void readShips(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        log.debug("readShips(...)");
+        if (in == null) {
+            throw new IllegalArgumentException("in must not be null");
+        }
+        
         in.mark(10);
 
         Scanner sc = new Scanner(in);
@@ -172,6 +194,11 @@ public class AddonsUtil {
      * @throws TransformerException something went wrong
      */
     public static void readEquipment(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException {
+        log.debug("readEquipment(...)");
+        if (in == null) {
+            throw new IllegalArgumentException("in must not be null");
+        }
+        
         in.mark(10);
 
         Scanner sc = new Scanner(in);
@@ -196,6 +223,9 @@ public class AddonsUtil {
      */
     public static void readOolite(ExpansionCache cache, Registry registry) throws IOException, SAXException, ParserConfigurationException, RegistryException, TransformerException {
         log.debug("readOolite({})", registry); 
+        if (cache == null) {
+            throw new IllegalArgumentException("cache must not be null");
+        }
         
         String tag = "latest";
 
@@ -246,6 +276,11 @@ public class AddonsUtil {
      * @return true when successful, false otherwise
      */
     public static void readShipModels(ExpansionCache cache, Expansion expansion) {
+        log.debug("readShipModels(...)");
+        if (expansion == null) {
+            throw new IllegalArgumentException("expansion must not be null");
+        }
+        
         try {
             ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownloadUrl())));
 
@@ -274,6 +309,11 @@ public class AddonsUtil {
      * @param zname the name of the file within the expansion
      */
     public static void readModel(InputStream in, Expansion expansion, String zname) {
+        log.debug("readModel(...)");
+        if (expansion == null) {
+            throw new IllegalArgumentException("expansion must not be null");
+        }
+        
         try {
             AddonsUtil.parseModel(in, expansion.getDownloadUrl() + "!" + zname);
         } catch (Exception e) {
@@ -287,6 +327,10 @@ public class AddonsUtil {
      */
     public static void readShipModels(ExpansionCache cache, Registry registry) {
         log.debug("readShipModels({}, {})", cache, registry);
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
+        
         int countSuccess = 0;
         int countFailure = 0;
 
@@ -306,6 +350,9 @@ public class AddonsUtil {
      */
     public static void readOxps(ExpansionCache cache, Registry registry) {
         log.debug("readOxps({}, {})", cache, registry);
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
         
         int i = 0;
         int total = registry.getExpansions().size();
@@ -326,6 +373,11 @@ public class AddonsUtil {
      * @param oxp the oxp to report errors
      */
     public static void readOxp(ExpansionCache cache, Registry registry, Expansion oxp) {
+        log.debug("readOxp(...)");
+        if (oxp == null) {
+            throw new IllegalArgumentException("oxp must not be null");
+        }
+        
         try {
             ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(oxp.getDownloadUrl())));
             ZipEntry zentry = null;
@@ -373,6 +425,11 @@ public class AddonsUtil {
      * @throws OxpException something went wrong
      */
     public static void readOxpEntry(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException, OxpException {
+        log.debug("readOxpEntry(...)");
+        if (zentry == null) {
+            throw new IllegalArgumentException("zentry must not be null");
+        }
+        
         if ("Config/equipment.plist".equals(zentry.getName())) {
             log.trace("parsing equipment of {}", oxp.getDownloadUrl());
             InputStream in = AddonsUtil.getZipEntryStream(zin);
@@ -430,7 +487,16 @@ public class AddonsUtil {
      * @throws OxpException something went wrong
      */
     public static void readManifest(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException, OxpException {
+        log.debug("readManifest(...)");
+        if (oxp == null) {
+            throw new IllegalArgumentException("oxp must not be null");
+        }
+        
         log.trace("parsing manifest from {}", oxp.getDownloadUrl());
+        if (oxp == null) {
+            throw new IllegalArgumentException("oxp must not be null");
+        }
+        
         InputStream in = AddonsUtil.getZipEntryStream(zin);
         in.mark(10);
 
@@ -463,6 +529,11 @@ public class AddonsUtil {
      * @throws TransformerException something went wrong
      */
     public static void readScript(ZipInputStream zin, ZipEntry zentry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+        log.debug("readScript(...)");
+        if (zin == null) {
+            throw new IllegalArgumentException("zin must not be null");
+        }
+        
         InputStream in = AddonsUtil.getZipEntryStream(zin);
         in.mark(10);
 
