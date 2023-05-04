@@ -96,6 +96,42 @@ public class AddonsUtilTest {
     }
 
     /**
+     * Test of readExpansionsList method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadExpansionsList4() throws Exception {
+        log.info("readExpansionsList4");
+
+        File data = new File("src/test/data/empty_file");
+        Registry registry = new Registry();
+        try {
+            AddonsUtil.readExpansionsList(data, registry);
+            fail("expected exception");
+        } catch (ParseCancellationException e) {
+            assertEquals("line 1:0 [@0,0:-1='<EOF>',<-1>,1:0] mismatched input '<EOF>' expecting '('", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readExpansionsList method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadExpansionsList5() throws Exception {
+        log.info("readExpansionsList5");
+
+        File data = new File("src/test/resources/AddonsUtilTest/ExpansionManagerList.plist");
+        Registry registry = new Registry();
+        assertEquals(0, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        AddonsUtil.readExpansionsList(data, registry);
+        assertEquals(743, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+    }
+
+    /**
      * Test of parseModel method, of class AddonsUtil.
      */
     @Test
