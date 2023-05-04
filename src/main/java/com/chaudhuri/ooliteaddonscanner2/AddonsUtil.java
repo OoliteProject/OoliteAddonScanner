@@ -449,7 +449,13 @@ public class AddonsUtil {
 
         } else if("manifest.plist".equals(zentry.getName())) {
             readManifest(zin, zentry, registry, oxp);
-        } else if ("Config/script.js".equals(zentry.getName()) || (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length())) {
+        } else {
+            readOxpEntry2(zin, zentry, registry, oxp);
+        }
+    }
+
+    private static void readOxpEntry2(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, SAXException, TransformerException, ParserConfigurationException {
+        if ("Config/script.js".equals(zentry.getName()) || (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length())) {
             StringBuilder sb = new StringBuilder();
             try (StringBuilderWriter sbw = new StringBuilderWriter(sb)) {
                 IOUtils.copy(AddonsUtil.getZipEntryStream(zin), sbw, Charset.defaultCharset());
