@@ -196,16 +196,22 @@ public class AddonsUtil {
      * @param url the (human understandable) url the file came from
      * @param in the InputStream to read
      * @param registry the registry to store found data
-     * @param oxp the expansion to add the found equipment to
+     * @param expansion the expansion to add the found equipment to
      * @throws IOException something went wrong
      * @throws ParserConfigurationException something went wrong
      * @throws SAXException something went wrong
      * @throws TransformerException something went wrong
      */
-    public static void readEquipment(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException {
+    public static void readEquipment(String url, InputStream in, Registry registry, Expansion expansion) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException {
         log.debug("readEquipment(...)");
         if (in == null) {
             throw new IllegalArgumentException("in must not be null");
+        }
+        if (registry == null) {
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
+        }
+        if (expansion == null) {
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         
         in.mark(10);
@@ -215,13 +221,13 @@ public class AddonsUtil {
             log.trace("Parsing {}", url);
             in.reset();
             List<Object> equipmentList = XMLPlistParser.parseList(in, null);
-            oxp.addWarning("Found XML equipment list");
-            log.info("Parsed {} ({} items of equipment)", oxp.getName(), equipmentList.size());
-            registry.addEquipmentList(oxp, (List)equipmentList.get(0));
+            expansion.addWarning("Found XML equipment list");
+            log.info("Parsed {} ({} items of equipment)", expansion.getName(), equipmentList.size());
+            registry.addEquipmentList(expansion, (List)equipmentList.get(0));
         } else {
             in.reset();
             PlistParser.ListContext lc = PlistParserUtil.parsePlistList(in, url);
-            registry.addEquipmentList(oxp, lc);
+            registry.addEquipmentList(expansion, lc);
         }
     }
     

@@ -360,10 +360,80 @@ public class AddonsUtilTest {
         try {
             AddonsUtil.readEquipment(url, in, registry, oxp);
             fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("registry must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readEquipment method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadEquipment3() throws Exception {
+        log.info("readEquipment3");
+        String url = "";
+        InputStream in = new FileInputStream("src/test/data/empty_file");
+        Registry registry = new Registry();
+        Expansion oxp = null;
+        try {
+            AddonsUtil.readEquipment(url, in, registry, oxp);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("expansion must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readEquipment method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadEquipment4() throws Exception {
+        log.info("readEquipment4");
+        String url = "";
+        InputStream in = new FileInputStream("src/test/data/empty_file");
+        Registry registry = new Registry();
+        Expansion oxp = new Expansion();
+        try {
+            AddonsUtil.readEquipment(url, in, registry, oxp);
+            fail("expected exception");
         } catch (NoSuchElementException e) {
             assertEquals(null, e.getMessage());
             log.debug("caught expected exception", e);
         }
+    }
+
+    /**
+     * Test of readEquipment method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadEquipment5() throws Exception {
+        log.info("readEquipment5");
+        String url = "";
+        InputStream in = new FileInputStream("src/test/resources/AddonsUtilTest/equipment1.xml");
+        Registry registry = new Registry();
+        Expansion oxp = new Expansion();
+        
+        assertEquals(0, registry.getEquipment().size());
+        AddonsUtil.readEquipment(url, new BufferedInputStream(in), registry, oxp);
+        assertEquals(3, registry.getEquipment().size());
+    }
+
+    /**
+     * Test of readEquipment method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadEquipment6() throws Exception {
+        log.info("readEquipment6");
+        String url = "";
+        InputStream in = new FileInputStream("src/test/resources/AddonsUtilTest/equipment1.plist");
+        Registry registry = new Registry();
+        Expansion oxp = new Expansion();
+        
+        assertEquals(0, registry.getEquipment().size());
+        AddonsUtil.readEquipment(url, new BufferedInputStream(in), registry, oxp);
+        assertEquals(3, registry.getEquipment().size());
     }
 
     /**
