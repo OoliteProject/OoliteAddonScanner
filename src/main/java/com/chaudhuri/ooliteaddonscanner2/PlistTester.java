@@ -121,11 +121,13 @@ public class PlistTester {
         PlistParser.ParseContext pc = parser.parse();
         
         if (el.hasErrors()) {
-            log.error("Found errors in {}", plistFilePath);
-            log.error("Syntax Errors:          {}", el.getSyntaxErrorCount());
-            log.error(String.format("Ambiguities:            %4d", el.getAmbiguityCount()));
-            log.error(String.format("Context Errors:         %4d", el.getContextSensitivityCount()));
-            log.error(String.format("Attempted Full Context: %4d", el.getAttemptFullContextCount()));
+            if (log.isErrorEnabled()) {
+                log.error("Found errors in {}", plistFilePath);
+                log.error("Syntax Errors:          {}", el.getSyntaxErrorCount());
+                log.error(String.format("Ambiguities:            %4d", el.getAmbiguityCount()));
+                log.error(String.format("Context Errors:         %4d", el.getContextSensitivityCount()));
+                log.error(String.format("Attempted Full Context: %4d", el.getAttemptFullContextCount()));
+            }
         } else {
             log.info("Successfully parsed plist in {}", plistFilePath);
             if (log.isDebugEnabled()) {

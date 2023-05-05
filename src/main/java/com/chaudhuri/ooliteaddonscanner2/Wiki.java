@@ -73,8 +73,10 @@ public class Wiki {
         }
         
         final String base = "http://wiki.alioth.net/index.php/";
-        // this uses too much of + escaping
-        //return base + URLEncoder.encode(name, Charset.forName("utf-8"));
+        /*
+         * The URLEncoder uses too much of + escaping
+         * so do not use 'base + URLEncoder.encode(name, Charset.forName("utf-8"));'
+         */
         
         return base
                 + name.replace(" ", "%20")

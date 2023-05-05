@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
 public class AddonsUtil {
     private static final Logger log = LogManager.getLogger();
     
-    private static final String EXCEPTION_OXP_MUST_NOT_BE_NULL = "oxp must not be null";
+    private static final String EXCEPTION_EXPANSION_MUST_NOT_BE_NULL = "expansion must not be null";
     private static final String EXCEPTION_REGISTRY_MUST_NOT_BE_NULL = "registry must not be null";
 
     /**
@@ -167,10 +167,10 @@ public class AddonsUtil {
             throw new IllegalArgumentException("in must not be null");
         }
         if (registry == null) {
-            throw new IllegalArgumentException("registry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
         if (expansion == null) {
-            throw new IllegalArgumentException("expansion must not be null");
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         
         in.mark(10);
@@ -287,7 +287,7 @@ public class AddonsUtil {
     public static void readShipModels(ExpansionCache cache, Expansion expansion) {
         log.debug("readShipModels(...)");
         if (expansion == null) {
-            throw new IllegalArgumentException("expansion must not be null");
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         
         try {
@@ -320,7 +320,7 @@ public class AddonsUtil {
     public static void readModel(InputStream in, Expansion expansion, String zname) {
         log.debug("readModel(...)");
         if (expansion == null) {
-            throw new IllegalArgumentException("expansion must not be null");
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         
         try {
@@ -379,42 +379,42 @@ public class AddonsUtil {
      * 
      * @param cache the cache to retrieve the file from
      * @param registry the registry to add the found data
-     * @param oxp the oxp to report errors
+     * @param expansion the oxp to report errors
      */
-    public static void readOxp(ExpansionCache cache, Registry registry, Expansion oxp) {
+    public static void readOxp(ExpansionCache cache, Registry registry, Expansion expansion) {
         log.debug("readOxp(...)");
-        if (oxp == null) {
-            throw new IllegalArgumentException(EXCEPTION_OXP_MUST_NOT_BE_NULL);
+        if (expansion == null) {
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         
         try {
-            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(oxp.getDownloadUrl())));
+            ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownloadUrl())));
             ZipEntry zentry = null;
             while ((zentry = zin.getNextEntry()) != null) {
-                readOxpEntry(zin, zentry, registry, oxp);
+                readOxpEntry(zin, zentry, registry, expansion);
             }
         } catch (EOFException e) {
-            log.warn("Incomplete plugin archive for {}", oxp.getDownloadUrl(), e);
+            log.warn("Incomplete plugin archive for {}", expansion.getDownloadUrl(), e);
             try {
-                cache.invalidate(oxp.getDownloadUrl());
+                cache.invalidate(expansion.getDownloadUrl());
                 log.warn("Evicted from cache.");
             } catch (Exception ex) {
-                log.error("Could not cleanup cache for {}", oxp.getDownloadUrl(), ex);
+                log.error("Could not cleanup cache for {}", expansion.getDownloadUrl(), ex);
             }
             System.exit(1);
         } catch (ConnectException e) {
-            String s = String.format("Could not download %s, %s: %s", oxp.getDownloadUrl(), e.getClass().getName(), e.getMessage());
-            oxp.addWarning(s);
+            String s = String.format("Could not download %s, %s: %s", expansion.getDownloadUrl(), e.getClass().getName(), e.getMessage());
+            expansion.addWarning(s);
             log.error(s);
             try {
-                cache.invalidate(oxp.getDownloadUrl());
+                cache.invalidate(expansion.getDownloadUrl());
                 log.warn("Evicted from cache.");
             } catch (Exception ex) {
-                log.error("Could not cleanup cache for {}", oxp.getDownloadUrl(), ex);
+                log.error("Could not cleanup cache for {}", expansion.getDownloadUrl(), ex);
             }
         } catch (Exception e) {
-            oxp.addWarning(String.format("Could not access: %s, %s: %s", oxp.getDownloadUrl(), e.getClass().getName(), e.getMessage()));
-            log.error("Could not access plugin {}", oxp.getDownloadUrl(), e);
+            expansion.addWarning(String.format("Could not access: %s, %s: %s", expansion.getDownloadUrl(), e.getClass().getName(), e.getMessage()));
+            log.error("Could not access plugin {}", expansion.getDownloadUrl(), e);
         }
     }
     
@@ -494,38 +494,38 @@ public class AddonsUtil {
      * @param zin the OXP Zip Inputstream to read
      * @param zentry the zip entry to read from zin
      * @param registry the registry to add the found data
-     * @param oxp the OXP to report errors
+     * @param expansion the OXP to report errors
      * @throws IOException something went wrong
      * @throws ParserConfigurationException something went wrong
      * @throws SAXException something went wrong
      * @throws TransformerException something went wrong
      * @throws OxpException something went wrong
      */
-    public static void readManifest(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException, OxpException {
+    public static void readManifest(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion expansion) throws IOException, ParserConfigurationException, SAXException, TransformerException, OxpException {
         log.debug("readManifest(...)");
-        if (oxp == null) {
-            throw new IllegalArgumentException(EXCEPTION_OXP_MUST_NOT_BE_NULL);
+        if (expansion == null) {
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         
-        log.trace("parsing manifest from {}", oxp.getDownloadUrl());
+        log.trace("parsing manifest from {}", expansion.getDownloadUrl());
         
         InputStream in = AddonsUtil.getZipEntryStream(zin);
         in.mark(10);
 
         Scanner sc = new Scanner(in);
         if (XML_HEADER.equals(sc.next())) {
-            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            log.trace("XML content found in {}!{}", expansion.getDownloadUrl(), zentry.getName());
             in.reset();
 
             List<Object> manifest = XMLPlistParser.parseList(in, null);
             if (manifest.size() != 1) {
                 throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
             }
-            oxp.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
+            expansion.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
         } else {
             in.reset();
-            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, oxp.getDownloadUrl()+"!"+zentry.getName());
-            oxp.setManifest(registry.toManifest(dc));
+            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, expansion.getDownloadUrl()+"!"+zentry.getName());
+            expansion.setManifest(registry.toManifest(dc));
         }
     }
 

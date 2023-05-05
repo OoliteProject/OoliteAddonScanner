@@ -283,6 +283,7 @@
                                 <rule>
                                     <element>BUNDLE</element>
 <!--
+    Activate this code when you want to introduce limits
                                     <limits>
                                         <limit>
                                             <counter>COMPLEXITY</counter>

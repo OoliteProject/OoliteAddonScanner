@@ -348,6 +348,25 @@ public class AddonsUtilTest {
     }
 
     /**
+     * Test of readEquipment method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadEquipment2() throws Exception {
+        log.info("readEquipment2");
+        String url = "";
+        InputStream in = new FileInputStream("src/test/data/empty_file");
+        Registry registry = null;
+        Expansion oxp = null;
+        try {
+            AddonsUtil.readEquipment(url, in, registry, oxp);
+            fail("expected exception");
+        } catch (NoSuchElementException e) {
+            assertEquals(null, e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
      * Test of readOolite method, of class AddonsUtil.
      */
     @Test
@@ -446,7 +465,7 @@ public class AddonsUtilTest {
             AddonsUtil.readOxp(cache, registry, oxp);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
-            assertEquals("oxp must not be null", e.getMessage());
+            assertEquals("expansion must not be null", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
@@ -481,7 +500,7 @@ public class AddonsUtilTest {
             AddonsUtil.readManifest(zin, zentry, registry, oxp);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
-            assertEquals("oxp must not be null", e.getMessage());
+            assertEquals("expansion must not be null", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
