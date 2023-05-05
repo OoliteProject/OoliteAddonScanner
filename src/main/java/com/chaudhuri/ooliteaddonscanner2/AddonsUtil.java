@@ -241,6 +241,9 @@ public class AddonsUtil {
         if (cache == null) {
             throw new IllegalArgumentException("cache must not be null");
         }
+        if (registry == null) {
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
+        }
         
         String tag = "latest";
 

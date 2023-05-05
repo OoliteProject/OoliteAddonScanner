@@ -29,11 +29,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class AddonsUtilTest {
     private static final Logger log = LogManager.getLogger();
     
+    private static File tempCacheDir;
+    
     public AddonsUtilTest() {
     }
     
     @BeforeAll
     public static void setUpClass() {
+        log.debug("setUpClass()");
+        
+        tempCacheDir = new File("target/testCacheDir");
+        tempCacheDir.mkdirs();
     }
     
     @AfterAll
@@ -451,6 +457,48 @@ public class AddonsUtilTest {
             assertEquals("cache must not be null", e.getMessage());
             log.debug("caught expected exception");
         }
+    }
+
+    /**
+     * Test of readOolite method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOolite2() throws Exception {
+        log.info("readOolite2");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+        Registry registry = null;
+        
+        try {
+            AddonsUtil.readOolite(cache, registry);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("registry must not be null", e.getMessage());
+            log.debug("caught expected exception");
+        }
+    }
+
+    /**
+     * Test of readOolite method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOolite3() throws Exception {
+        log.info("readOolite3");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+        Registry registry = new Registry();
+
+        assertEquals(0, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        AddonsUtil.readOolite(cache, registry);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(41, registry.getEquipment().size());
+        assertEquals(194, registry.getShips().size());
     }
 
     /**
