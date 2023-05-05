@@ -1,0 +1,353 @@
+<?xml version="1.0"?>
+<!-- here we have a typical ship list. It is a dictionary of ships. -->
+<plist version="1.0">
+    <dict>
+        <key>cobra3-miner-player</key>
+        <dict>
+            <key>aft_eject_position</key>
+            <string>0.0 -17.0 -40.0</string>
+            <key>custom_views</key>
+            <array>
+                <dict>
+                    <key>view_description</key>
+                    <string>Rear View</string>
+                    <key>view_orientation</key>
+                    <string>1.0 0.0 0.0 0.0</string>
+                    <key>view_position</key>
+                    <string>0.0 30.0 -380.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
+                    <key>view_description</key>
+                    <string>Rear Right View</string>
+                    <key>view_orientation</key>
+                    <string>0.9239 0.0 0.3827 0.0</string>
+                    <key>view_position</key>
+                    <string>251.42 30.0 -251.42</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
+                    <key>view_description</key>
+                    <string>Right View</string>
+                    <key>view_orientation</key>
+                    <string>0.7071 0.0 0.7071 0.0</string>
+                    <key>view_position</key>
+                    <string>350.0 30.0 0.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
+                    <key>view_description</key>
+                    <string>Front Right View</string>
+                    <key>view_orientation</key>
+                    <string>0.3827 0.0 0.9239 0.0</string>
+                    <key>view_position</key>
+                    <string>251.42 30.0 251.42</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
+                    <key>view_description</key>
+                    <string>Front View</string>
+                    <key>view_orientation</key>
+                    <string>0.0 0.0 1.0 0.0</string>
+                    <key>view_position</key>
+                    <string>0.0 30.0 350.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
+                    <key>view_description</key>
+                    <string>Front Left View</string>
+                    <key>view_orientation</key>
+                    <string>0.3827 0.0 -0.9239 0.0</string>
+                    <key>view_position</key>
+                    <string>-251.42 30.0 251.42</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
+                    <key>view_description</key>
+                    <string>Left View</string>
+                    <key>view_orientation</key>
+                    <string>0.7071 0.0 -0.7071 0.0</string>
+                    <key>view_position</key>
+                    <string>-350.0 30.0 0.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
+                    <key>view_description</key>
+                    <string>Rear Left View</string>
+                    <key>view_orientation</key>
+                    <string>0.9239 0.0 -0.3827 0.0</string>
+                    <key>view_position</key>
+                    <string>-251.42 30.0 -251.42</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
+                    <key>view_description</key>
+                    <string>Top View</string>
+                    <key>view_orientation</key>
+                    <string>-0.7071 0.7071 0.0 0.0</string>
+                    <key>view_position</key>
+                    <string>0.0 420.0 0.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+                <dict>
+                    <key>view_description</key>
+                    <string>Bottom View</string>
+                    <key>view_orientation</key>
+                    <string>0.0 0.0 0.7071 0.7071</string>
+                    <key>view_position</key>
+                    <string>0.0 -420.0 0.0</string>
+                    <key>weapon_facing</key>
+                    <string>FORWARD</string>
+                </dict>
+            </array>
+            <key>energy_recharge_rate</key>
+            <integer>3</integer>
+            <key>exhaust</key>
+            <array>
+                <string>10.7601 6.3008 -31.8587  6.3 5.6 9.0</string>
+                <string>-10.7601 6.3008 -31.8587 6.3 5.6 9.0</string>
+            </array>
+            <key>extra_cargo</key>
+            <integer>0</integer>
+            <key>frangible</key>
+            <string>false</string>
+            <key>forward_weapon_type</key>
+            <string>WEAPON_MINING_LASER</string>
+            <key>laser_color</key>
+            <string>whiteColor</string>
+            <key>materials</key>
+            <dict>
+                <key>minercobra_diffuse.png</key>
+                <dict>
+                    <key>diffuse_map</key>
+                    <string>minercobra_diffuse.png</string>
+                    <key>specular_color</key>
+                    <array><!-- Applies when specular map is not used (no shaders)  -->
+                        <real>0.2</real>
+                        <real>0.2</real>
+                        <real>0.2</real>
+                    </array>
+                    <key>shininess</key>
+                    <integer>5</integer>
+                    <key>emission_map</key>
+                    <dict>
+                        <key>name</key>
+                        <string>griff_minercobra_mk3_mainhull_normal.png</string>
+                        <key>extract_channel</key>
+                        <string>a</string>
+                    </dict>
+                    <key>emission_modulate_color</key>
+                    <array>
+                        <real>0.9926</real>
+                        <real>0.9686</real>
+                        <real>0.7325</real> 
+                    </array>
+                </dict>
+            </dict>
+            <key>max_cargo</key>
+            <integer>75</integer>
+            <key>max_energy</key>
+            <integer>192</integer>
+            <key>max_flight_pitch</key>
+            <integer>1</integer>
+            <key>max_flight_roll</key>
+            <integer>2</integer>
+            <key>max_flight_speed</key>
+            <integer>350</integer>
+            <key>max_missiles</key>
+            <integer>2</integer>
+            <key>missiles</key>
+            <integer>2</integer>
+            <key>missile_launch_position</key>
+            <string>0.0 -13.7 21.06</string>
+            <key>model</key>
+            <string>griff_minercobra_mk3_mainhull.dat</string>
+            <key>name</key>
+            <string>Miner Cobra Mark III</string>
+            <key>roles</key>
+            <string>player</string>
+            <key>thrust</key>
+            <integer>32</integer>
+            <key>scoop_position</key>
+            <string>0.0 -9.57 7.66</string>
+            <key>smooth</key>
+            <string>false</string>
+            <key>subentities</key>
+            <array>
+                <string>griff_normalmapped_minercobra_mkIII_front_gun_player   0 0 0 1 0 0 0</string>
+            </array>
+            <key>shaders</key>
+            <dict>
+                <key>minercobra_diffuse.png</key>
+                <dict>
+                    <key>vertex_shader</key>
+                    <string>griff_minernormalmap_ships.vertex</string>
+                    <key>fragment_shader</key>
+                    <string>Z_GrOovy_minercobra_mk3_player.fragment</string>
+                    <key>textures</key>
+                    <array>
+                        <string>minercobra_diffuse.png</string>
+                        <string>griff_minercobra_mk3_mainhull_normal.png</string>
+			<string>griff_minercobra_mk3_mainhull_effects.png</string>
+                    </array>
+                    <key>uniforms</key>
+                    <dict>
+                        <key>uColorMap</key>
+                        <dict>
+                            <key>type</key>
+                            <string>texture</string>
+                            <key>value</key>
+                            <integer>0</integer>
+                        </dict>
+                        <key>uNormalMap</key>
+                        <dict>
+                            <key>type</key>
+                            <string>texture</string>
+                            <key>value</key>
+                            <integer>1</integer>
+                        </dict>
+                        <key>uEffectsMap</key>
+                        <dict>
+                            <key>type</key>
+                            <string>texture</string>
+                            <key>value</key>
+                            <integer>2</integer>
+                        </dict>
+                        <key>uTime</key>
+                        <string>universalTime</string>
+                        <key>nearly_dead</key>
+                        <string>throwingSparks</string>
+                        <key>alertlevel</key>
+                        <string>alertCondition</string>
+                        <key>hull_heat_level</key>
+                        <string>hullHeatLevel</string>
+                        <key>engine_power</key>
+                        <string>speedFactor</string>
+                    </dict>
+                </dict>
+            </dict>
+            <key>view_position_aft</key>
+            <string>0.0 7.5 -32.5</string>
+            <key>view_position_forward</key>
+            <string>0.0 7.25 31.0</string>
+            <key>view_position_port</key>
+            <string>-33.5 5.85 0.0</string>
+            <key>view_position_starboard</key>
+            <string>33.5 5.85 0.0</string>
+            <key>weapon_facings</key>
+            <integer>3</integer>
+            <key>weapon_position_forward</key>
+            <string>-0.0961 0.9367 43.4655</string>
+            <key>weapon_position_aft</key>
+            <string>0.0 0.0 -32.5</string>
+            <key>weapon_position_port</key>
+            <string>-40.0 2.17 -4.33</string>
+            <key>weapon_position_starboard</key>
+            <string>40.0 2.17 -4.33</string>
+        </dict>
+        <key>griff_normalmapped_minercobra_mkIII_front_gun_player</key>
+        <dict>
+            <key>ai_type</key>
+            <string>nullAI.plist</string>
+            <key>model</key>
+            <string>griff_minercobra_mk3_front_gun.dat</string>
+            <key>name</key>
+            <string>Miner Cobra Mark III</string>
+            <key>roles</key>
+            <string>griff_normalmapped_minercobra_mkIII_subent</string>
+            <key>forward_weapon_type</key>
+            <string>WEAPON_NONE</string>
+            <key>smooth</key>
+            <integer>0</integer>
+            <key>materials</key>
+            <dict>
+                <key>griff_minercobra_mk3_front_gun_diffuse_spec.png</key>
+                <dict>
+                    <key>diffuse_map</key>
+                    <string>griff_minercobra_mk3_front_gun_diffuse_spec.png</string> 
+                    <key>specular_color</key>
+                    <array>
+                        <real>0.2</real>
+                        <real>0.2</real>
+                        <real>0.2</real>
+                    </array>
+                    <key>shininess</key>
+                    <integer>5</integer> 
+                </dict>
+            </dict>
+            <key>max_energy</key>
+            <integer>100</integer>
+            <key>shaders</key>
+            <dict> 
+                <key>griff_minercobra_mk3_front_gun_diffuse_spec.png</key>
+                <dict>
+                    <key>vertex_shader</key>
+                    <string>griff_minernormalmap_ships.vertex</string> 
+                    <key>fragment_shader</key>
+                    <string>griff_minercobra_mk3_frontgun.fragment</string> 
+                    <key>textures</key>
+                    <array>
+                        <string>griff_minercobra_mk3_front_gun_diffuse_spec.png</string>
+                        <string>griff_minercobra_mk3_front_gun_normal.png</string>
+                    </array>
+                    <key>uniforms</key>
+                    <dict>
+                        <key>uColorMap</key>
+                        <dict>
+                            <key>type</key>
+                            <string>texture</string>; 
+                            <key>value</key>
+                            <integer>0</integer>
+                        </dict>
+                        <key>uNormalMap</key>
+                        <dict>
+                            type = texture; 
+                            value = 1;
+                        </dict>
+                        <key>uTime</key>
+                        <string>universalTime</string>
+                        <key>hull_heat_level</key>
+                        <string>hullHeatLevel</string>	
+                        <key>laser_heat_level</key>
+                        <dict> 
+                            <key>binding</key>
+                            <string>laserHeatLevel</string>
+                            <key>bindToSubentity</key>
+                            <integer>0</integer> 
+                        </dict>
+                    </dict>
+                </dict>
+            </dict>
+        </dict>
+        <key>cobra3-miner</key>
+        <dict>
+            <key>like_ship</key>
+            <string>cobra3-miner-player</string>
+            <key>ai_type</key>
+            <string>minerAI.plist</string>
+            <key>fuel</key>
+            <integer>70</integer>
+            <key>has_ecm</key>
+            <real>0.15</real>
+            <key>has_escape_pod</key>
+            <real>0.95</real>
+            <key>has_scoop</key>
+            <real>1.0</real>
+            <key>likely_cargo</key>
+            <integer>12</integer>
+            <key>missiles</key>
+            <integer>2</integer>
+            <key>roles</key>
+            <string>miner trader</string>
+        </dict>
+    </dict>
+</plist>

@@ -155,16 +155,22 @@ public class AddonsUtil {
      * @param url the (human understandable) url the file came from
      * @param in the InputStream to read
      * @param registry the registry to store found data
-     * @param oxp the expansion to add the found ships to
+     * @param expansion the expansion to add the found ships to
      * @throws IOException something went wrong
      * @throws ParserConfigurationException something went wrong
      * @throws SAXException something went wrong
      * @throws TransformerException something went wrong
      */
-    public static void readShips(String url, InputStream in, Registry registry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+    public static void readShips(String url, InputStream in, Registry registry, Expansion expansion) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         log.debug("readShips(...)");
         if (in == null) {
             throw new IllegalArgumentException("in must not be null");
+        }
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
+        if (expansion == null) {
+            throw new IllegalArgumentException("expansion must not be null");
         }
         
         in.mark(10);
@@ -175,12 +181,12 @@ public class AddonsUtil {
             in.reset();
 
             Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(in, null);
-            log.info("Parsed {} ({} ships)", oxp.getName(), shipList.size());
-            registry.addShipList(oxp, shipList);
+            log.info("Parsed {} ({} ships)", expansion.getName(), shipList.size());
+            registry.addShipList(expansion, shipList);
         } else {
             in.reset();
             PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, url);
-            registry.addShipList(oxp, dc);
+            registry.addShipList(expansion, dc);
         }
     }
     
