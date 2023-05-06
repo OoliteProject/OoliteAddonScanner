@@ -584,7 +584,7 @@ public class AddonsUtil {
     }
 
     /**
-     * Reads a script file from an OXP Zip file.
+     * Reads a script file from an OXP Zip file and adds it to the expansion.
      * 
      * @param zin the OXP Zip Input Stream
      * @param zentry the entry to read from zin
@@ -603,7 +603,7 @@ public class AddonsUtil {
             throw new IllegalArgumentException(EXCEPTION_ZENTRY_MUST_NOT_BE_NULL);
         }
         if (expansion == null) {
-            throw new IllegalArgumentException("expanstion must not be null");
+            throw new IllegalArgumentException("expansion must not be null");
         }
         
         InputStream in = AddonsUtil.getZipEntryStream(zin);

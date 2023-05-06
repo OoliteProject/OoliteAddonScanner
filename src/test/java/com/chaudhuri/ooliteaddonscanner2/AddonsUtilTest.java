@@ -1211,4 +1211,47 @@ public class AddonsUtilTest {
         }
     }
     
+    /**
+     * Test of readScript method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadScript3() throws Exception {
+        log.info("readScript3");
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/Cargo_wrecks_teaser_1.7.2.oxz"));
+
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("world-scripts.plist")) {
+            zentry = zin.getNextEntry();
+        }
+
+        Expansion oxp = null;
+        try {
+            AddonsUtil.readScript(zin, zentry, oxp);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("expansion must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+    
+    /**
+     * Test of readScript method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadScript4() throws Exception {
+        log.info("readScript4");
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/Cargo_wrecks_teaser_1.7.2.oxz"));
+
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("world-scripts.plist")) {
+            zentry = zin.getNextEntry();
+        }
+
+        Expansion oxp = new Expansion("Cargo_wrecks_teaser");
+        
+        assertEquals(0, oxp.getScripts().size());
+        AddonsUtil.readScript(zin, zentry, oxp);
+        assertEquals(1, oxp.getScripts().size());
+    }
+    
 }
