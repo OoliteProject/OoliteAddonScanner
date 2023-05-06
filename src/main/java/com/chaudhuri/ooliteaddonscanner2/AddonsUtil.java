@@ -325,20 +325,24 @@ public class AddonsUtil {
     }
     
     /**
-     * Reads a (ship) model from a given inputstream.
+     * Reads a (ship) model from a given inputstream and reports problems
+     * as warnings in the expansion.
      * 
-     * @param in the input stream to read
+     * @param data the input stream to read
      * @param expansion the expansion to add warnings
      * @param zname the name of the file within the expansion
      */
-    public static void readModel(InputStream in, Expansion expansion, String zname) {
+    public static void readModel(InputStream data, Expansion expansion, String zname) {
         log.debug("readModel(...)");
+        if (data == null) {
+            throw new IllegalArgumentException("data must not be null");
+        }
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         
         try {
-            AddonsUtil.parseModel(in, expansion.getDownloadUrl() + "!" + zname);
+            AddonsUtil.parseModel(data, expansion.getDownloadUrl() + "!" + zname);
         } catch (Exception e) {
             log.warn("Could not parse model {}!{}: {}", expansion.getDownloadUrl(), zname, e.getMessage());
             expansion.addWarning(String.format("Could not parse model %s!%s: %s", expansion.getDownloadUrl(), zname, e.getMessage()));

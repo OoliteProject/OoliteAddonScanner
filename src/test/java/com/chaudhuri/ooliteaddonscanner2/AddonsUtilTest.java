@@ -6,6 +6,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.NoSuchFileException;
@@ -589,9 +590,42 @@ public class AddonsUtilTest {
             AddonsUtil.readModel(in, expansion, zname);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
+            assertEquals("data must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readModel method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadModel2() throws FileNotFoundException {
+        log.info("readModel2");
+        InputStream in = new FileInputStream("src/test/data/empty_file");
+        Expansion expansion = null;
+        String zname = "";
+        try {
+            AddonsUtil.readModel(in, expansion, zname);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
             assertEquals("expansion must not be null", e.getMessage());
             log.debug("caught expected exception", e);
         }
+    }
+
+    /**
+     * Test of readModel method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadModel3() throws FileNotFoundException {
+        log.info("readModel3");
+        InputStream in = new FileInputStream("src/test/data/empty_file");
+        Expansion expansion = new Expansion();
+        String zname = "";
+
+        assertEquals(0, expansion.getWarnings().size());
+        AddonsUtil.readModel(in, expansion, zname);
+        assertEquals(1, expansion.getWarnings().size());
     }
 
     /**
