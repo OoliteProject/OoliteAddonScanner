@@ -1069,9 +1069,110 @@ public class AddonsUtilTest {
             AddonsUtil.readManifest(zin, zentry, registry, oxp);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
+            assertEquals("zin must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readManifest method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadManifest2() throws Exception {
+        log.info("readManifest2");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/ThargornThreat_1.5.2.oxz"));
+
+        ZipEntry zentry = null;
+        Registry registry = null;
+        Expansion oxp = null;
+        try {
+            AddonsUtil.readManifest(zin, zentry, registry, oxp);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("zentry must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readManifest method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadManifest3() throws Exception {
+        log.info("readManifest3");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/ThargornThreat_1.5.2.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("manifest.plist")) {
+            zentry = zin.getNextEntry();
+        }
+        
+        Registry registry = null;
+        Expansion oxp = null;
+        try {
+            AddonsUtil.readManifest(zin, zentry, registry, oxp);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("registry must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readManifest method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadManifest4() throws Exception {
+        log.info("readManifest4");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/ThargornThreat_1.5.2.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("manifest.plist")) {
+            zentry = zin.getNextEntry();
+        }
+        
+        Registry registry = new Registry();
+        
+        Expansion oxp = null;
+        try {
+            AddonsUtil.readManifest(zin, zentry, registry, oxp);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
             assertEquals("expansion must not be null", e.getMessage());
             log.debug("caught expected exception", e);
         }
+    }
+
+    /**
+     * Test of readManifest method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadManifest5() throws Exception {
+        log.info("readManifest5");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/ThargornThreat_1.5.2.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("manifest.plist")) {
+            zentry = zin.getNextEntry();
+        }
+        
+        Registry registry = new Registry();
+        
+        Expansion expansion = new Expansion("myId");
+        registry.addExpansion(expansion);
+        
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[]", registry.getWarnings().toString());
+        assertNull(expansion.getManifest().getIdentifier());
+        AddonsUtil.readManifest(zin, zentry, registry, expansion);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[XML Manifest found, Unknown key 'licence' in XML manifest.plist]", registry.getWarnings().toString());
+        assertNotNull(expansion.getManifest().getIdentifier());
     }
 
     /**

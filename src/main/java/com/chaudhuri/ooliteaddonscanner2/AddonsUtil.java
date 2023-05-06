@@ -530,7 +530,8 @@ public class AddonsUtil {
     }
     
     /**
-     * Reads an OXP manifest from the OXP.
+     * Reads an OXP manifest from the zip entry.The resulting manifest is set
+     * in the expansion.
      * 
      * @param zin the OXP Zip Inputstream to read
      * @param zentry the zip entry to read from zin
@@ -544,6 +545,15 @@ public class AddonsUtil {
      */
     public static void readManifest(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion expansion) throws IOException, ParserConfigurationException, SAXException, TransformerException, OxpException {
         log.debug("readManifest(...)");
+        if (zin == null) {
+            throw new IllegalArgumentException("zin must not be null");
+        }
+        if (zentry == null) {
+            throw new IllegalArgumentException("zentry must not be null");
+        }
+        if (registry == null) {
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
+        }
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
@@ -563,6 +573,7 @@ public class AddonsUtil {
                 throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
             }
             expansion.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
+            expansion.addWarning("XML Manifest found");
         } else {
             in.reset();
             PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, expansion.getDownloadUrl()+"!"+zentry.getName());
