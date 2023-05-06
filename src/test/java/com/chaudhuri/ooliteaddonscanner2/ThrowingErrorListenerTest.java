@@ -91,7 +91,13 @@ public class ThrowingErrorListenerTest {
             tel.syntaxError(null, offendingSymbol, 0, 0, null, null);
             fail("expected exception");
         } catch (NullPointerException e) {
-            assertEquals("Cannot invoke \"org.antlr.v4.runtime.Recognizer.getVocabulary()\" because \"recognizer\" is null", e.getMessage());
+            /*
+            Different JVMs seem to produce different messages, so we cannot
+            reliably tell which message to check for.
+            
+            //assertNull(e.getMessage());
+            //assertEquals("Cannot invoke \"org.antlr.v4.runtime.Recognizer.getVocabulary()\" because \"recognizer\" is null", e.getMessage());
+             */
             log.debug("caught expected exception", e);
         }
     }

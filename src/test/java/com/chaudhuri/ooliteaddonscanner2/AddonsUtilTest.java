@@ -1193,4 +1193,22 @@ public class AddonsUtilTest {
         }
     }
     
+    /**
+     * Test of readScript method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadScript2() throws Exception {
+        log.info("readScript2");
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/ThargornThreat_1.5.2.oxz"));
+        ZipEntry zentry = null;
+        Expansion oxp = null;
+        try {
+            AddonsUtil.readScript(zin, zentry, oxp);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("zentry must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+    
 }
