@@ -203,18 +203,18 @@ public class Registry {
     
     /** Adds an expansion to the list of expansions.
      * 
-     * @param oxp 
+     * @param expansion 
      */
-    public void addExpansion(Expansion oxp) {
-        if (oxp.getIdentifier() == null) {
-            throw new IllegalArgumentException("OXP identifier must not be null");
+    public void addExpansion(Expansion expansion) {
+        if (expansion.getIdentifier() == null) {
+            throw new IllegalArgumentException("expansion identifier must not be null");
         }
         
-        if (expansions.containsKey(oxp.getIdentifier())) {
-            Expansion oldOxp = expansions.get(oxp.getIdentifier());
-            addWarning(String.format("OXP Overwrite! %s (%s) and %s (%s) share same id %s", oxp.getName(), oxp.getDownloadUrl(), oldOxp.getName(), oldOxp.getDownloadUrl(), oxp.getIdentifier()));
+        if (expansions.containsKey(expansion.getIdentifier())) {
+            Expansion oldOxp = expansions.get(expansion.getIdentifier());
+            addWarning(String.format("OXP Overwrite! %s (%s) and %s (%s) share same id %s", expansion.getName(), expansion.getDownloadUrl(), oldOxp.getName(), oldOxp.getDownloadUrl(), expansion.getIdentifier()));
         }
-        expansions.put(oxp.getIdentifier(), oxp);
+        expansions.put(expansion.getIdentifier(), expansion);
     }
     
     /** Adds list of equipment.

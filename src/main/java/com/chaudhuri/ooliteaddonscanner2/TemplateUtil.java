@@ -135,9 +135,11 @@ public class TemplateUtil {
         if (templateEngine == null) {
             throw new IllegalArgumentException("templateEngine must not be null");
         }
+        File shipsDir = new File(outputdir, "ships");
+        shipsDir.mkdirs();
 
         for (Ship ship: registry.getShips()) {
-            templateEngine.process(ship, "ship.ftlh", new File(outputdir, "ships/"+ship.getIdentifier()+HTML_EXTENSION));
+            templateEngine.process(ship, "ship.ftlh", new File(shipsDir, ship.getIdentifier()+HTML_EXTENSION));
         }
     }
     

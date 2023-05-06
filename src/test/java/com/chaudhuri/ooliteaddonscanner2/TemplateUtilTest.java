@@ -4,6 +4,7 @@ package com.chaudhuri.ooliteaddonscanner2;
 
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
+import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -328,7 +329,80 @@ public class TemplateUtilTest {
      */
     @Test
     public void testPrintShips() throws Exception {
-        log.info("printShips");
+        log.info("testPrintShips");
+
+        try {
+            TemplateUtil.printShips(null, null, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("registry must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
     }
-    
+
+    /**
+     * Test of testPrintShips method, of class TemplateUtil.
+     */
+    @Test
+    public void testPrintShips2() throws Exception {
+        log.info("printShips2");
+        
+        Registry registry = new Registry();
+
+        try {
+            TemplateUtil.printShips(registry, null, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("outputdir must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of printShips method, of class TemplateUtil.
+     */
+    @Test
+    public void testPrintShips3() throws Exception {
+        log.info("printShips3");
+        
+        Registry registry = new Registry();
+
+        File outputdir = new File(tempCacheDir, "testPrintShips3");
+        outputdir.mkdirs();
+
+        assertTrue(outputdir.isDirectory());
+        try {
+            TemplateUtil.printShips(registry, outputdir, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("templateEngine must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of printShips method, of class TemplateUtil.
+     */
+    @Test
+    public void testPrintShips4() throws Exception {
+        log.info("printShips4");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion("myExpansion");
+        expansion.setTitle("title");
+        registry.addExpansion(expansion);
+        Ship ship = new Ship("myShip");
+        ship.setExpansion(expansion);
+        registry.addShip(ship);
+
+        File outputdir = new File(tempCacheDir, "testPrintShips4");
+        outputdir.mkdirs();
+        
+        TemplateEngine templateEngine = new TemplateEngine();
+
+        assertTrue(outputdir.isDirectory());
+        TemplateUtil.printShips(registry, outputdir, templateEngine);
+        assertTrue(new File(outputdir, "ships/myShip.html").isFile());
+    }
+
 }
