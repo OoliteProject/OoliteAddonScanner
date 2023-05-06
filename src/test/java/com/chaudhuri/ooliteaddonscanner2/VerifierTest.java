@@ -330,6 +330,11 @@ public class VerifierTest {
         assertEquals("CARRIAGE RETURN (CR)", Verifier.describeCodePoint(13));
         assertEquals("SHIFT OUT", Verifier.describeCodePoint(14));
         assertEquals("SHIFT IN", Verifier.describeCodePoint(15));
+    }
+
+    @Test
+    public void testDescribeCodePoint2() {
+        log.info("testDescribeCodePoint2");
         assertEquals("DATA LINK ESCAPE", Verifier.describeCodePoint(16));
         assertEquals("DEVICE CONTROL ONE", Verifier.describeCodePoint(17));
         assertEquals("DEVICE CONTROL TWO", Verifier.describeCodePoint(18));

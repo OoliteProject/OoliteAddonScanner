@@ -19,6 +19,10 @@ import org.apache.logging.log4j.Logger;
 public class TemplateUtil {
     private static final Logger log = LogManager.getLogger();
 
+    private static final String EXCEPTION_REGISTRY_MUST_NOT_BE_NULL = "registry must not be null";
+    private static final String EXCEPTION_OUTPUTDIR_MUST_NOT_BE_NULL = "outputdir must not be null";
+    private static final String EXCEPTION_TEMPLATEENGINE_MUST_NOT_BE_NULL = "templateEngine must not be null";
+    
     /**
      * Prevents creating instances.
      */
@@ -38,13 +42,13 @@ public class TemplateUtil {
     public static void printIndexes(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
         log.debug("printIndex(...)");
         if (registry == null) {
-            throw new IllegalArgumentException("registry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
         if (outputdir == null) {
-            throw new IllegalArgumentException("outputdir must not be null");
+            throw new IllegalArgumentException(EXCEPTION_OUTPUTDIR_MUST_NOT_BE_NULL);
         }
         if (templateEngine == null) {
-            throw new IllegalArgumentException("templateEngine must not be null");
+            throw new IllegalArgumentException(EXCEPTION_TEMPLATEENGINE_MUST_NOT_BE_NULL);
         }
         
         registry.setProperty("ImplementationVendor", String.valueOf(Main.class.getPackage().getImplementationVendor()));
@@ -71,13 +75,13 @@ public class TemplateUtil {
      */
     public static void printExpansions(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
         if (registry == null) {
-            throw new IllegalArgumentException("registry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
         if (outputdir == null) {
-            throw new IllegalArgumentException("outputdir must not be null");
+            throw new IllegalArgumentException(EXCEPTION_OUTPUTDIR_MUST_NOT_BE_NULL);
         }
         if (templateEngine == null) {
-            throw new IllegalArgumentException("templateEngine must not be null");
+            throw new IllegalArgumentException(EXCEPTION_TEMPLATEENGINE_MUST_NOT_BE_NULL);
         }
         File expansionsDir = new File(outputdir, "expansions");
         expansionsDir.mkdirs();
@@ -99,13 +103,13 @@ public class TemplateUtil {
      */
     public static void printEquipment(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
         if (registry == null) {
-            throw new IllegalArgumentException("registry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
         if (outputdir == null) {
-            throw new IllegalArgumentException("outputdir must not be null");
+            throw new IllegalArgumentException(EXCEPTION_OUTPUTDIR_MUST_NOT_BE_NULL);
         }
         if (templateEngine == null) {
-            throw new IllegalArgumentException("templateEngine must not be null");
+            throw new IllegalArgumentException(EXCEPTION_TEMPLATEENGINE_MUST_NOT_BE_NULL);
         }
         File equipmentDir = new File(outputdir, "equipment");
         equipmentDir.mkdirs();
@@ -127,13 +131,13 @@ public class TemplateUtil {
      */
     public static void printShips(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
         if (registry == null) {
-            throw new IllegalArgumentException("registry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
         if (outputdir == null) {
-            throw new IllegalArgumentException("outputdir must not be null");
+            throw new IllegalArgumentException(EXCEPTION_OUTPUTDIR_MUST_NOT_BE_NULL);
         }
         if (templateEngine == null) {
-            throw new IllegalArgumentException("templateEngine must not be null");
+            throw new IllegalArgumentException(EXCEPTION_TEMPLATEENGINE_MUST_NOT_BE_NULL);
         }
         File shipsDir = new File(outputdir, "ships");
         shipsDir.mkdirs();

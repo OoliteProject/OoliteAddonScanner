@@ -603,7 +603,7 @@ public class AddonsUtil {
             throw new IllegalArgumentException(EXCEPTION_ZENTRY_MUST_NOT_BE_NULL);
         }
         if (expansion == null) {
-            throw new IllegalArgumentException("expansion must not be null");
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
         
         InputStream in = AddonsUtil.getZipEntryStream(zin);
