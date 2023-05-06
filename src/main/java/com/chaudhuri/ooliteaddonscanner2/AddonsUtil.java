@@ -457,7 +457,7 @@ public class AddonsUtil {
      * @param zin the OXP Zip InputStream
      * @param zentry the entry to read
      * @param registry the registry to add the found data
-     * @param oxp the OXP to report errors
+     * @param expansion the OXP to report errors
      * @throws IOException something went wrong
      * @throws RegistryException something went wrong
      * @throws SAXException something went wrong
@@ -465,30 +465,39 @@ public class AddonsUtil {
      * @throws ParserConfigurationException something went wrong
      * @throws OxpException something went wrong
      */
-    public static void readOxpEntry(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion oxp) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException, OxpException {
+    public static void readOxpEntry(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion expansion) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException, OxpException {
         log.debug("readOxpEntry(...)");
+        if (zin == null) {
+            throw new IllegalArgumentException("zin must not be null");
+        }
         if (zentry == null) {
             throw new IllegalArgumentException("zentry must not be null");
         }
+        if (registry == null) {
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
+        }
+        if (expansion == null) {
+            throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
+        }
         
         if ("Config/equipment.plist".equals(zentry.getName())) {
-            log.trace("parsing equipment of {}", oxp.getDownloadUrl());
+            log.trace("parsing equipment of {}", expansion.getDownloadUrl());
             InputStream in = AddonsUtil.getZipEntryStream(zin);
-            String url = String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName());
-            AddonsUtil.readEquipment(url, in, registry, oxp);
+            String url = String.format("%s!%s", expansion.getDownloadUrl(), zentry.getName());
+            AddonsUtil.readEquipment(url, in, registry, expansion);
 
         } else if("Config/shipdata.plist".equals(zentry.getName())) {
             try {
-                log.trace("parsing shipdata of {}", oxp.getDownloadUrl());
-                AddonsUtil.readShips(String.format("%s!%s", oxp.getDownloadUrl(), zentry.getName()), AddonsUtil.getZipEntryStream(zin), registry, oxp);
+                log.trace("parsing shipdata of {}", expansion.getDownloadUrl());
+                AddonsUtil.readShips(String.format("%s!%s", expansion.getDownloadUrl(), zentry.getName()), AddonsUtil.getZipEntryStream(zin), registry, expansion);
             } catch (Exception e) {
-                oxp.addWarning(String.format("%s: %s at %s!%s", e.getClass().getName(), e.getMessage(), oxp.getDownloadUrl(), zentry.getName()));
+                expansion.addWarning(String.format("%s: %s at %s!%s", e.getClass().getName(), e.getMessage(), expansion.getDownloadUrl(), zentry.getName()));
             }
 
         } else if("manifest.plist".equals(zentry.getName())) {
-            readManifest(zin, zentry, registry, oxp);
+            readManifest(zin, zentry, registry, expansion);
         } else {
-            readOxpEntry2(zin, zentry, oxp);
+            readOxpEntry2(zin, zentry, expansion);
         }
     }
 

@@ -865,9 +865,194 @@ public class AddonsUtilTest {
             AddonsUtil.readOxpEntry(null, null, null, null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
+            assertEquals("zin must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readOxpEntry method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxpEntry2() throws Exception {
+        log.info("readOxpEntry2");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/oolite.oxp.Norby.MinerCobra.oxz"));
+
+        try {
+            AddonsUtil.readOxpEntry(zin, null, null, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
             assertEquals("zentry must not be null", e.getMessage());
             log.debug("caught expected exception", e);
         }
+    }
+
+    /**
+     * Test of readOxpEntry method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxpEntry3() throws Exception {
+        log.info("readOxpEntry3");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/oolite.oxp.Frame.FuelCollector.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+
+        try {
+            AddonsUtil.readOxpEntry(zin, zentry, null, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("registry must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readOxpEntry method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxpEntry4() throws Exception {
+        log.info("readOxpEntry4");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/oolite.oxp.Frame.FuelCollector.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("equipment.plist")) {
+            zentry = zin.getNextEntry();
+        }
+        
+        Registry registry = new Registry();
+
+        try {
+            AddonsUtil.readOxpEntry(zin, zentry, registry, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("expansion must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readOxpEntry method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxpEntry5() throws Exception {
+        log.info("readOxpEntry5");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/oolite.oxp.Frame.FuelCollector.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("equipment.plist")) {
+            zentry = zin.getNextEntry();
+        }
+        
+        Registry registry = new Registry();
+        
+        Expansion expansion = new Expansion("myid");
+        registry.addExpansion(expansion);
+
+
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
+        AddonsUtil.readOxpEntry(zin, zentry, registry, expansion);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(1, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[Found XML equipment list]", registry.getWarnings().toString());
+    }
+
+    /**
+     * Test of readOxpEntry method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxpEntry6() throws Exception {
+        log.info("readOxpEntry6");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/oolite.oxp.Frame.FuelCollector.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("shipdata.plist")) {
+            zentry = zin.getNextEntry();
+        }
+        
+        Registry registry = new Registry();
+        
+        Expansion expansion = new Expansion("myid");
+        registry.addExpansion(expansion);
+
+
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[]", registry.getWarnings().toString());
+        AddonsUtil.readOxpEntry(zin, zentry, registry, expansion);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(2, registry.getShips().size());
+        assertEquals("[]", registry.getWarnings().toString());
+    }
+
+    /**
+     * Test of readOxpEntry method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxpEntry7() throws Exception {
+        log.info("readOxpEntry7");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/oolite.oxp.ByronArn.AutoRefuel.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("script.js")) {
+            zentry = zin.getNextEntry();
+        }
+        
+        Registry registry = new Registry();
+        
+        Expansion expansion = new Expansion("myid");
+        registry.addExpansion(expansion);
+
+
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[]", registry.getWarnings().toString());
+        assertEquals(0, expansion.getScripts().size());
+        AddonsUtil.readOxpEntry(zin, zentry, registry, expansion);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[]", registry.getWarnings().toString());
+        assertEquals(1, expansion.getScripts().size());
+    }
+
+    /**
+     * Test of readOxpEntry method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxpEntry8() throws Exception {
+        log.info("readOxpEntry8");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/oolite.oxp.cim.combat-simulator.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("world-scripts.plist")) {
+            zentry = zin.getNextEntry();
+        }
+        
+        Registry registry = new Registry();
+        
+        Expansion expansion = new Expansion("myid");
+        registry.addExpansion(expansion);
+
+
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[]", registry.getWarnings().toString());
+        assertEquals(0, expansion.getScripts().size());
+        AddonsUtil.readOxpEntry(zin, zentry, registry, expansion);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[]", registry.getWarnings().toString());
+        assertEquals(1, expansion.getScripts().size());
     }
 
     /**
