@@ -201,7 +201,7 @@ public class Main {
             new File(outputdir, "expansions").mkdirs();
             new File(outputdir, "ships").mkdirs();
             
-            TemplateUtil.printIndex(registry, outputdir, templateEngine);
+            TemplateUtil.printIndexes(registry, outputdir, templateEngine);
             TemplateUtil.printExpansions(registry, outputdir, templateEngine);
             TemplateUtil.printEquipment(registry, outputdir, templateEngine);
             TemplateUtil.printShips(registry, outputdir, templateEngine);

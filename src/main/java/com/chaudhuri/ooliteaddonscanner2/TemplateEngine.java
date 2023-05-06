@@ -7,6 +7,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -51,6 +52,12 @@ public class TemplateEngine {
      */
     public void process(Object data, String templatename, File outfile) throws IOException, TemplateException, TemplateEngineException {
         log.debug("process({}, {})", data, templatename);
+        if (outfile == null) {
+            throw new IllegalArgumentException("outfile must not be null");
+        }
+        if (!outfile.getParentFile().isDirectory()) {
+            throw new FileNotFoundException("Path to file does not exist: " + outfile.getAbsolutePath());
+        }
     
         log.info("writing {}", outfile.getAbsolutePath());
         

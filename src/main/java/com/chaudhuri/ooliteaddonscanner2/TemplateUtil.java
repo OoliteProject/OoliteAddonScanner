@@ -35,8 +35,18 @@ public class TemplateUtil {
      * @throws TemplateException something went wrong
      * @throws TemplateEngineException something went wrong
      */
-    public static void printIndex(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
+    public static void printIndexes(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
         log.debug("printIndex(...)");
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
+        if (outputdir == null) {
+            throw new IllegalArgumentException("outputdir must not be null");
+        }
+        if (templateEngine == null) {
+            throw new IllegalArgumentException("templateEngine must not be null");
+        }
+        
         registry.setProperty("ImplementationVendor", String.valueOf(Main.class.getPackage().getImplementationVendor()));
         registry.setProperty("ImplementationTitle", String.valueOf(Main.class.getPackage().getImplementationTitle()));
         registry.setProperty("ImplementationVersion", String.valueOf(Main.class.getPackage().getImplementationVersion()));
@@ -60,8 +70,20 @@ public class TemplateUtil {
      * @throws TemplateEngineException something went wrong
      */
     public static void printExpansions(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
+        if (outputdir == null) {
+            throw new IllegalArgumentException("outputdir must not be null");
+        }
+        if (templateEngine == null) {
+            throw new IllegalArgumentException("templateEngine must not be null");
+        }
+        File expansionsDir = new File(outputdir, "expansions");
+        expansionsDir.mkdirs();
+        
         for (Expansion expansion: registry.getExpansions()) {
-            templateEngine.process(expansion, "expansion.ftlh", new File(outputdir, "expansions/"+expansion.getIdentifier()+HTML_EXTENSION));
+            templateEngine.process(expansion, "expansion.ftlh", new File(expansionsDir, expansion.getIdentifier()+HTML_EXTENSION));
         }
     }
     
@@ -76,8 +98,20 @@ public class TemplateUtil {
      * @throws TemplateEngineException something went wrong
      */
     public static void printEquipment(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
+        if (outputdir == null) {
+            throw new IllegalArgumentException("outputdir must not be null");
+        }
+        if (templateEngine == null) {
+            throw new IllegalArgumentException("templateEngine must not be null");
+        }
+        File equipmentDir = new File(outputdir, "equipment");
+        equipmentDir.mkdirs();
+
         for (Equipment equipment: registry.getEquipment()) {
-            templateEngine.process(equipment, "equipment.ftlh", new File(outputdir, "equipment/"+equipment.getIdentifier()+HTML_EXTENSION));
+            templateEngine.process(equipment, "equipment.ftlh", new File(equipmentDir, equipment.getIdentifier()+HTML_EXTENSION));
         }
     }
     
@@ -92,6 +126,16 @@ public class TemplateUtil {
      * @throws TemplateEngineException something went wrong
      */
     public static void printShips(Registry registry, File outputdir, TemplateEngine templateEngine) throws IOException, TemplateException, TemplateEngineException {
+        if (registry == null) {
+            throw new IllegalArgumentException("registry must not be null");
+        }
+        if (outputdir == null) {
+            throw new IllegalArgumentException("outputdir must not be null");
+        }
+        if (templateEngine == null) {
+            throw new IllegalArgumentException("templateEngine must not be null");
+        }
+
         for (Ship ship: registry.getShips()) {
             templateEngine.process(ship, "ship.ftlh", new File(outputdir, "ships/"+ship.getIdentifier()+HTML_EXTENSION));
         }
