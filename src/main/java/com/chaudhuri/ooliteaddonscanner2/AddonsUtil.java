@@ -288,13 +288,18 @@ public class AddonsUtil {
     }
 
     /**
+     * Loads the given expansion and parses all contained ship models.
+     * Results are added to the expansion.
      * 
-     * @param cache
-     * @param expansion
+     * @param cache the cache to load from
+     * @param expansion the expansionn to load
      * @return true when successful, false otherwise
      */
     public static void readShipModels(ExpansionCache cache, Expansion expansion) {
         log.debug("readShipModels(...)");
+        if (cache == null) {
+            throw new IllegalArgumentException("cache must not be null");
+        }
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }

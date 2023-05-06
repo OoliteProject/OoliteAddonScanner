@@ -506,8 +506,28 @@ public class AddonsUtilTest {
      */
     @Test
     public void testReadShipModels_ExpansionCache_Expansion() {
-        log.info("readShipModels");
+        log.info("testReadShipModels_ExpansionCache_Expansion");
         ExpansionCache cache = null;
+        Expansion expansion = null;
+        try {
+            AddonsUtil.readShipModels(cache, expansion);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("cache must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readShipModels method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadShipModels_ExpansionCache_Expansion2() throws IOException {
+        log.info("testReadShipModels_ExpansionCache_Expansion2");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
         Expansion expansion = null;
         try {
             AddonsUtil.readShipModels(cache, expansion);
@@ -516,6 +536,44 @@ public class AddonsUtilTest {
             assertEquals("expansion must not be null", e.getMessage());
             log.debug("caught expected exception", e);
         }
+    }
+
+    /**
+     * Test of readShipModels method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadShipModels_ExpansionCache_Expansion3() throws IOException {
+        log.info("testReadShipModels_ExpansionCache_Expansion3");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+        Expansion expansion = new Expansion();
+
+        assertEquals(0, expansion.getWarnings().size());
+        AddonsUtil.readShipModels(cache, expansion);
+        assertEquals(1, expansion.getWarnings().size());
+    }
+
+    /**
+     * Test of readShipModels method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadShipModels_ExpansionCache_Expansion4() throws IOException {
+        log.info("testReadShipModels_ExpansionCache_Expansion4");
+        File oxpFile = new File("src/test/data/oolite.oxp.Norby.MinerCobra.oxz");
+        assertTrue(oxpFile.exists());
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+        Expansion expansion = new Expansion();
+        expansion.setDownloadUrl(oxpFile.toURI().toString());
+
+        assertEquals(0, expansion.getWarnings().size());
+        AddonsUtil.readShipModels(cache, expansion);
+        log.warn("warnings {}", expansion.getWarnings());
+        assertEquals(0, expansion.getWarnings().size());
     }
 
     /**

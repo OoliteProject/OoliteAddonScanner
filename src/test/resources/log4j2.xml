@@ -15,13 +15,17 @@
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.model.ExpansionTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifestTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.model.ShipTest"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.OxpExceptionTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.PlistParserUtilTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Registry"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.RegistryTest"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.RegistryExceptionTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.TemplateEngine"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.TemplateEngineTest"/>
-    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Verifier"/>
-    <Logger level="debug" name="com.chaudhuri.ooliteaddonscanner2.VerifierTest"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.ThrowingErrorListener"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.ThrowingErrorListenerTest"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.Verifier"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.VerifierTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.Wiki"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.WikiTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.XMLPlistParser"/>

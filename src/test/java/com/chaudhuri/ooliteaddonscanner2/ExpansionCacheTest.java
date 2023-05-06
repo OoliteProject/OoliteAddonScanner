@@ -94,8 +94,9 @@ public class ExpansionCacheTest {
 
         File testDir = new File("target/test/ExpansionCacheTest");
         testDir.mkdirs();
-        
+
         ExpansionCache cache = new ExpansionCache(testDir);
+        cache.setBaseUrl(new File("src/test/data/").toURI().toURL().toString());
         Map<String, Object> m = cache.getOoliteManifest("latest");
         assertNotNull(m);
         assertEquals(18, m.size());

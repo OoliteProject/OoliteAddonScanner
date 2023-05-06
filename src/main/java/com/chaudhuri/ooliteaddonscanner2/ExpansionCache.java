@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,6 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,6 +44,9 @@ public class ExpansionCache {
     
     /** Time after which we remove files from the cache. */
     private static final Instant THRESHOLD = Instant.now().minus(180, ChronoUnit.DAYS);
+    
+    /** Base url to download releases from. Can be overridden for unit tests. */
+    private String baseUrl = "https://api.github.com/repos";
     
     /**
      * Creates a new ExpansionCache.
@@ -126,7 +131,8 @@ public class ExpansionCache {
     }
     
     /**
-     * Downloads a manifest from the github Oolite repository.
+     * Downloads a manifest from the github Oolite repository and returns
+     * the parsed JSON.
      * 
      * @param tag the tag to search for
      * @return the manifest found, as it is returned by Genson
@@ -135,7 +141,7 @@ public class ExpansionCache {
     public Map<String, Object> getOoliteManifest(String tag) throws IOException {
         log.debug("getOoliteManifest({})", tag);
         String repository = "OoliteProject/oolite";
-        String urlStr = "https://api.github.com/repos/" + repository + "/releases/" + tag;
+        String urlStr = baseUrl + "/" + repository + "/releases/" + tag;
 
         log.debug("Reading {}", urlStr);
         URL url = new URL(urlStr);
@@ -190,6 +196,40 @@ public class ExpansionCache {
     }
     
     private void doDownload(URL u, File local) throws IOException {
+        log.info("Downloading to {}", local);
+        if (u == null) {
+            throw new IllegalArgumentException("u must not be null");
+        }
+        
+        switch(u.getProtocol()) {
+            case "http":
+            case "https":
+                doDownloadHttp(u, local);
+                break;
+            case "file":
+                doDownloadFile(u, local);
+                break;
+            default:
+                throw new UnsupportedOperationException(String.format("Cannot download %s", u));
+        }
+    }
+    
+    private void doDownloadFile(URL u, File local) throws IOException {
+        log.debug("doDownloadFile(...)");
+        if (u == null) {
+            throw new IllegalArgumentException("u must not be null");
+        }
+        if (local == null) {
+            throw new IllegalArgumentException("local must not be null");
+        }
+        
+        local.getParentFile().mkdirs();
+        try (InputStream in = u.openStream(); OutputStream out = new FileOutputStream(local)) {
+            IOUtils.copy(in, out);
+        }
+    }
+    
+    private void doDownloadHttp(URL u, File local) throws IOException {
         log.info("Downloading to {}", local);
         
         try {
@@ -325,5 +365,15 @@ public class ExpansionCache {
         log.debug("invalidate({})", url);
         File cached = getCachedFile(url);
         Files.delete(cached.toPath());
+    }
+    
+    /**
+     * Sets the baseUrl from which to download Oolite resources. Needed for
+     * unit testing.
+     * 
+     * @param baseUrl the new url
+     */
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 }
