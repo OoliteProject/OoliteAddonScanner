@@ -159,9 +159,11 @@ public class Main {
         
         String urlStr = commandline.getOptionValue("u", "http://addons.oolite.space/api/1.0/overview");
         String outputDirStr = commandline.getOptionValue("o", "target/OoliteExpansionIndex");
+        File outputdir = new File(outputDirStr);
+        outputdir.mkdirs();
         
         // try to download from http://addons.oolite.org/api/1.0/overview
-        File data = File.createTempFile("OoliteAddonScanner2", ".nsdata");
+        File data = File.createTempFile("OoliteAddonScanner2", ".nsdata", outputdir);
         URL u = new URL(urlStr);
         try (InputStream in = u.openStream(); OutputStream out = new FileOutputStream(data)) {
             in.transferTo(out);
@@ -195,8 +197,6 @@ public class Main {
             // scanning finished. Now verify...
             Verifier.verify(registry);
             
-            File outputdir = new File(outputDirStr);
-            outputdir.mkdirs();
             new File(outputdir, "equipment").mkdirs();
             new File(outputdir, "expansions").mkdirs();
             new File(outputdir, "ships").mkdirs();
