@@ -640,9 +640,58 @@ public class AddonsUtilTest {
             AddonsUtil.readShipModels(cache, registry);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
+            assertEquals("cache must not be null", e.getMessage());
+            log.debug("caught expected exception");
+        }
+    }
+
+    /**
+     * Test of readShipModels method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadShipModels_ExpansionCache_Registry2() throws IOException {
+        log.info("readShipModels2");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+        Registry registry = null;
+        try {
+            AddonsUtil.readShipModels(cache, registry);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
             assertEquals("registry must not be null", e.getMessage());
             log.debug("caught expected exception");
         }
+    }
+
+    /**
+     * Test of readShipModels method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadShipModels_ExpansionCache_Registry3() throws IOException {
+        log.info("readShipModels3");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+
+        File oxpFile = new File("src/test/data/oolite.oxp.Norby.MinerCobra.oxz");
+        assertTrue(oxpFile.exists());
+        Expansion expansion = new Expansion("Norby.MinerCobra");
+        expansion.setDownloadUrl(oxpFile.toURI().toString());
+        Registry registry = new Registry();
+        registry.addExpansion(expansion);
+
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
+        AddonsUtil.readShipModels(cache, registry);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
     }
 
     /**
