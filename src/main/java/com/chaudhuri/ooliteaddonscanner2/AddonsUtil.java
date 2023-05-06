@@ -49,6 +49,8 @@ import org.xml.sax.SAXException;
 public class AddonsUtil {
     private static final Logger log = LogManager.getLogger();
     
+    private static final String EXCEPTION_CACHE_MUST_NOT_BE_NULL = "cache must not be null";
+    private static final String EXCEPTION_DATA_MUST_NOT_BE_NULL = "data must not be null";
     private static final String EXCEPTION_EXPANSION_MUST_NOT_BE_NULL = "expansion must not be null";
     private static final String EXCEPTION_REGISTRY_MUST_NOT_BE_NULL = "registry must not be null";
 
@@ -68,7 +70,7 @@ public class AddonsUtil {
     public static void readExpansionsList(File data, Registry registry) throws IOException {
         log.debug("readExpansionsList(...)");
         if (data == null) {
-            throw new IllegalArgumentException("data must not be null");
+            throw new IllegalArgumentException(EXCEPTION_DATA_MUST_NOT_BE_NULL);
         }
         if (registry == null) {
             throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
@@ -99,7 +101,7 @@ public class AddonsUtil {
     public static void parseModel(InputStream data, String source) throws IOException {
         log.debug("parseModel({}, {})", data, source);
         if (data == null) {
-            throw new IllegalArgumentException("data must not be null");
+            throw new IllegalArgumentException(EXCEPTION_DATA_MUST_NOT_BE_NULL);
         }
         
         try {
@@ -239,7 +241,7 @@ public class AddonsUtil {
     public static void readOolite(ExpansionCache cache, Registry registry) throws IOException, SAXException, ParserConfigurationException, RegistryException, TransformerException {
         log.debug("readOolite({})", registry); 
         if (cache == null) {
-            throw new IllegalArgumentException("cache must not be null");
+            throw new IllegalArgumentException(EXCEPTION_CACHE_MUST_NOT_BE_NULL);
         }
         if (registry == null) {
             throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
@@ -298,7 +300,7 @@ public class AddonsUtil {
     public static void readShipModels(ExpansionCache cache, Expansion expansion) {
         log.debug("readShipModels(...)");
         if (cache == null) {
-            throw new IllegalArgumentException("cache must not be null");
+            throw new IllegalArgumentException(EXCEPTION_CACHE_MUST_NOT_BE_NULL);
         }
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
@@ -335,7 +337,7 @@ public class AddonsUtil {
     public static void readModel(InputStream data, Expansion expansion, String zname) {
         log.debug("readModel(...)");
         if (data == null) {
-            throw new IllegalArgumentException("data must not be null");
+            throw new IllegalArgumentException(EXCEPTION_DATA_MUST_NOT_BE_NULL);
         }
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
@@ -355,7 +357,7 @@ public class AddonsUtil {
     public static void readShipModels(ExpansionCache cache, Registry registry) {
         log.debug("readShipModels({}, {})", cache, registry);
         if (cache == null) {
-            throw new IllegalArgumentException("cache must not be null");
+            throw new IllegalArgumentException(EXCEPTION_CACHE_MUST_NOT_BE_NULL);
         }
         if (registry == null) {
             throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
@@ -380,6 +382,9 @@ public class AddonsUtil {
      */
     public static void readOxps(ExpansionCache cache, Registry registry) {
         log.debug("readOxps({}, {})", cache, registry);
+        if (cache == null) {
+            throw new IllegalArgumentException(EXCEPTION_CACHE_MUST_NOT_BE_NULL);
+        }
         if (registry == null) {
             throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
@@ -404,6 +409,12 @@ public class AddonsUtil {
      */
     public static void readOxp(ExpansionCache cache, Registry registry, Expansion expansion) {
         log.debug("readOxp(...)");
+        if (cache == null) {
+            throw new IllegalArgumentException(EXCEPTION_CACHE_MUST_NOT_BE_NULL);
+        }
+        if (registry == null) {
+            throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
+        }
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }

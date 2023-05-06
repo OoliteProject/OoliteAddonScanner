@@ -172,13 +172,13 @@ public class ExpansionCacheTest {
         assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
         Instant lastModified = Instant.ofEpochMilli(downloaded.lastModified());
         assertTrue(Duration.between(lastModified, Instant.now()).toSeconds() < 2, String.format("File last accessed %s", lastModified));
-
+        
         // try to download again - it should not happen
         cache.update(testDownload);
         assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
         Instant lastModified2 = Instant.ofEpochMilli(downloaded.lastModified());
         Duration age = Duration.between(lastModified, lastModified2);
-        assertTrue(age.toSeconds() < 3, String.format("File age is %s. Was the file downloaded?", age));
+        assertTrue(age.toSeconds() < 2, String.format("File age differrence is %s. File %s was expected not to be downloaded again", age, downloaded));
         
     }
 

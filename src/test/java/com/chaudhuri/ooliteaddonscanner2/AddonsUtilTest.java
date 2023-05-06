@@ -491,6 +491,8 @@ public class AddonsUtilTest {
         testCache.delete();
         testCache.mkdirs();
         ExpansionCache cache = new ExpansionCache(testCache);
+        cache.setBaseUrl(new File("src/test/data/").toURI().toURL().toString());
+
         Registry registry = new Registry();
 
         assertEquals(0, registry.getExpansions().size());
@@ -706,9 +708,59 @@ public class AddonsUtilTest {
             AddonsUtil.readOxps(cache, registry);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
+            assertEquals("cache must not be null", e.getMessage());
+            log.debug("caught expected exception");
+        }
+    }
+
+    /**
+     * Test of readOxps method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxps2() throws IOException {
+        log.info("testReadOxps2");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+
+        Registry registry = null;
+        try {
+            AddonsUtil.readOxps(cache, registry);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
             assertEquals("registry must not be null", e.getMessage());
             log.debug("caught expected exception");
         }
+    }
+
+    /**
+     * Test of readOxps method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxps3() throws IOException {
+        log.info("testReadOxps3");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+        
+        File oxpFile = new File("src/test/data/oolite.oxp.Norby.MinerCobra.oxz");
+        assertTrue(oxpFile.exists());
+        Expansion expansion = new Expansion("Norby.MinerCobra");
+        expansion.setDownloadUrl(oxpFile.toURI().toString());
+        Registry registry = new Registry();
+        registry.addExpansion(expansion);
+        
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
+        AddonsUtil.readOxps(cache, registry);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(3, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
     }
 
     /**
@@ -724,9 +776,82 @@ public class AddonsUtilTest {
             AddonsUtil.readOxp(cache, registry, oxp);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
+            assertEquals("cache must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readOxp method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxp2() throws IOException {
+        log.info("readOxp2");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+
+        Registry registry = null;
+        Expansion oxp = null;
+        try {
+            AddonsUtil.readOxp(cache, registry, oxp);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("registry must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of readOxp method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxp3() throws IOException {
+        log.info("readOxp3");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+
+        Registry registry = new Registry();
+
+        Expansion oxp = null;
+        try {
+            AddonsUtil.readOxp(cache, registry, oxp);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
             assertEquals("expansion must not be null", e.getMessage());
             log.debug("caught expected exception", e);
         }
+    }
+
+    /**
+     * Test of readOxp method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadOxp4() throws IOException {
+        log.info("readOxp4");
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+        ExpansionCache cache = new ExpansionCache(testCache);
+
+        Registry registry = new Registry();
+
+        Expansion oxp = new Expansion("nonexistent");
+        oxp.setDownloadUrl("http://127.0.0.1:1/OoliteAddonScanner/test");
+        registry.addExpansion(oxp);
+        
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
+        AddonsUtil.readOxp(cache, registry, oxp);
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals(1, registry.getWarnings().size());
     }
 
     /**
