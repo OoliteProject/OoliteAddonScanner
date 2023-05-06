@@ -53,6 +53,8 @@ public class AddonsUtil {
     private static final String EXCEPTION_DATA_MUST_NOT_BE_NULL = "data must not be null";
     private static final String EXCEPTION_EXPANSION_MUST_NOT_BE_NULL = "expansion must not be null";
     private static final String EXCEPTION_REGISTRY_MUST_NOT_BE_NULL = "registry must not be null";
+    private static final String EXCEPTION_ZENTRY_MUST_NOT_BE_NULL = "zentry must not be null";
+    private static final String EXCEPTION_ZIN_MUST_NOT_BE_NULL = "zin must not be null";
 
     /**
      * Prevent instances being created.
@@ -136,7 +138,7 @@ public class AddonsUtil {
     public static InputStream getZipEntryStream(ZipInputStream zin) throws IOException {
         log.debug("getZipEntryStream(...)");
         if (zin == null) {
-            throw new IllegalArgumentException("zin must not be null");
+            throw new IllegalArgumentException(EXCEPTION_ZIN_MUST_NOT_BE_NULL);
         }
         
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -468,10 +470,10 @@ public class AddonsUtil {
     public static void readOxpEntry(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion expansion) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException, OxpException {
         log.debug("readOxpEntry(...)");
         if (zin == null) {
-            throw new IllegalArgumentException("zin must not be null");
+            throw new IllegalArgumentException(EXCEPTION_ZIN_MUST_NOT_BE_NULL);
         }
         if (zentry == null) {
-            throw new IllegalArgumentException("zentry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_ZENTRY_MUST_NOT_BE_NULL);
         }
         if (registry == null) {
             throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
@@ -546,10 +548,10 @@ public class AddonsUtil {
     public static void readManifest(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion expansion) throws IOException, ParserConfigurationException, SAXException, TransformerException, OxpException {
         log.debug("readManifest(...)");
         if (zin == null) {
-            throw new IllegalArgumentException("zin must not be null");
+            throw new IllegalArgumentException(EXCEPTION_ZIN_MUST_NOT_BE_NULL);
         }
         if (zentry == null) {
-            throw new IllegalArgumentException("zentry must not be null");
+            throw new IllegalArgumentException(EXCEPTION_ZENTRY_MUST_NOT_BE_NULL);
         }
         if (registry == null) {
             throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
@@ -586,16 +588,22 @@ public class AddonsUtil {
      * 
      * @param zin the OXP Zip Input Stream
      * @param zentry the entry to read from zin
-     * @param oxp the OXP to add found data and report errors
+     * @param expansion the OXP to add found data and report errors
      * @throws IOException something went wrong
      * @throws ParserConfigurationException something went wrong
      * @throws SAXException something went wrong
      * @throws TransformerException something went wrong
      */
-    public static void readScript(ZipInputStream zin, ZipEntry zentry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+    public static void readScript(ZipInputStream zin, ZipEntry zentry, Expansion expansion) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         log.debug("readScript(...)");
         if (zin == null) {
-            throw new IllegalArgumentException("zin must not be null");
+            throw new IllegalArgumentException(EXCEPTION_ZIN_MUST_NOT_BE_NULL);
+        }
+        if (zentry == null) {
+            throw new IllegalArgumentException(EXCEPTION_ZENTRY_MUST_NOT_BE_NULL);
+        }
+        if (expansion == null) {
+            throw new IllegalArgumentException("expanstion must not be null");
         }
         
         InputStream in = AddonsUtil.getZipEntryStream(zin);
@@ -603,18 +611,19 @@ public class AddonsUtil {
 
         Scanner sc = new Scanner(in);
         if (XML_HEADER.equals(sc.next())) {
-            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            log.trace("XML content found in {}!{}", expansion.getDownloadUrl(), zentry.getName());
             in.reset();
             List<Object> worldscripts = XMLPlistParser.parseList(in, null);
             List<Object> scriptlist = (List)worldscripts.get(0);
             for (Object worldscript: scriptlist) {
-                oxp.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
+                expansion.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
             }
+            expansion.addWarning("XML script list found");
         } else {
             in.reset();
-            PlistParser.ListContext lc = PlistParserUtil.parsePlistList(in, oxp.getDownloadUrl()+"!"+zentry.getName());
+            PlistParser.ListContext lc = PlistParserUtil.parsePlistList(in, expansion.getDownloadUrl()+"!"+zentry.getName());
             for (PlistParser.ValueContext vc: lc.value()) {
-                oxp.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
+                expansion.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
             }
         }
     }
