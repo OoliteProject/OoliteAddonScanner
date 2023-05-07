@@ -482,5 +482,24 @@ public class ExpansionTest {
         expansion = new Expansion("myoxp");
         assertEquals("myoxp", expansion.getIdentifier());
     }
+    
+    @Test
+    public void testDuplicateEquipment() {
+        log.info("testDuplicateEquipment");
+        
+        Expansion expansion = new Expansion();
+        Equipment e1 = new Equipment("equipment");
+        Equipment e2 = new Equipment("equipment");
+        
+        assertNotEquals(e1, e2);
+        assertEquals(0, expansion.getEquipment().size());
+        assertEquals(0, expansion.getWarnings().size());
+        expansion.addEquipment(e1);
+        assertEquals(1, expansion.getEquipment().size());
+        assertEquals(0, expansion.getWarnings().size());
+        expansion.addEquipment(e2);
+        assertEquals(1, expansion.getEquipment().size());
+        assertEquals(1, expansion.getWarnings().size());
+    }
 
 }

@@ -575,7 +575,7 @@ public class AddonsUtilTest {
 
         assertEquals(0, expansion.getWarnings().size());
         AddonsUtil.readShipModels(cache, expansion);
-        log.warn("warnings {}", expansion.getWarnings());
+        log.debug("warnings {}", expansion.getWarnings());
         assertEquals(0, expansion.getWarnings().size());
     }
 

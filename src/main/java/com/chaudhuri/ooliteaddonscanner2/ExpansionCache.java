@@ -70,7 +70,7 @@ public class ExpansionCache {
         try {
             cleanCache(cacheDIR);
         } catch (IOException e) {
-            log.warn("Could not cleanup cache.", e);
+            log.info("Could not cleanup cache.", e);
         }
     }
     
@@ -125,7 +125,7 @@ public class ExpansionCache {
             try {
                 Files.delete(dir.toPath());
             } catch (DirectoryNotEmptyException e) {
-                log.warn("Could not delete {} due to contents: {}", dir, dir.listFiles(), e);
+                log.info("Could not delete {} due to contents: {}", dir, dir.listFiles(), e);
             }
         }
     }

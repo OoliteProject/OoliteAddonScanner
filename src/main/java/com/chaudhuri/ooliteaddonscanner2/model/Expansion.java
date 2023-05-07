@@ -72,12 +72,17 @@ public class Expansion implements Wikiworthy {
     
     /**
      * Adds Equipment to this Expansion.
+     * If equipment with the same identifier was already registered, it will
+     * be replaced and a warning is added to the expansion.
      * 
      * @param e the Equipment to add
      */
     public void addEquipment(Equipment e) {
         if (e.getIdentifier() == null) {
             throw new IllegalArgumentException("Equipment must have an identifier.");
+        }
+        if (equipment.containsKey(e.getIdentifier())) {
+            addWarning("Replaced equipment '" + e.getIdentifier() + "'");
         }
         equipment.put(e.getIdentifier(), e);
     }

@@ -299,7 +299,6 @@ public class Registry {
             throw new RegistryException(String.format("Could not evaluate expansion %s equipment %s", expansion, list), e);
         }
         
-        // todo: can we add just like that? Do we need to check for duplicates?
         expansion.addEquipment(eq);
         addEquipment(eq);
     }
@@ -391,7 +390,6 @@ public class Registry {
             throw new RegistryException(String.format("Could not parse features for %s", eq), e);
         }
         
-        // todo: can we add just like that? Do we need to check for duplicates?
         expansion.addEquipment(eq);
         this.equipment.put(eq.getIdentifier(), eq);
     }

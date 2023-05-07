@@ -302,6 +302,8 @@
                     <excludes>
                         <exclude>com/chaudhuri/plist/**/*.class</exclude>
                         <exclude>com/chaudhuri/plistcheck/PlistTest*.class</exclude>
+                        <exclude>com/chaudhuri/ooliteaddonscanner2/Main.class</exclude>
+                        <exclude>com/chaudhuri/ooliteaddonscanner2/PlistTester.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>
