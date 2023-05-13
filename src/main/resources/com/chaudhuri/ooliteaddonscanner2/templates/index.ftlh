@@ -22,5 +22,10 @@
             <li><a href="indexAllByIdentifier.html">All by Identifier</a></li>
             <li><a href="warnings.html">${ warnings?size } Warnings</a></li>
         </ul>
+
+        <p>
+            Oolite was downloaded from <a href="${ properties.ooliteDownloadUrl }">${ properties.ooliteDownloadUrl }</a><br/>
+            Expansion Manager Manifest was downloaded from <a href="${ properties.expansionManagerUrl }">${ properties.expansionManagerUrl }</a>
+        </p>
     </body>
 </html>

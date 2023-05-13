@@ -131,7 +131,8 @@ public class TemplateUtilTest {
         try {
             TemplateUtil.printIndexes(registry, outputdir, templateEngine);
             fail("expected exception");
-        } catch (FileNotFoundException e) {
+        } catch (IllegalStateException e) {
+            assertEquals("Registry is missing property key 'expansionManagerUrl'", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
@@ -144,6 +145,52 @@ public class TemplateUtilTest {
         log.info("printIndexes5");
         
         Registry registry = new Registry();
+        registry.setProperty("expansionManagerUrl", "expansionManagerUrl");
+        File outputdir = new File(tempCacheDir, "testPrintIndexes4");
+        TemplateEngine templateEngine = new TemplateEngine();
+
+        assertFalse(outputdir.isDirectory());
+        try {
+            TemplateUtil.printIndexes(registry, outputdir, templateEngine);
+            fail("expected exception");
+        } catch (IllegalStateException e) {
+            assertEquals("Registry is missing property key 'ooliteDownloadUrl'", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of printIndexes method, of class TemplateUtil.
+     */
+    @Test
+    public void testPrintIndexes6() throws Exception {
+        log.info("printIndexes6");
+        
+        Registry registry = new Registry();
+        registry.setProperty("expansionManagerUrl", "expansionManagerUrl");
+        registry.setProperty("ooliteDownloadUrl", "ooliteDownloadUrl");
+        File outputdir = new File(tempCacheDir, "testPrintIndexes4");
+        TemplateEngine templateEngine = new TemplateEngine();
+
+        assertFalse(outputdir.isDirectory());
+        try {
+            TemplateUtil.printIndexes(registry, outputdir, templateEngine);
+            fail("expected exception");
+        } catch (FileNotFoundException e) {
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    /**
+     * Test of printIndexes method, of class TemplateUtil.
+     */
+    @Test
+    public void testPrintIndexes7() throws Exception {
+        log.info("printIndexes7");
+        
+        Registry registry = new Registry();
+        registry.setProperty("expansionManagerUrl", "expansionManagerUrl");
+        registry.setProperty("ooliteDownloadUrl", "ooliteDownloadUrl");
         File outputdir = new File(tempCacheDir, "testPrintIndexes5");
         outputdir.mkdirs();
         TemplateEngine templateEngine = new TemplateEngine();

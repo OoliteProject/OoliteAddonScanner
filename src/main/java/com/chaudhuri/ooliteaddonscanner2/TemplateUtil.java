@@ -50,10 +50,17 @@ public class TemplateUtil {
         if (templateEngine == null) {
             throw new IllegalArgumentException(EXCEPTION_TEMPLATEENGINE_MUST_NOT_BE_NULL);
         }
+        if (!registry.getProperties().containsKey("expansionManagerUrl")) {
+            throw new IllegalStateException("Registry is missing property key 'expansionManagerUrl'");
+        }
+        if (!registry.getProperties().containsKey("ooliteDownloadUrl")) {
+            throw new IllegalStateException("Registry is missing property key 'ooliteDownloadUrl'");
+        }
         
         registry.setProperty("ImplementationVendor", String.valueOf(Main.class.getPackage().getImplementationVendor()));
         registry.setProperty("ImplementationTitle", String.valueOf(Main.class.getPackage().getImplementationTitle()));
         registry.setProperty("ImplementationVersion", String.valueOf(Main.class.getPackage().getImplementationVersion()));
+        
         templateEngine.process(registry, "index.ftlh", new File(outputdir, "index.html"));
         templateEngine.process(registry, "indexExpansionsByName.ftlh", new File(outputdir, "indexExpansionsByName.html"));
         templateEngine.process(registry, "indexEquipmentByName.ftlh", new File(outputdir, "indexEquipmentByName.html"));

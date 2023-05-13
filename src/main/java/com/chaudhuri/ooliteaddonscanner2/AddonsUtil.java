@@ -289,6 +289,7 @@ public class AddonsUtil {
                 }
             }
         }
+        registry.setProperty("ooliteDownloadUrl", url);
     }
 
     /**

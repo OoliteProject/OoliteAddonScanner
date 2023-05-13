@@ -174,6 +174,7 @@ public class Main {
         log.info("Want to read {}", data.getAbsolutePath());
 
         Registry registry = new Registry();
+        registry.setProperty("expansionManagerUrl", u.toString());
         ExpansionCache cache = new ExpansionCache(cacheDIR);
         TemplateEngine templateEngine = new TemplateEngine();
         
