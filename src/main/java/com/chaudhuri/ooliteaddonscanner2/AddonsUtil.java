@@ -7,6 +7,7 @@ import static com.chaudhuri.ooliteaddonscanner2.Main.OXP_PATH_SCRIPTS;
 import static com.chaudhuri.ooliteaddonscanner2.Main.XML_HEADER;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
+import com.chaudhuri.ooliteaddonscanner2.model.Model;
 import com.chaudhuri.plist.ModelLexer;
 import com.chaudhuri.plist.ModelParser;
 import com.chaudhuri.plist.PlistLexer;
@@ -100,7 +101,7 @@ public class AddonsUtil {
      * @param source the source of the model data (such that it can be used in error messages)
      * @throws IOException something went wrong
      */
-    public static void parseModel(InputStream data, String source) throws IOException {
+    public static Model parseModel(InputStream data, String source) throws IOException {
         log.debug("parseModel({}, {})", data, source);
         if (data == null) {
             throw new IllegalArgumentException(EXCEPTION_DATA_MUST_NOT_BE_NULL);
@@ -120,7 +121,13 @@ public class AddonsUtil {
             parser.removeErrorListeners();
             parser.addErrorListener(errorListener);
 
-            parser.model();
+            ModelParser.ModelContext mc = parser.model();
+            
+            return new Model(
+                    source,
+                    Integer.parseInt(mc.header().nverts().NUMBER().getText()), 
+                    Integer.parseInt(mc.header().nfaces().NUMBER().getText())
+            );
         } catch (ParseCancellationException e) {
             throw new IOException("Could not parse "+source, e);
         }
@@ -347,7 +354,8 @@ public class AddonsUtil {
         }
         
         try {
-            AddonsUtil.parseModel(data, expansion.getDownloadUrl() + "!" + zname);
+            Model model = AddonsUtil.parseModel(data, expansion.getDownloadUrl() + "!" + zname);
+            expansion.addModel(zname, model);
         } catch (Exception e) {
             log.warn("Could not parse model {}!{}: {}", expansion.getDownloadUrl(), zname, e.getMessage());
             expansion.addWarning(String.format("Could not parse model %s!%s: %s", expansion.getDownloadUrl(), zname, e.getMessage()));

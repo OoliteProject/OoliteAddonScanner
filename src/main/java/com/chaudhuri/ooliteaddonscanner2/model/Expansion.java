@@ -34,6 +34,7 @@ public class Expansion implements Wikiworthy {
     private final TreeMap<String, Ship> ships;
     private final TreeMap<String, String> readmes;
     private final TreeMap<String, String> scripts;
+    private final TreeMap<String, Model> models;
     
     private String asWikipage;
     
@@ -50,6 +51,7 @@ public class Expansion implements Wikiworthy {
         this.manifest = new ExpansionManifest();
         this.readmes = new TreeMap<>();
         this.scripts = new TreeMap<>();
+        this.models = new TreeMap<>();
     }
     
     /**
@@ -108,6 +110,16 @@ public class Expansion implements Wikiworthy {
     public void addReadme(String filename, String content) {
         readmes.put(filename, content);
     }
+
+    /**
+     * Adds a model to this Expansion.
+     * 
+     * @param name name of the model
+     * @param model model data
+     */
+    public void addModel(String name, Model model) {
+        models.put(name, model);
+    }
     
     /**
      * Returns a String representation of this Expansion.
@@ -143,6 +155,10 @@ public class Expansion implements Wikiworthy {
      */
     public Map<String, String> getReadmes() {
         return new TreeMap<>(readmes);
+    }
+
+    public Map<String, Model> getModels() {
+        return new TreeMap<>(models);
     }
     
     /**
