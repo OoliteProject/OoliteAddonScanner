@@ -27,6 +27,7 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -92,6 +93,27 @@ public class AddonsUtil {
         PlistParser.ListContext lc = parser.list();
 
         registry.addExpansions(lc);
+    }
+
+    /**
+     * Reads the list of expansions from a file and adds it to the registry.
+     * 
+     * @param data the file to read
+     * @param registry the registry to store the data
+     * @param max maximum amount of expansions to read
+     * @throws IOException something went wrong
+     */
+    public static void readExpansionsList(File data, Registry registry, int max) throws IOException {
+        log.debug("readExpansionsList({}, {}, {})", data, registry, max);
+        
+        readExpansionsList(data, registry);
+        Random random = new Random();
+        
+        while (registry.getExpansions().size() > max) {
+            List<Expansion> toRemove = registry.getExpansions().subList(max, registry.getExpansions().size());
+            log.debug("Removing {}", toRemove.size());
+            registry.removeExpansions(toRemove);
+        }
     }
     
     /**

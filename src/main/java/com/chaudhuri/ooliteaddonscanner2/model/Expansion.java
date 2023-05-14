@@ -11,7 +11,7 @@ import java.util.TreeMap;
  *
  * @author hiran
  */
-public class Expansion implements Wikiworthy {
+public class Expansion implements Wikiworthy, Comparable {
     private String identifier;
     private String requiredOoliteVersion;
     private String title;
@@ -567,6 +567,16 @@ public class Expansion implements Wikiworthy {
             result.addAll(s.getWarnings());
         }
         return result;
+    }
+
+    @Override
+    public int compareTo(Object other) {
+        if (other == null || !(other instanceof Expansion)) {
+            return -1;
+        }
+        
+        Expansion e = (Expansion)other;
+        return identifier.compareTo(e.getIdentifier());
     }
     
 }

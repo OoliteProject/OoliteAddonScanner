@@ -151,6 +151,7 @@ public class Main {
         Options options = new Options();
         options.addOption("c", "cache", true, "Path where to cache the expansions so they do not have to be downloaded for every run");
         options.addOption("o", "output", true, "Path where to write result files");
+        options.addOption("m", "maxExpansion", true, "Maximum amount of expansions to parse");
         options.addOption("u", "url", true, "URL for downloading the expansions list");
         CommandLine commandline = new DefaultParser().parse(options, args);
         
@@ -181,7 +182,12 @@ public class Main {
         try {
             AddonsUtil.readOolite(cache, registry);
             
-            AddonsUtil.readExpansionsList(data, registry);
+            if (commandline.hasOption("maxExpansion")) {
+                int max = Integer.parseInt(commandline.getOptionValue("maxExpansion"));
+                AddonsUtil.readExpansionsList(data, registry, max);
+            } else {
+                AddonsUtil.readExpansionsList(data, registry);
+            }
             log.debug("Parsed {}", registry.getExpansions().size());
             
             AddonsUtil.readOxps(cache, registry);

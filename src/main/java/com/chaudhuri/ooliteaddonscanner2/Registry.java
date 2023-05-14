@@ -102,6 +102,16 @@ public class Registry {
         }
     }
     
+    public void removeExpansion(Expansion toRemove) {
+        expansions.remove(toRemove.getIdentifier());
+    }
+    
+    public void removeExpansions(List<Expansion> toRemove) {
+        for (Expansion e: toRemove) {
+            removeExpansion(e);
+        }
+    }
+    
     private static void evaluateOxpKeys(PlistParser.KeyvaluepairContext kc, Expansion oxp) {
 
         String key = kc.STRING().getText();
