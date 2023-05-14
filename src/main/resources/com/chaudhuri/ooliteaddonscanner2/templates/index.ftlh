@@ -20,6 +20,7 @@
             <li><a href="indexEquipmentByName.html">${ equipment?size } Equipment by Name</a></li>
             <li><a href="indexShipsByName.html">${ ships?size } Ships by Name</a></li>
             <li><a href="indexAllByIdentifier.html">All by Identifier</a></li>
+            <li><a href="indexModelsByName.html">Models</a></li>
             <li><a href="warnings.html">${ warnings?size } Warnings</a></li>
         </ul>
 

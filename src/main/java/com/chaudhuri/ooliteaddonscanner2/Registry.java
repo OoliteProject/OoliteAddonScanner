@@ -6,6 +6,7 @@ import com.chaudhuri.plist.PlistParser;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
+import com.chaudhuri.ooliteaddonscanner2.model.Model;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.util.ArrayList;
@@ -690,7 +691,7 @@ public class Registry {
     public List<String> getGlobalWarnings() {
         return new ArrayList<>(warnings);
     }
-    
+        
     /**
      * Returns the property with given key's value.
      * @param key the key
