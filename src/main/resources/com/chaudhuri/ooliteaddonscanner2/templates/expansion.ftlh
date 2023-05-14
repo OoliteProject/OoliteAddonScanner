@@ -91,13 +91,13 @@
                 </tr>
                 <tr>
                     <td>Required Expansions</td>
-                    <td>${ requires_oxps!"" }</td>
-                    <td>${ manifest.requires_oxps!"" }</td>
+                    <td>${ requiresOxps!"" }</td>
+                    <td>${ manifest.requiresOxps!"" }</td>
                 </tr>
                 <tr>
                     <td>Optional Expansions</td>
-                    <td>${ optional_oxps!"" }</td>
-                    <td>${ manifest.optional_oxps!"" }</td>
+                    <td>${ optionalOxps!"" }</td>
+                    <td>${ manifest.optionalOxps!"" }</td>
                 </tr>
                 <tr>
                     <td>Conflict Expansions</td>
@@ -106,13 +106,13 @@
                 </tr>
                 <tr>
                     <td>Information URL</td>
-                    <td><a target="_blank" href="${ information_url!"" }">${ information_url!"n/a"}</a></td>
+                    <td><a target="_blank" href="${ informationUrl!"" }">${ informationUrl!"n/a"}</a></td>
                     <td><a target="_blank" href="${ manifest.information_url!"" }">${ manifest.information_url!"n/a"}</a></td>
                 </tr>
                 <tr>
                     <td>Download URL</td>
-                    <td><a href="${ download_url!"" }">${ download_url!"n/a"}</a></td>
-                    <td><a target="_blank" href="${ manifest.download_url!"" }">${ manifest.download_url!"n/a"}</a></td>
+                    <td><a target="_blank" href="${ downloadUrl!"" }">${ downloadUrl!"n/a" }</a></td>
+                    <td><a target="_blank" href="${ manifest.downloadUrl!"" }">${ manifest.downloadUrl!"n/a"}</a></td>
                 </tr>
                 <tr>
                     <td>License</td>
@@ -125,7 +125,7 @@
                 </tr>
                 <tr>
                     <td>Upload date</td>
-                    <td>${ upload_date!"n/a" }</td>
+                    <td>${ uploadDate!"n/a" }</td>
                 </tr>
             </table>
         <#else>
@@ -136,16 +136,16 @@
                 <tr><td>Author</td><td>${ author }</td></tr>
                 <tr><td>Version</td><td>${ version }</td></tr>
                 <tr><td>Tags</td><td>${ tags!"" }</td></tr>
-                <tr><td>Required Oolite Version</td><td>${ required_oolite_version!"" }</td></tr>
-                <tr><td>Maximum Oolite Version</td><td>${ maximum_oolite_version!"" }</td></tr>
-                <tr><td>Required Expansions</td><td>${ requires_oxps!"" }</td></tr>
-                <tr><td>Optional Expansions</td><td>${ optional_oxps!"" }</td></tr>
-                <tr><td>Conflict Expansions</td><td>${ conflict_oxps!"" }</td></tr>
-                <tr><td>Information URL</td><td><a target="_blank" href="${ information_url!"" }">${ information_url!"n/a"}</a></td></tr>
-                <tr><td>Download URL</td><td><a href="${ download_url!"" }">${ download_url!"n/a"}</a></td></tr>
+                <tr><td>Required Oolite Version</td><td>${ requiredOoliteVersion!"" }</td></tr>
+                <tr><td>Maximum Oolite Version</td><td>${ maximumOoliteVersion!"" }</td></tr>
+                <tr><td>Required Expansions</td><td>${ requiresOxps!"" }</td></tr>
+                <tr><td>Optional Expansions</td><td>${ optionalOxps!"" }</td></tr>
+                <tr><td>Conflict Expansions</td><td>${ conflictOxps!"" }</td></tr>
+                <tr><td>Information URL</td><td><a target="_blank" href="${ informationUrl!"" }">${ informationUrl!"n/a"}</a></td></tr>
+                <tr><td>Download URL</td><td><a href="${ downloadUrl!"" }">${ downloadUrl!"n/a"}</a></td></tr>
                 <tr><td>License</td><td>${ license!"n/a"}</td></tr>
-                <tr><td>File Size</td><td>${ file_size!"n/a" }</td></tr>
-                <tr><td>Upload date</td><td>${ upload_date!"n/a" }</td></tr>
+                <tr><td>File Size</td><td>${ fileSize!"n/a" }</td></tr>
+                <tr><td>Upload date</td><td>${ uploadDate!"n/a" }</td></tr>
             </table>
         </#if>
         </a>
