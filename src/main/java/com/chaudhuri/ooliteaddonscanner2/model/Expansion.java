@@ -11,7 +11,95 @@ import java.util.TreeMap;
  *
  * @author hiran
  */
-public class Expansion implements Wikiworthy, Comparable {
+public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
+
+    /**
+     * Resembles a reference to another Expansion.
+     */
+    public static class Dependency {
+        private String identifier;
+        private String version;
+        private String maxVersion;
+        private String description;
+
+        /**
+         * Returns the referenced identifier.
+         * 
+         * @return the identifier
+         */
+        public String getIdentifier() {
+            return identifier;
+        }
+
+        /**
+         * Sets the referenced identifier.
+         * 
+         * @param identifier the identifier
+         */
+        public void setIdentifier(String identifier) {
+            this.identifier = identifier;
+        }
+
+        /**
+         * Returns the referenced version.
+         * 
+         * @return the version
+         */
+        public String getVersion() {
+            return version;
+        }
+
+        /**
+         * Sets the referenced version.
+         * 
+         * @param version the version
+         */
+        public void setVersion(String version) {
+            this.version = version;
+        }
+
+        /**
+         * Returns the maximum version.
+         * 
+         * @return the version
+         */
+        public String getMaxVersion() {
+            return maxVersion;
+        }
+
+        /**
+         * Sets the maximum version.
+         * 
+         * @param version the version
+         */
+        public void setMaxVersion(String maxVersion) {
+            this.maxVersion = maxVersion;
+        }
+
+        /**
+         * Returns the description (reason for this reference).
+         * 
+         * @return the description
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
+         * Sets the description (reason for this reference).
+         * 
+         * @param description the description
+         */
+        public void setDescription(String description) {
+            this.description = description;
+        }
+
+        @Override
+        public String toString() {
+            return "Dependency{" + "identifier=" + identifier + ", version=" + version + ", maxVersion=" + maxVersion + ", description=" + description + '}';
+        }
+    }
+    
     private String identifier;
     private String requiredOoliteVersion;
     private String title;
@@ -25,9 +113,9 @@ public class Expansion implements Wikiworthy, Comparable {
     private String license;
     private String uploadDate;
     private String tags;
-    private String requiresOxps;
-    private String optionalOxps;
-    private String conflictOxps;
+    private List<Dependency> requiresOxps = new ArrayList<>();
+    private List<Dependency> optionalOxps = new ArrayList<>();
+    private List<Dependency> conflictOxps = new ArrayList<>();
     private String maximumOoliteVersion;
     private ExpansionManifest manifest;
     private final TreeMap<String, Equipment> equipment;
@@ -157,6 +245,11 @@ public class Expansion implements Wikiworthy, Comparable {
         return new TreeMap<>(readmes);
     }
 
+    /**
+     * Returns the ship models.
+     * 
+     * @return the models in a map
+     */
     public Map<String, Model> getModels() {
         return new TreeMap<>(models);
     }
@@ -220,7 +313,7 @@ public class Expansion implements Wikiworthy, Comparable {
      * 
      * @return the oxp specifier
      */
-    public String getConflictOxps() {
+    public List<Dependency> getConflictOxps() {
         return conflictOxps;
     }
 
@@ -229,7 +322,7 @@ public class Expansion implements Wikiworthy, Comparable {
      * 
      * @param conflictOxps the oxp specifier
      */
-    public void setConflictOxps(String conflictOxps) {
+    public void setConflictOxps(List<Dependency> conflictOxps) {
         this.conflictOxps = conflictOxps;
     }
 
@@ -428,7 +521,7 @@ public class Expansion implements Wikiworthy, Comparable {
      * 
      * @return the oxp specifier
      */
-    public String getRequiresOxps() {
+    public List<Dependency> getRequiresOxps() {
         return requiresOxps;
     }
 
@@ -437,7 +530,7 @@ public class Expansion implements Wikiworthy, Comparable {
      * 
      * @param requiresOxps the oxp specifier
      */
-    public void setRequiresOxps(String requiresOxps) {
+    public void setRequiresOxps(List<Dependency> requiresOxps) {
         this.requiresOxps = requiresOxps;
     }
 
@@ -446,7 +539,7 @@ public class Expansion implements Wikiworthy, Comparable {
      * 
      * @return the oxp specifier
      */
-    public String getOptionalOxps() {
+    public List<Dependency> getOptionalOxps() {
         return optionalOxps;
     }
 
@@ -455,7 +548,7 @@ public class Expansion implements Wikiworthy, Comparable {
      * 
      * @param optionalOxps the oxp specifier
      */
-    public void setOptionalOxps(String optionalOxps) {
+    public void setOptionalOxps(List<Dependency> optionalOxps) {
         this.optionalOxps = optionalOxps;
     }
 
@@ -570,13 +663,12 @@ public class Expansion implements Wikiworthy, Comparable {
     }
 
     @Override
-    public int compareTo(Object other) {
-        if (other == null || !(other instanceof Expansion)) {
+    public int compareTo(Expansion other) {
+        if (other == null) {
             return -1;
         }
         
-        Expansion e = (Expansion)other;
-        return identifier.compareTo(e.getIdentifier());
+        return identifier.compareTo(other.getIdentifier());
     }
     
 }

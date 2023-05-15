@@ -6,8 +6,8 @@ import com.chaudhuri.plist.PlistParser;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
-import com.chaudhuri.ooliteaddonscanner2.model.Model;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
+import com.chaudhuri.ooliteaddonscanner2.model.Warnable;
 import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,10 +103,20 @@ public class Registry {
         }
     }
     
+    /**
+     * Removes an expansion from this registry.
+     * 
+     * @param toRemove the expansion to be removed
+     */
     public void removeExpansion(Expansion toRemove) {
         expansions.remove(toRemove.getIdentifier());
     }
     
+    /**
+     * Removes several expansions from this registry.
+     * 
+     * @param toRemove the list of expansions to be removed
+     */
     public void removeExpansions(List<Expansion> toRemove) {
         for (Expansion e: toRemove) {
             removeExpansion(e);
@@ -141,6 +151,45 @@ public class Registry {
             evaluateOxpKeys2(kc, oxp);
         }
     }
+    
+    private static List<Expansion.Dependency> parseDependencies(PlistParser.ValueContext vc, Warnable warnable) {
+        List<Expansion.Dependency> result = new ArrayList<>();
+        
+        if (vc.list() != null) {
+            for (PlistParser.ValueContext vc2: vc.list().value()) {
+                PlistParser.DictionaryContext dict = vc2.dictionary();
+                
+                Expansion.Dependency dependency = new Expansion.Dependency();
+
+                for (PlistParser.KeyvaluepairContext kvc: dict.keyvaluepair()) {
+                    String key = kvc.STRING().getText();
+                    String value = kvc.value().getText();
+                    switch(key) {
+                        case EXPANSION_IDENTIFIER:
+                            dependency.setIdentifier(value);
+                            break;
+                        case EXPANSION_VERSION:
+                            dependency.setVersion(value);
+                            break;
+                        case EXPANSION_DESCRIPTION:
+                            dependency.setDescription(value);
+                            break;
+                        case "maximum_version":
+                            dependency.setMaxVersion(value);
+                            break;
+                        default:
+                            log.warn("unknown dependency key {}", key);
+                            warnable.addWarning("Dependency with illegal key '" + key + "'");
+                            break;
+                    }
+                    
+                }
+                result.add(dependency);
+            }
+        }
+        
+        return result;
+    }
 
     private static void evaluateOxpKeys2(PlistParser.KeyvaluepairContext kc, Expansion oxp) {
         String key = kc.STRING().getText();
@@ -151,11 +200,11 @@ public class Registry {
         } else if (EXPANSION_TAGS.equals(key)) {
             oxp.setTags(kc.value().getText());
         } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
-            oxp.setRequiresOxps(kc.value().getText());
+            oxp.setRequiresOxps(parseDependencies(kc.value(), oxp));
         } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
-            oxp.setOptionalOxps(kc.value().getText());
+            oxp.setOptionalOxps(parseDependencies(kc.value(), oxp));
         } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
-            oxp.setConflictOxps(kc.value().getText());
+            oxp.setConflictOxps(parseDependencies(kc.value(), oxp));
         } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
             oxp.setMaximumOoliteVersion(kc.value().getText());
         } else {
@@ -171,7 +220,7 @@ public class Registry {
         } else if (EXPANSION_AUTHOR.equals(key)) {
             em.setAuthor(kc.value().getText());
         } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
-            em.setConflictOxps(kc.value().getText());
+            em.setConflictOxps(parseDependencies(kc.value(), em));
         } else if (EXPANSION_DESCRIPTION.equals(key)) {
             em.setDescription(kc.value().getText());
         } else if ("download_url".equals(key)) {
@@ -195,11 +244,11 @@ public class Registry {
         } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
             em.setMaximumOoliteVersion(kc.value().getText());
         } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
-            em.setOptionalOxps(kc.value().getText());
+            em.setOptionalOxps(parseDependencies(kc.value(), em));
         } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
             em.setRequiredOoliteVersion(kc.value().getText());
         } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
-            em.setRequiresOxps(kc.value().getText());
+            em.setRequiresOxps(parseDependencies(kc.value(), em));
         } else if (EXPANSION_TAGS.equals(key)) {
             em.setTags(kc.value().getText());
         } else if (EXPANSION_TITLE.equals(key)) {
@@ -226,6 +275,38 @@ public class Registry {
             addWarning(String.format("OXP Overwrite! %s (%s) and %s (%s) share same id %s", expansion.getName(), expansion.getDownloadUrl(), oldOxp.getName(), oldOxp.getDownloadUrl(), expansion.getIdentifier()));
         }
         expansions.put(expansion.getIdentifier(), expansion);
+    }
+    
+    /**
+     * Returns the matching expansion or null.
+     * 
+     * The "identifier" must match the "identifier" of the other OXP as set in 
+     * its manifest.plist.
+     * 
+     * See https://wiki.alioth.net/index.php/Manifest.plist#Dependency_management_keys
+     * 
+     * @param identifier the identifier
+     * @return the expansion, or null if not found
+     */
+    public Expansion getExpansion(String identifier) {
+        return getExpansion(identifier, null);
+    }
+    
+    /**
+     * Returns the matching expansion or null.
+     * 
+     * The "identifier" must match the "identifier" of the other OXP as set in 
+     * its manifest.plist, and the "version" is the minimum version of that OXP
+     * ("0" will match all versions). 
+     * 
+     * See https://wiki.alioth.net/index.php/Manifest.plist#Dependency_management_keys
+     * 
+     * @param identifier the identifier
+     * @param version the version
+     * @return the expansion, or null if not found
+     */
+    public Expansion getExpansion(String identifier, String version) {
+        return expansions.get(identifier);
     }
     
     /** Adds list of equipment.
@@ -604,7 +685,7 @@ public class Registry {
                     em.setCategory(String.valueOf(entry.getValue()));
                     break;
                 case EXPANSION_CONFLICT_OXPS:
-                    em.setConflictOxps(String.valueOf(entry.getValue()));
+                    em.setConflictOxps(parseDependencies((PlistParser.ValueContext)entry.getValue(), em));
                     break;
                 case EXPANSION_DESCRIPTION:
                     em.setDescription(String.valueOf(entry.getValue()));
@@ -622,13 +703,13 @@ public class Registry {
                     em.setMaximumOoliteVersion(String.valueOf(entry.getValue()));
                     break;
                 case EXPANSION_OPTIONAL_OXPS:
-                    em.setOptionalOxps(String.valueOf(entry.getValue()));
+                    em.setOptionalOxps(parseDependencies((PlistParser.ValueContext)entry.getValue(), em));
                     break;
                 case EXPANSION_REQUIRED_OOLITE_VERSION:
                     em.setRequiredOoliteVersion(String.valueOf(entry.getValue()));
                     break;
                 case EXPANSION_REQUIRES_OXPS:
-                    em.setRequiresOxps(String.valueOf(entry.getValue()));
+                    em.setRequiresOxps(parseDependencies((PlistParser.ValueContext)entry.getValue(), em));
                     break;
                 case EXPANSION_TAGS:
                     em.setTags(String.valueOf(entry.getValue()));

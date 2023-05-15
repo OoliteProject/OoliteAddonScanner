@@ -27,7 +27,6 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -107,7 +106,6 @@ public class AddonsUtil {
         log.debug("readExpansionsList({}, {}, {})", data, registry, max);
         
         readExpansionsList(data, registry);
-        Random random = new Random();
         
         while (registry.getExpansions().size() > max) {
             List<Expansion> toRemove = registry.getExpansions().subList(max, registry.getExpansions().size());

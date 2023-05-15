@@ -91,13 +91,29 @@
                 </tr>
                 <tr>
                     <td>Required Expansions</td>
-                    <td>${ requiresOxps!"" }</td>
-                    <td>${ manifest.requiresOxps!"" }</td>
+                    <td>
+                        <#list requiresOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
+                    <td>
+                        <#list manifest.requiresOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
                 </tr>
                 <tr>
                     <td>Optional Expansions</td>
-                    <td>${ optionalOxps!"" }</td>
-                    <td>${ manifest.optionalOxps!"" }</td>
+                    <td>
+                        <#list optionalOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
+                    <td>
+                        <#list manifest.optionalOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
                 </tr>
                 <tr>
                     <td>Conflict Expansions</td>
@@ -138,9 +154,30 @@
                 <tr><td>Tags</td><td>${ tags!"" }</td></tr>
                 <tr><td>Required Oolite Version</td><td>${ requiredOoliteVersion!"" }</td></tr>
                 <tr><td>Maximum Oolite Version</td><td>${ maximumOoliteVersion!"" }</td></tr>
-                <tr><td>Required Expansions</td><td>${ requiresOxps!"" }</td></tr>
-                <tr><td>Optional Expansions</td><td>${ optionalOxps!"" }</td></tr>
-                <tr><td>Conflict Expansions</td><td>${ conflictOxps!"" }</td></tr>
+                <tr>
+                    <td>Required Expansions</td>
+                    <td>
+                        <#list requiresOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Optional Expansions</td>
+                    <td>
+                        <#list optionalOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Conflict Expansions</td>
+                    <td>
+                        <#list conflictOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
+                </tr>
                 <tr><td>Information URL</td><td><a target="_blank" href="${ informationUrl!"" }">${ informationUrl!"n/a"}</a></td></tr>
                 <tr><td>Download URL</td><td><a href="${ downloadUrl!"" }">${ downloadUrl!"n/a"}</a></td></tr>
                 <tr><td>License</td><td>${ license!"n/a"}</td></tr>

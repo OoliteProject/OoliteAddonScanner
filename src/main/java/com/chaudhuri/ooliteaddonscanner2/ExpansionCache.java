@@ -214,6 +214,12 @@ public class ExpansionCache {
         }
     }
     
+    /**
+     * Downloads from file:// urls (which is a local copy).
+     * @param u the url from which to download
+     * @param local the file where to store the data
+     * @throws IOException something went wrong
+     */
     private void doDownloadFile(URL u, File local) throws IOException {
         log.debug("doDownloadFile(...)");
         if (u == null) {

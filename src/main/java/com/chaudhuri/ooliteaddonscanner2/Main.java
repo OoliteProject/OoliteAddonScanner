@@ -40,6 +40,7 @@ public class Main {
     public static final String XML_HEADER = "<?xml";
     public static final String HTML_EXTENSION = ".html";
     public static final String OXP_PATH_SCRIPTS = "Scripts/";
+    public static final String MAX_EXPANSION = "maxExpansion";
 
     private static void zipupInternal(ZipOutputStream zos, File file, File root) throws IOException {
         log.debug("zipup_internal({}, {}, {})", zos, file, root);
@@ -151,14 +152,14 @@ public class Main {
         Options options = new Options();
         options.addOption("c", "cache", true, "Path where to cache the expansions so they do not have to be downloaded for every run");
         options.addOption("o", "output", true, "Path where to write result files");
-        options.addOption("m", "maxExpansion", true, "Maximum amount of expansions to parse");
+        options.addOption("m", MAX_EXPANSION, true, "Maximum amount of expansions to parse");
         options.addOption("u", "url", true, "URL for downloading the expansions list");
         CommandLine commandline = new DefaultParser().parse(options, args);
         
         String cachePath = commandline.getOptionValue("c", ExpansionCache.DEFAULT_CACHE_DIR.getAbsolutePath());
         File cacheDIR = new File(cachePath);
         
-        String urlStr = commandline.getOptionValue("u", "http://addons.oolite.space/api/1.0/overview");
+        String urlStr = commandline.getOptionValue("u", "http://addons.oolite.space/api/1.0/overview/");
         String outputDirStr = commandline.getOptionValue("o", "target/OoliteExpansionIndex");
         File outputdir = new File(outputDirStr);
         outputdir.mkdirs();
@@ -182,8 +183,8 @@ public class Main {
         try {
             AddonsUtil.readOolite(cache, registry);
             
-            if (commandline.hasOption("maxExpansion")) {
-                int max = Integer.parseInt(commandline.getOptionValue("maxExpansion"));
+            if (commandline.hasOption(MAX_EXPANSION)) {
+                int max = Integer.parseInt(commandline.getOptionValue(MAX_EXPANSION));
                 AddonsUtil.readExpansionsList(data, registry, max);
             } else {
                 AddonsUtil.readExpansionsList(data, registry);

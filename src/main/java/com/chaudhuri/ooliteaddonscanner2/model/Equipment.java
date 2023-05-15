@@ -12,7 +12,7 @@ import java.util.TreeMap;
  *
  * @author hiran
  */
-public class Equipment implements Wikiworthy {
+public class Equipment implements Wikiworthy, Warnable {
     private Expansion expansion;
     
     private String techlevel;

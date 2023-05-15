@@ -13,7 +13,7 @@ import java.util.TreeMap;
  * 
  * @author hiran
  */
-public class Ship implements Wikiworthy {
+public class Ship implements Wikiworthy, Warnable {
     private Expansion expansion;
     private String identifier;
     private HashMap<String, String> features;

@@ -10,10 +10,10 @@ import java.util.List;
  *
  * @author hiran
  */
-public class ExpansionManifest {
+public class ExpansionManifest implements Warnable {
     private String author;
     private String category;
-    private String conflictOxps;
+    private List<Expansion.Dependency> conflictOxps = new ArrayList<>();
     private String description;
     private String downloadUrl;
     private String fileSize;
@@ -21,9 +21,9 @@ public class ExpansionManifest {
     private String informationUrl;
     private String license;
     private String maximumOoliteVersion;
-    private String optionalOxps;
+    private List<Expansion.Dependency> optionalOxps = new ArrayList<>();
     private String requiredOoliteVersion;
-    private String requiresOxps;
+    private List<Expansion.Dependency> requiresOxps = new ArrayList<>();
     private String tags;
     private String title;
     private String version;
@@ -150,7 +150,7 @@ public class ExpansionManifest {
      * 
      * @return the OXP specifier
      */
-    public String getRequiresOxps() {
+    public List<Expansion.Dependency> getRequiresOxps() {
         return requiresOxps;
     }
 
@@ -159,7 +159,7 @@ public class ExpansionManifest {
      * 
      * @param requiresOxps the OXP specifier
      */
-    public void setRequiresOxps(String requiresOxps) {
+    public void setRequiresOxps(List<Expansion.Dependency> requiresOxps) {
         this.requiresOxps = requiresOxps;
     }
 
@@ -168,7 +168,7 @@ public class ExpansionManifest {
      * 
      * @return the OXP specifier.
      */
-    public String getOptionalOxps() {
+    public List<Expansion.Dependency> getOptionalOxps() {
         return optionalOxps;
     }
 
@@ -177,7 +177,7 @@ public class ExpansionManifest {
      * 
      * @param optionalOxps the OXP specifier.
      */
-    public void setOptionalOxps(String optionalOxps) {
+    public void setOptionalOxps(List<Expansion.Dependency> optionalOxps) {
         this.optionalOxps = optionalOxps;
     }
 
@@ -294,7 +294,7 @@ public class ExpansionManifest {
      * 
      * @return the oxp specifier
      */
-    public String getConflictOxps() {
+    public List<Expansion.Dependency> getConflictOxps() {
         return conflictOxps;
     }
 
@@ -303,7 +303,7 @@ public class ExpansionManifest {
      * 
      * @param conflictOxps the OXP specifier
      */
-    public void setConflictOxps(String conflictOxps) {
+    public void setConflictOxps(List<Expansion.Dependency> conflictOxps) {
         this.conflictOxps = conflictOxps;
     }
 
