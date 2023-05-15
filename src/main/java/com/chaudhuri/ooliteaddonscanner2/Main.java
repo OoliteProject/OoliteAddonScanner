@@ -158,7 +158,7 @@ public class Main {
         String cachePath = commandline.getOptionValue("c", ExpansionCache.DEFAULT_CACHE_DIR.getAbsolutePath());
         File cacheDIR = new File(cachePath);
         
-        String urlStr = commandline.getOptionValue("u", "http://addons.oolite.space/api/1.0/overview");
+        String urlStr = commandline.getOptionValue("u", "http://addons.oolite.space/api/1.0/overview/");
         String outputDirStr = commandline.getOptionValue("o", "target/OoliteExpansionIndex");
         File outputdir = new File(outputDirStr);
         outputdir.mkdirs();

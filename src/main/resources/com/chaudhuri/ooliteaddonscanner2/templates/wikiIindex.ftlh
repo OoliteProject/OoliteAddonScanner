@@ -54,6 +54,25 @@ only visible equipment is listed here
 </#if></#items></#list>
 |}
 
+= Models =
+
+{| class="wikitable sortable"
+|+ 
+! Model
+! Expansion 
+! Vertexes
+! Faces
+<#list expansions><#items as expansion>
+<#list expansion.models><#items as modelname, model>
+|-
+| [[${ modelname }]]
+| [[${ expansion.name }]]
+| [[${ model.nvertexes }]]
+| [[${ model.nfaces }]]
+</#items></#list>
+</#items></#list>
+|}
+
 = ${ warnings?size } Warnings =
 While going through the list of expansions registered for the Expansion Manager,
 some discrepancies were noted. These may have an effect on the completeness of 
