@@ -5,6 +5,7 @@ package com.chaudhuri.ooliteaddonscanner2;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
@@ -203,11 +204,43 @@ public class Verifier {
     }
     
     /**
+     * Checks whether the dependencies can be resolved within the registry.
+     * Applies warnings to the expansion.
+     * See https://wiki.alioth.net/index.php/Manifest.plist#Dependency_management_keys
+     * 
+     * @param dependencies
+     * @param expansion
+     * @param registry 
+     */
+    private static void verifyDependency(Expansion.Dependency dependency, Expansion expansion, Registry registry) {
+        // todo: implement this method
+    }
+    
+    /**
+     * Checks whether the dependencies can be resolved within the registry.
+     * Applies warnings to the expansion.
+     * See https://wiki.alioth.net/index.php/Manifest.plist#Dependency_management_keys
+     * 
+     * @param dependencies
+     * @param expansion
+     * @param registry 
+     */
+    private static void verifyDependencies(List<Expansion.Dependency> dependencies, Expansion expansion, Registry registry) {
+        if (dependencies == null) {
+            throw new IllegalArgumentException("dependencies must not be null");
+        }
+        for (Expansion.Dependency dependency: dependencies) {
+            verifyDependency(dependency, expansion, registry);
+        }
+    }
+    
+    /**
      * Verifies an expansion and adds warnings to the expansion.
      * 
      * @param expansion 
+     * @param registry
      */
-    public static void verify(Expansion expansion) {
+    public static void verify(Expansion expansion, Registry registry) {
         verifyExpansion1(expansion);
         verifyExpansion2(expansion);
         verifyExpansion3(expansion);
@@ -222,6 +255,8 @@ public class Verifier {
         verifyExpansion12(expansion);
         verifyExpansion13(expansion);
         verifyExpansion14(expansion);
+        verifyDependencies(expansion.getRequiresOxps(), expansion, registry);
+        verifyDependencies(expansion.getOptionalOxps(), expansion, registry);
     }
     
     /**
@@ -265,7 +300,7 @@ public class Verifier {
         log.debug("verify({})", registry);
         
         for (Expansion expansion: registry.getExpansions()) {
-            verify(expansion);
+            verify(expansion, registry);
         }
 
         for (Equipment e: registry.getEquipment()) {

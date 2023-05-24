@@ -6,6 +6,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -77,7 +78,7 @@ public class VerifierTest {
         log.info("testVerify_Expansion");
         Expansion expansion = new Expansion();
         assertEquals(0, expansion.getWarnings().size());
-        Verifier.verify(expansion);
+        Verifier.verify(expansion, null);
         assertEquals(0, expansion.getWarnings().size());
     }
         
@@ -93,7 +94,7 @@ public class VerifierTest {
         expansion.setManifest(manifest);
 
         assertEquals(0, expansion.getWarnings().size());
-        Verifier.verify(expansion);
+        Verifier.verify(expansion, null);
         assertEquals(1, expansion.getWarnings().size());
     }
 
@@ -109,7 +110,7 @@ public class VerifierTest {
         expansion.setManifest(manifest);
 
         assertEquals(0, expansion.getWarnings().size());
-        Verifier.verify(expansion);
+        Verifier.verify(expansion, null);
         assertEquals(1, expansion.getWarnings().size());
     }
 
@@ -238,9 +239,9 @@ public class VerifierTest {
         expansion.setTags("n");
         expansion.setRequiredOoliteVersion("n");
         expansion.setMaximumOoliteVersion("n");
-        expansion.setRequiresOxps("n");
-        expansion.setOptionalOxps("n");
-        expansion.setConflictOxps("n");
+        expansion.setRequiresOxps(new ArrayList<>());
+        expansion.setOptionalOxps(new ArrayList<>());
+        expansion.setConflictOxps(new ArrayList<>());
         expansion.setInformationUrl("n");
         expansion.addScript("myscript1", "normal");
         expansion.addScript("myscript2", " fetch ");
@@ -251,7 +252,7 @@ public class VerifierTest {
         
         Verifier.verify(registry);
         log.info("warnings: {}", registry.getWarnings());
-        assertEquals(15, registry.getWarnings().size());
+        assertEquals(12, registry.getWarnings().size());
         assertEquals("Identifier mismatch between OXP Manifest and Expansion Manager at character position 0001 (LATIN SMALL LETTER I vs LATIN SMALL LETTER N)", registry.getWarnings().get(0));
         assertEquals("Title mismatch between OXP Manifest and Expansion Manager at character position 0001 (LATIN SMALL LETTER T vs LATIN SMALL LETTER N)", registry.getWarnings().get(1));
         assertEquals("Category mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(2));
@@ -260,13 +261,10 @@ public class VerifierTest {
         assertEquals("Tags mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(5));
         assertEquals("Required Oolite Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(6));
         assertEquals("Maximum Oolite Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(7));
-        assertEquals("Required Expansions mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(8));
-        assertEquals("Optional Expansions mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(9));
-        assertEquals("Conflict Expansions mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(10));
-        assertEquals("Information URL mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(11));
-        assertEquals("JavaScript with fetch", registry.getWarnings().get(12));
-        assertEquals("JavaScript with url", registry.getWarnings().get(13));
-        assertEquals("JavaScript with xmlhttprequest", registry.getWarnings().get(14));
+        assertEquals("Information URL mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(8));
+        assertEquals("JavaScript with fetch", registry.getWarnings().get(9));
+        assertEquals("JavaScript with url", registry.getWarnings().get(10));
+        assertEquals("JavaScript with xmlhttprequest", registry.getWarnings().get(11));
     }
     
     /**
