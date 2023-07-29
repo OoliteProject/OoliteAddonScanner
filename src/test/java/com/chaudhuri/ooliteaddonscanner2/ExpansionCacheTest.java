@@ -166,18 +166,19 @@ public class ExpansionCacheTest {
 
         // now check if we can update the file.
         // TODO: We may want to place an absolute date here
-        downloaded.setLastModified(Instant.now().minus(600, ChronoUnit.DAYS).toEpochMilli());
+        downloaded.setLastModified(Instant.now().minus(700, ChronoUnit.DAYS).toEpochMilli());
         assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
         cache.update(testDownload);
         assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
         Instant lastModified = Instant.ofEpochMilli(downloaded.lastModified());
-        assertTrue(Duration.between(lastModified, Instant.now()).toSeconds() < 2, String.format("File last accessed %s", lastModified));
+        Duration age = Duration.between(lastModified, Instant.now());
+        assertTrue(age.toSeconds() < 2, String.format("File %s has age %s, we expected it to be younger", downloaded, age));
         
         // try to download again - it should not happen
         cache.update(testDownload);
         assertTrue(downloaded.exists(), "Expected file " + downloaded.getAbsolutePath());
         Instant lastModified2 = Instant.ofEpochMilli(downloaded.lastModified());
-        Duration age = Duration.between(lastModified, lastModified2);
+        age = Duration.between(lastModified, lastModified2);
         assertTrue(age.toSeconds() < 3, String.format("File age differrence is %s. File %s was expected not to be downloaded again", age, downloaded));
         
     }
