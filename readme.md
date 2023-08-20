@@ -31,7 +31,8 @@ Fire up your preferred editor, change the file and save it. Immediately the
 Plist Tester will validate again, showing you the impact of your change.
 
 ## Run the Generator:
-Run
+Use the scripts `run-generator.cmd` on Windows and `run-generator.sh` on Linux.
+Or run
 
     java -cp target/OoliteAddonScanner-1.0-SNAPSHOT.jar com.chaudhuri.cataloggenerator.Main -in expansionUrls.txt  -out ./catalog.plist
 
