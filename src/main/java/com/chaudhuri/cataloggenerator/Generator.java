@@ -39,7 +39,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 /**
@@ -69,26 +68,62 @@ public class Generator implements Runnable {
     public Generator() {
     }
 
+    /**
+     * Gets the path/file where the input will be read from.
+     * The file is expected to have one URL per line.
+     * 
+     * @return the path
+     */
     public Path getInputPath() {
         return inputPath;
     }
 
+    /**
+     * Sets the path/file where the input will be read from.
+     * The file is expected to have one URL per line.
+     * 
+     * @param inputPath the path
+     */
     public void setInputPath(Path inputPath) {
         this.inputPath = inputPath;
     }
 
+    /**
+     * Gets the path/file where the output will be written.
+     * 
+     * @return the path
+     */
     public Path getOutputPath() {
         return outputPath;
     }
 
+    /**
+     * Sets the path/file where the output will be written.
+     * 
+     * @param outputPath the path
+     */
     public void setOutputPath(Path outputPath) {
         this.outputPath = outputPath;
     }
 
+    /**
+     * Gets the output format.
+     * Valid values are html, json, xml, plist. You can supply a comma separated
+     * list but then several output files are created.
+     * 
+     * @return the format
+     */
     public String getOutputFormat() {
         return outputFormat;
     }
 
+    /**
+     * Sets the output format.
+     * Valid values are html, json, xml, plist. You can supply a comma separated
+     * list but then several output files are created.
+     * 
+     * @param outputFormat the format
+     */
     public void setOutputFormat(String outputFormat) {
         this.outputFormat = outputFormat;
     }
@@ -129,6 +164,9 @@ public class Generator implements Runnable {
         this.threadCount = threadCount;
     }
     
+    /**
+     * Initializes the generator so it is ready to run.
+     */
     public void init() {
         cache = new ExpansionCache(cacheDIR.toFile());
     }
@@ -158,7 +196,7 @@ public class Generator implements Runnable {
 
     
     ExpansionManifest getManifestFromOXZ(ZipInputStream zin, String urlString) {
-        log.warn("getManifestFromOXZ({})", zin);
+        log.debug("getManifestFromOXZ({}, {})", zin, urlString);
         
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
@@ -173,7 +211,7 @@ public class Generator implements Runnable {
             log.warn("Incomplete plugin archive for {}", urlString, e);
             try {
                 cache.invalidate(urlString);
-                log.warn("Evicted from cache.");
+                log.info("Evicted from cache.");
             } catch (Exception ex) {
                 log.error("Could not cleanup cache for {}", urlString, ex);
             }
@@ -184,7 +222,7 @@ public class Generator implements Runnable {
             log.error(s);
             try {
                 cache.invalidate(expansion.getDownloadUrl());
-                log.warn("Evicted from cache.");
+                log.info("Evicted from cache.");
             } catch (Exception ex) {
                 log.error("Could not cleanup cache for {}", expansion.getDownloadUrl(), ex);
             }
@@ -220,7 +258,7 @@ public class Generator implements Runnable {
                     .map(e -> getManifestFromUrl(e))
                     .collect(Collectors.toList());
             
-            log.warn("Found {} manifests", catalog.size());
+            log.info("Found {} manifests", catalog.size());
         } catch (IOException e) {
             log.error("Could not read input", e);
             return;
@@ -234,7 +272,7 @@ public class Generator implements Runnable {
                     
                     Path myOutputPath = outputPath;
                     if (!myOutputPath.toString().endsWith("." + format)) {
-                        myOutputPath = outputPath.resolveSibling(outputPath.getFileName() + "." + format);
+                        myOutputPath = outputPath.toAbsolutePath().resolveSibling(outputPath.getFileName() + "." + format);
                     }
                     
                     try (OutputStream os = Files.newOutputStream(myOutputPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
@@ -255,6 +293,8 @@ public class Generator implements Runnable {
                                 log.warn("unknown output format: {}", format);
                         }
                     }
+                    
+                    log.info("Wrote {}", myOutputPath.toAbsolutePath());
                 } catch (Exception ex) {
                     log.error("cannot write {} output", format, ex);
                 }
