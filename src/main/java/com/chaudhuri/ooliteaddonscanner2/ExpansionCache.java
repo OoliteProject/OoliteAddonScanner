@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
 public class ExpansionCache {
     private static final Logger log = LogManager.getLogger(ExpansionCache.class);
 
-    static final File DEFAULT_CACHE_DIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
+    public static final File DEFAULT_CACHE_DIR = new File(System.getProperty("user.home")+"/.Oolite/expansion_cache");
     
     protected File cacheDIR;
     
@@ -175,7 +175,14 @@ public class ExpansionCache {
         throw new IllegalStateException("Could not find file matching "+pattern.pattern());
     }
     
-    private File getCachedFile(String url) throws MalformedURLException {
+    /**
+     * Returns the file that should be caching the requested URL.
+     * 
+     * @param url the requested URL
+     * @return the file
+     * @throws MalformedURLException something went wrong
+     */
+    public File getCachedFile(String url) throws MalformedURLException {
         URL u = new URL(url);
         return new File(cacheDIR, u.getHost() + File.separator + u.getFile());
     }

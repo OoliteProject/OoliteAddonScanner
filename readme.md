@@ -5,7 +5,9 @@ scans them for ships and equipment and builds easy to surf HTML files.
 
 These HTML files are generated regularly with the output being downloadable as Release.
 
-This project also helps OXP authors by validating their plist files.
+This project also helps OXP authors by validating their plist files, plus it
+helps maintaining the catalog of available OXPs based on a simple list of
+OXZ download URLs.
 
 ## Compile:
 Based on Java 11+. Just run the maven build.
@@ -27,3 +29,11 @@ In the UI either type the path to your file, or use the ellipsis button to
 browse for one. The Plist Tester will validate the files and display errors.
 Fire up your preferred editor, change the file and save it. Immediately the 
 Plist Tester will validate again, showing you the impact of your change.
+
+## Run the Generator:
+Use the scripts `run-generator.cmd` on Windows and `run-generator.sh` on Linux.
+Or run
+
+    java -cp target/OoliteAddonScanner-1.0-SNAPSHOT.jar com.chaudhuri.cataloggenerator.Main -in expansionUrls.txt  -out ./catalog.plist
+
+to read the URLs in expansionUrls.txt and write the catalog.plist file.

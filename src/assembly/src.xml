@@ -37,6 +37,15 @@
             <outputDirectory></outputDirectory>
             <fileMode>0755</fileMode>
         </file>
+        <file>
+            <source>target/src/main/resources-ext/run-generator.cmd</source>
+            <outputDirectory></outputDirectory>
+        </file>
+        <file>
+            <source>target/src/main/resources-ext/run-generator.sh</source>
+            <outputDirectory></outputDirectory>
+            <fileMode>0755</fileMode>
+        </file>
     </files>
     <fileSets>
         <fileSet>
