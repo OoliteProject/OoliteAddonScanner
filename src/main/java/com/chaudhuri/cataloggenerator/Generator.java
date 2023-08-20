@@ -313,26 +313,18 @@ public class Generator implements Runnable {
     private void writeHtml(List<ExpansionManifest> catalog, OutputStream out) throws ParserConfigurationException, TransformerConfigurationException, TransformerException, IOException, SAXException {
         Document doc = generateXml(catalog);
         
-//        URL stylesheet = getClass().getResource("/com/chaudhuri/ooliteaddonscanner2/templates/catalog_html.xslt");
-//        log.warn("stylesheet url: {}", stylesheet);
-//        
-//        Document ss = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stylesheet.openStream());
-//        Transformer transformer = TransformerFactory.newInstance().newTransformer(new DOMSource(ss));
-
-        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(new File("src/main/resources/com/chaudhuri/ooliteaddonscanner2/templates/catalog_html.xslt")));
-
-        //Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(stylesheet.openStream()));
-        log.warn("doc: {}", doc);
+        URL stylesheet = getClass().getResource("/com/chaudhuri/ooliteaddonscanner2/templates/catalog_html.xslt");
+        log.debug("stylesheet url: {}", stylesheet);
+        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(stylesheet.openStream()));
         transformer.transform(new DOMSource(doc), new StreamResult(out));
     }
     
     private void writePlist(List<ExpansionManifest> catalog, OutputStream out) throws ParserConfigurationException, TransformerConfigurationException, TransformerException, IOException {
         Document doc = generateXml(catalog);
         
-//        URL stylesheet = getClass().getResource("/com/chaudhuri/ooliteaddonscanner2/templates/catalog_plist.xslt");
-//        log.warn("stylesheet url: {}", stylesheet);
-//        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(stylesheet.openStream()));
-        Transformer transformer = TransformerFactory.newInstance().newTransformer();
+        URL stylesheet = getClass().getResource("/com/chaudhuri/ooliteaddonscanner2/templates/catalog_plist.xslt");
+        log.debug("stylesheet url: {}", stylesheet);
+        Transformer transformer = TransformerFactory.newInstance().newTransformer(new StreamSource(stylesheet.openStream()));
         transformer.transform(new DOMSource(doc), new StreamResult(out));
     }
 }
