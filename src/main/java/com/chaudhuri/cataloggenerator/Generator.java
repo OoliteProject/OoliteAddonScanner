@@ -237,7 +237,7 @@ public class Generator implements Runnable {
                         myOutputPath = outputPath.resolveSibling(outputPath.getFileName() + "." + format);
                     }
                     
-                    try (OutputStream os = Files.newOutputStream(myOutputPath, StandardOpenOption.CREATE)) {
+                    try (OutputStream os = Files.newOutputStream(myOutputPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
                         switch (format) {
                             case "xml":
                                 writeXml(fCatalog, os);
