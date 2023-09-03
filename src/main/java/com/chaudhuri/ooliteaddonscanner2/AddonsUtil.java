@@ -18,6 +18,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -663,8 +664,19 @@ public class AddonsUtil {
         }
     }
     
+    /**
+     * Performs something.
+     * 
+     * @param zos
+     * @param file
+     * @param root needed to calculate relative paths
+     * @throws IOException 
+     */
     private static void zipupInternal(ZipOutputStream zos, File file, File root) throws IOException {
         log.debug("zipup_internal({}, {}, {})", zos, file, root);
+        if (root == null) {
+            throw new IllegalArgumentException("root must not be null");
+        }
         
         if (file.isDirectory()) {
             File[] files = file.listFiles();
@@ -700,16 +712,27 @@ public class AddonsUtil {
      * @param directory the file/directory to zip up
      * @return the archive file
      */
-    public static File zipup(File directory) {
+    public static File zipup(File directory) throws FileNotFoundException {
+        if (directory == null) {
+            throw new IllegalArgumentException("directory must not be null");
+        }
+        if (!directory.exists()) {
+            throw new FileNotFoundException(directory.getAbsolutePath());
+        }
+        
         Date d = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyMMdd");
         File zipfile = new File(directory.getParentFile(), directory.getName()+"-"+sdf.format(d)+".zip");
         log.info("Zip {} -> {}", directory, zipfile);
 
         try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(zipfile))) {
-            zipupInternal(zos, directory, directory.getParentFile());
-        } catch(IOException e) {
-            log.error("Could not zip to {}", zipfile, e);
+            File parent = directory.getParentFile();
+            if (parent == null) {
+                parent = directory;
+            }
+            zipupInternal(zos, directory, parent);
+        } catch(IOException | IllegalArgumentException e) {
+            log.error("Could not zip {} to {}", directory.getAbsolutePath(), zipfile.getAbsolutePath(), e);
         }
         return zipfile;
     }

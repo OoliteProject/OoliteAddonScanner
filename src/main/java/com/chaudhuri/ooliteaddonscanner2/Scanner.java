@@ -4,21 +4,31 @@
 package com.chaudhuri.ooliteaddonscanner2;
 
 import com.chaudhuri.ooliteaddonscanner2.model.CustomSearch;
+import com.chaudhuri.ooliteaddonscanner2.model.CustomSearch.Hit;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
+import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
+import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -40,6 +50,13 @@ public class Scanner implements Runnable {
     private URL catalogUrl;
     private File outputDir = new File("output");
     private int maxExpansions = Integer.MAX_VALUE;
+    private boolean fullIndex = false;
+    
+    /** Runtime error that caused the scanner to break. */
+    private Throwable failure;
+    
+    private Registry registry;
+    private ExpansionCache cache;
 
     /**
      * Creates a new Scanner and initializes default parameters.
@@ -48,6 +65,70 @@ public class Scanner implements Runnable {
      */
     public Scanner() throws MalformedURLException {
         this.catalogUrl = new URL("http://addons.oolite.space/api/1.0/overview/");
+    }
+
+    /**
+     * Returns whether a full index is generated even if we have custom searches.
+     * @return true if the full index will be built
+     */
+    public boolean isFullIndex() {
+        return fullIndex;
+    }
+
+    /**
+     * Sets whether a full index is generated even if we have custom searches.
+     * @param fullIndex true if the full index shall be built
+     */
+    public void setFullIndex(boolean fullIndex) {
+        this.fullIndex = fullIndex;
+    }
+
+    /**
+     * Adds a new custom search.
+     * @param cs the search to add
+     */
+    public void addCustomSearch(CustomSearch cs) {
+        if (customSearches == null) {
+            customSearches = new ArrayList<>();
+        }
+        if (cs==null) {
+            throw new IllegalArgumentException("cs must not be null");
+        }
+        if (cs.getPattern()==null) {
+            throw new IllegalArgumentException("Custom search must have a pattern");
+        }
+        customSearches.add(cs);
+    }
+
+    /**
+     * Adds a list of custom searches.
+     * @param list the list of searches to add
+     */
+    public void addCustomSearches(List<CustomSearch> list) {
+        if (list == null) {
+            throw new IllegalArgumentException("list must not be null");
+        }
+        if (customSearches == null) {
+            customSearches = new ArrayList<>();
+        }
+        for (CustomSearch cs: list) {
+            if (cs==null) {
+                throw new IllegalArgumentException("Custom search must not be null");
+            }
+            if (cs.getPattern()==null) {
+                throw new IllegalArgumentException("Custom search must have a pattern");
+            }
+        }
+        customSearches.addAll(list);
+    }
+
+    /**
+     * Returns the list of configured custom searches.
+     * 
+     * @return the list
+     */
+    public List<CustomSearch> getCustomSearches() {
+        return customSearches;
     }
 
     /**
@@ -180,12 +261,108 @@ public class Scanner implements Runnable {
         log.debug("Checked {} wiki lookups in {}", tpe.getTaskCount(), Duration.between(start, end));
     }
     
+    private List<CustomSearch> getInterestedCustomSearches(String filename) {
+        List<CustomSearch> result = new ArrayList<>();
+        for (CustomSearch cs: customSearches) {
+            if (cs.willSearch(filename)) {
+                result.add(cs);
+            }
+        }
+        return result;
+    }
+    
+    private void doCustomSearches() {
+        if (customSearches == null || customSearches.isEmpty()) {
+            return;
+        }
+        
+        for (CustomSearch cs: customSearches) {
+            cs.init();
+        }
+        
+        List<Expansion> expansions = registry.getExpansions();
+        int expansionCount = 0;
+        Instant t0 = Instant.now();
+        
+        // for all expansions
+        for (Expansion expansion: expansions) {
+            expansionCount++;
+            log.info("Scanning {}/{} {}", expansionCount, expansions.size(), expansion.getIdentifier());
+            try {
+                ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownloadUrl())));
+                ZipEntry zentry = null;
+                // for all files in there
+                while ((zentry = zin.getNextEntry()) != null) {
+                    if (zentry.isDirectory()) {
+                        continue;
+                    }
+                    
+                    String source = expansion.getIdentifier() + "!" + zentry.getName();
+                    
+                    // check if any custom search is interested - if not, continue with next
+                    List<CustomSearch> searches = getInterestedCustomSearches(zentry.getName());
+                    if (!searches.isEmpty()) {
+                        log.debug("Participating searches for {}:", source);
+                        for (CustomSearch cs: searches) {
+                            log.debug("  {}", cs);
+                        }
+                        
+                        // open stream, loop over lines
+                        InputStream in = AddonsUtil.getZipEntryStream(zin);
+                        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+                            int lineNumber = 0;
+                            while (reader.ready()) {
+                                String line = reader.readLine();
+                                lineNumber++;
+                                
+                                for (CustomSearch cs: searches) {
+                                    cs.searchLine(expansion.getIdentifier(), zentry.getName(), lineNumber, line);
+                                }
+                            }
+                        }
+                        // run all the interested custom searches
+                    }
+                }
+            } catch (Exception e) {
+                log.warn("Could not run custom searches on {}", expansion, e);
+            }
+        }
+        
+        Instant t1 = Instant.now();
+        List<Hit> hits = customSearches.stream().flatMap(t->t.getResults().stream()).collect(Collectors.toList());
+        Duration d = Duration.between(t0, t1);
+        
+        log.info("Scanned {} expansions, found {} hits in {}", expansions.size(), hits.size(), d);
+        // collect and return results
+    }
+    
+    /**
+     * Returns whether the scan was successful.
+     * @return the status
+     */
+    public boolean isSuccessful() {
+        return failure == null;
+    }
+    
+    /**
+     * Returns a reason of failure.
+     * @return the reason
+     */
+    public Throwable getFailure() {
+        return failure;
+    }
+    
     @Override
     public void run() {
         try {
-            Registry registry = new Registry();
+            if (! outputDir.exists()) {
+                log.info("Creating output directory {}", outputDir);
+                outputDir.mkdirs();
+            }
+            
+            registry = new Registry();
             registry.setProperty("expansionManagerUrl", catalogUrl.toString());
-            ExpansionCache cache = new ExpansionCache(cacheDir);
+            cache = new ExpansionCache(cacheDir);
             TemplateEngine templateEngine = new TemplateEngine();
 
             // try to download from http://addons.oolite.org/api/1.0/overview
@@ -203,33 +380,44 @@ public class Scanner implements Runnable {
             AddonsUtil.readExpansionsList(data, registry, maxExpansions);
             log.debug("Parsed {}", registry.getExpansions().size());
 
-            AddonsUtil.readOxps(cache, registry);
+            if (fullIndex || customSearches == null || customSearches.isEmpty()) {
+                AddonsUtil.readOxps(cache, registry);
 
-            AddonsUtil.readShipModels(cache, registry);
+                AddonsUtil.readShipModels(cache, registry);
 
-            log.info("Parsed {} OXPs", registry.getExpansions().size());
-            log.info("Parsed {} equipment", registry.getEquipment().size());
-            log.info("Parsed {} ships", registry.getShips().size());
+                log.info("Parsed {} OXPs", registry.getExpansions().size());
+                log.info("Parsed {} equipment", registry.getEquipment().size());
+                log.info("Parsed {} ships", registry.getShips().size());
 
-            // scan for wiki pages
-            scanWikipages(registry);
+                // scan for wiki pages
+                scanWikipages(registry);
 
-            // scanning finished. Now verify...
-            Verifier.verify(registry);
+                // scanning finished. Now verify...
+                Verifier.verify(registry);
 
-            new File(outputDir, "equipment").mkdirs();
-            new File(outputDir, "expansions").mkdirs();
-            new File(outputDir, "ships").mkdirs();
+                new File(outputDir, "equipment").mkdirs();
+                new File(outputDir, "expansions").mkdirs();
+                new File(outputDir, "ships").mkdirs();
 
-            TemplateUtil.printIndexes(registry, outputDir, templateEngine);
-            TemplateUtil.printExpansions(registry, outputDir, templateEngine);
-            TemplateUtil.printEquipment(registry, outputDir, templateEngine);
-            TemplateUtil.printShips(registry, outputDir, templateEngine);
-            templateEngine.process(registry, "wikiIindex.ftlh", new File(outputDir, "wiki.txt"));
+                TemplateUtil.printIndexes(registry, outputDir, templateEngine);
+                TemplateUtil.printExpansions(registry, outputDir, templateEngine);
+                TemplateUtil.printEquipment(registry, outputDir, templateEngine);
+                TemplateUtil.printShips(registry, outputDir, templateEngine);
+                templateEngine.process(registry, "wikiIindex.ftlh", new File(outputDir, "wiki.txt"));
 
-            AddonsUtil.zipup(outputDir);
+                AddonsUtil.zipup(outputDir);
+            }
+
+            if (!customSearches.isEmpty()) {
+                doCustomSearches();
+                Properties props = new Properties();
+                props.put("searches", customSearches);
+                templateEngine.process(props, "customSearches.ftlh", new File(outputDir, "customSearches.html"));
+            }
+
         } catch (Exception e) {
-            log.fatal("Scan failed", e);
+            failure = new Exception("Scan failed", e);
+            log.info("Scan failed", e);
         }
     }
     
