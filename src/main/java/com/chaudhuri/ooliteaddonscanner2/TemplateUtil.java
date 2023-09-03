@@ -2,7 +2,7 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
-import static com.chaudhuri.ooliteaddonscanner2.Main.HTML_EXTENSION;
+import static com.chaudhuri.ooliteaddonscanner2.Scanner.HTML_EXTENSION;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
