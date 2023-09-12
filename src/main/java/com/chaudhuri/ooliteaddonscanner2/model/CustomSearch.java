@@ -47,6 +47,16 @@ public class CustomSearch {
         private int start;
         private int stop;
 
+        /**
+         * Creates a new Hit instance.
+         * 
+         * @param expansionId the expanion we found
+         * @param relPath the relative path inside the expansion
+         * @param lineNumber the line inside the file
+         * @param line the line holding the hit
+         * @param start the start of the hit range
+         * @param stop the stop of the hit range
+         */
         public Hit(String expansionId, String relPath, int lineNumber, String line, int start, int stop) {
             this.expansionId = expansionId;
             this.relPath = relPath;
@@ -56,62 +66,137 @@ public class CustomSearch {
             this.stop = stop;
         }
 
+        /**
+         * Returns the id of the expansion holding the hit.
+         * 
+         * @return the id
+         */
         public String getExpansionId() {
             return expansionId;
         }
 
+        /**
+         * Sets the id of the expansion holding the hit.
+         * 
+         * @param expansionId the id
+         */
         public void setExpansionId(String expansionId) {
             this.expansionId = expansionId;
         }
 
+        /**
+         * Returns the relative path to the file inside the expansion.
+         * 
+         * @return the path
+         */
         public String getRelPath() {
             return relPath;
         }
 
+        /**
+         * Sets the relative path to the file inside the expansion.
+         * 
+         * @param relPath the path
+         */
         public void setRelPath(String relPath) {
             this.relPath = relPath;
         }
 
+        /**
+         * Returns the linenumber within the file.
+         * 
+         * @return the line number
+         */
         public int getLineNumber() {
             return lineNumber;
         }
 
+        /**
+         * Sets the linenumber within the file.
+         * 
+         * @param lineNumber the line number
+         */
         public void setLineNumber(int lineNumber) {
             this.lineNumber = lineNumber;
         }
 
+        /**
+         * Returns the line that matched the search criteria.
+         * 
+         * @param the complete line
+         */
         public String getLine() {
             return line;
         }
 
+        /**
+         * Sets the line that matched the search criteria.
+         * 
+         * @param line the complete line
+         */
         public void setLine(String line) {
             this.line = line;
         }
 
+        /**
+         * Returns the start index of the hit within the line.
+         * 
+         * @return the index
+         */
         public int getStart() {
             return start;
         }
 
+        /**
+         * Sets the start index of the hit within the line.
+         * 
+         * @param start the index
+         */
         public void setStart(int start) {
             this.start = start;
         }
 
+        /**
+         * Returns the end index of the hit within the line.
+         * 
+         * @return the index
+         */
         public int getStop() {
             return stop;
         }
 
+        /**
+         * Sets the end index of the hit within the line.
+         * 
+         * @param stop the index
+         */
         public void setStop(int stop) {
             this.stop = stop;
         }
-        
+
+        /**
+         * Returns the leading part of the line (before the hit).
+         * 
+         * @return the leading part
+         */
         public String getLeader() {
             return line.substring(0, start);
         }
         
+        /**
+         * Returns the matching part of the line (between start and end).
+         * 
+         * @return the matching part
+         */
         public String getMatch() {
             return line.substring(start, stop);
         }
         
+        /**
+         * Returns the trailing part of the line (after the hit).
+         * 
+         * @return the trailing part
+         */
         public String getTrailer() {
             return line.substring(stop);
         }
@@ -137,6 +222,9 @@ public class CustomSearch {
         this.name = name;
     }
     
+    /**
+     * Initializes this custom search. Call this method once before running the search.
+     */
     public void init() {
         if (results != null) {
             throw new IllegalStateException("This search has already run?");

@@ -64,7 +64,7 @@ public class Scanner implements Runnable {
      * @throws MalformedURLException something went wrong
      */
     public Scanner() throws MalformedURLException {
-        this.catalogUrl = new URL("http://addons.oolite.space/api/1.0/overview/");
+        this.catalogUrl = new URL("http://addons.oolite.space/api/1.0/overview");
     }
 
     /**
