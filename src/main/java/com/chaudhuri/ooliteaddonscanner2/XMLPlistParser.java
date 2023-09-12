@@ -217,7 +217,18 @@ public class XMLPlistParser {
         return result.get(0);
     }
     
-    private static Document parseInputStream(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException {
+    /**
+     * Parses an XML stream into a Dom document. Optionally you can specify
+     * an errorhandler.
+     * 
+     * @param in the input stream to parse
+     * @param eh the handler to report errors
+     * @return the parsed document
+     * @throws ParserConfigurationException something went wrong
+     * @throws SAXException something went wrong
+     * @throws IOException something went wrong
+     */
+    public static Document parseInputStream(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         if(eh != null) {
