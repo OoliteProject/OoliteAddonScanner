@@ -408,7 +408,7 @@ public class Scanner implements Runnable {
                 AddonsUtil.zipup(outputDir);
             }
 
-            if (!customSearches.isEmpty()) {
+            if (customSearches != null && !customSearches.isEmpty()) {
                 doCustomSearches();
                 Properties props = new Properties();
                 props.put("searches", customSearches);
