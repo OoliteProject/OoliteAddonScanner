@@ -12,6 +12,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -304,22 +305,29 @@ public class ExpansionCache {
      * @throws IOException something went wrong
      */
     private Date doCheckLastModified(URL u, int followRedirectsCount) throws IOException {
-        HttpURLConnection con = (HttpURLConnection)u.openConnection();
-        con.setRequestMethod("HEAD");
-        con.connect();
-        Map<String, List<String>> headers = con.getHeaderFields();
+        URLConnection urlconnection = u.openConnection();
         
-        // ensure we have a http status 200
-        if (200 <= con.getResponseCode() && con.getResponseCode() < 300) {
-            // then parse Last-Modified date
-            return new Date(con.getLastModified());
-        } else if (300 <= con.getResponseCode() && con.getResponseCode() < 400) {
-            log.debug("Redirect {} with {}", u, headers);
-            if (followRedirectsCount == 0)
-                throw new IllegalStateException("Received redirect but cannot follow");
-            return doCheckLastModified(new URL(headers.get("Location").get(0)), followRedirectsCount - 1);
+        if (urlconnection instanceof HttpURLConnection) {
+            HttpURLConnection con = (HttpURLConnection)urlconnection;
+            con.setRequestMethod("HEAD");
+            con.connect();
+            Map<String, List<String>> headers = con.getHeaderFields();
+
+            // ensure we have a http status 200
+            if (200 <= con.getResponseCode() && con.getResponseCode() < 300) {
+                // then parse Last-Modified date
+                return new Date(con.getLastModified());
+            } else if (300 <= con.getResponseCode() && con.getResponseCode() < 400) {
+                log.debug("Redirect {} with {}", u, headers);
+                if (followRedirectsCount == 0)
+                    throw new IllegalStateException("Received redirect but cannot follow");
+                return doCheckLastModified(new URL(headers.get("Location").get(0)), followRedirectsCount - 1);
+            } else {
+                throw new IOException("HEAD " + u + " resulted in "+con.getResponseCode() + " " + con.getResponseMessage());
+            }
         } else {
-            throw new IOException("HEAD " + u + " resulted in "+con.getResponseCode() + " " + con.getResponseMessage());
+            log.warn("cannot check lastModified for url {}", u);
+            return new Date();
         }
     }
     
