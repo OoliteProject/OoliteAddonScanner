@@ -254,7 +254,7 @@ public class XMLPlistParser {
         return parseDict((Element)plist.getElementsByTagName("dict").item(0));
     }
     
-    /** Parses an XML file, checks it is a plist and returns the list of values
+    /** Parses an XML file, checks if it is a plist and returns the list of values
      * found.
      * 
      * @param in
