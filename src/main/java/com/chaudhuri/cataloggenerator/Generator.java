@@ -341,6 +341,16 @@ public class Generator implements Runnable {
         return doc;
     }
     
+    /**
+     * Writes the catalog as XML document.
+     * The catalog is generated and written out using the identity transformation.
+     * 
+     * @param catalog the catalog to write
+     * @param out the outputstream to write to
+     * @throws ParserConfigurationException something went wrong
+     * @throws TransformerConfigurationException something went wrong
+     * @throws TransformerException something went wrong
+     */
     private void writeXml(List<ExpansionManifest> catalog, OutputStream out) throws ParserConfigurationException, TransformerConfigurationException, TransformerException {
         Document doc = generateXml(catalog);
         

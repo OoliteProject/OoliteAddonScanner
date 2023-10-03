@@ -14,6 +14,8 @@
 )</xsl:template>
 
     <xsl:template match="manifest">  {
+    "identifier" = "<xsl:value-of select="@identifier"/>"
+    "version" = "<xsl:value-of select="@version"/>"
 <xsl:for-each select="*">    "<xsl:value-of select="name()"/>" = "<xsl:value-of select="."/>";
 </xsl:for-each>  }</xsl:template>
 </xsl:stylesheet>
