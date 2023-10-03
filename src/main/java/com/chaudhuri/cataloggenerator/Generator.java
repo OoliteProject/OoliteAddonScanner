@@ -260,7 +260,7 @@ public class Generator implements Runnable {
             
             log.info("Found {} manifests", catalog.size());
         } catch (IOException e) {
-            log.error("Could not read input", e);
+            log.error("Could not read input {}", inputPath.toAbsolutePath(), e);
             return;
         }
 
