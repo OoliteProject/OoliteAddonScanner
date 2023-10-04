@@ -71,6 +71,28 @@ public class Generator implements Callable<Object> {
     }
 
     /**
+     * Returns the location where expansions are cached.
+     * 
+     * @return the location
+     */
+    public Path getCacheDIR() {
+        return cacheDIR;
+    }
+
+    /**
+     * Sets the location where expansions are cached.
+     * This must happen before init() is called.
+     * 
+     * @return the location
+     */
+    public void setCacheDIR(Path cacheDIR) {
+        if (cache != null) {
+            throw new IllegalStateException("already initialized");
+        }
+        this.cacheDIR = cacheDIR;
+    }
+
+    /**
      * Gets the path/file where the input will be read from.
      * The file is expected to have one URL per line.
      * 
@@ -170,6 +192,7 @@ public class Generator implements Callable<Object> {
      * Initializes the generator so it is ready to run.
      */
     public void init() {
+        log.info("Caching expansions in {}", cacheDIR.toFile().getAbsolutePath());
         cache = new ExpansionCache(cacheDIR.toFile());
     }
     

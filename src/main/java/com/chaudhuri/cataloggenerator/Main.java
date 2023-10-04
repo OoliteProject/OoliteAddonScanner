@@ -36,6 +36,7 @@ public class Main {
         Options options = new Options();
         options.addRequiredOption("i", "in", true, "Input file (one URL per line)");
         options.addRequiredOption("o", "out", true, "Output file");
+        options.addOption("c", "cache", true, "Location to cache downloaded expansions");
         options.addOption("f", "format", true, "Output format. A comma separated list of [html, json, plist, xml]. Defaults to plist");
         
         try {
@@ -51,6 +52,9 @@ public class Main {
                 generator.setOutputFormat(commandline.getOptionValue("format"));
             } else {
                 generator.setOutputFormat("plist");
+            }
+            if (commandline.hasOption("c")) {
+                generator.setCacheDIR(Path.of(commandline.getOptionValue("cache")));
             }
 
             log.info(Main.class.getPackage().getImplementationTitle() + " version " + Main.class.getPackage().getImplementationVersion());
