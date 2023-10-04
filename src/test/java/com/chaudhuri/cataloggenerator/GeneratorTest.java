@@ -7,6 +7,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -126,11 +127,11 @@ public class GeneratorTest {
      * Test of run method, of class Generator.
      */
     @Test
-    public void testRun() {
-        log.info("testRun");
+    public void testCall() throws IOException {
+        log.info("testCall");
         Generator instance = new Generator();
         try {
-            instance.run();
+            instance.call();
             fail("expected exception");
         } catch (IllegalStateException e) {
             assertEquals("inputPath must not be null.", e.getMessage());
@@ -142,14 +143,14 @@ public class GeneratorTest {
      * Test of run method, of class Generator.
      */
     @Test
-    public void testRun2() {
-        log.info("testRun2()");
+    public void testCall2() throws IOException {
+        log.info("testCall2()");
         
         Generator instance = new Generator();
         instance.setInputPath(FileSystems.getDefault().getPath("src","test", "data", "expansionUrls.txt"));
 
         try {
-            instance.run();
+            instance.call();
             fail("expected exception");
         } catch (IllegalStateException e) {
             assertEquals("outputFormat must not be null.", e.getMessage());
@@ -161,15 +162,15 @@ public class GeneratorTest {
      * Test of run method, of class Generator.
      */
     @Test
-    public void testRun3() {
-        log.info("testRun3()");
+    public void testCall3() throws IOException {
+        log.info("testCall3()");
         
         Generator instance = new Generator();
         instance.setInputPath(FileSystems.getDefault().getPath("src","test", "data", "expansionUrls.txt"));
         instance.setOutputFormat("xml");
 
         try {
-            instance.run();
+            instance.call();
             fail("expected exception");
         } catch (IllegalStateException e) {
             assertEquals("outputPath must not be null.", e.getMessage());
@@ -181,8 +182,8 @@ public class GeneratorTest {
      * Test of run method, of class Generator.
      */
     @Test
-    public void testRun4() {
-        log.info("testRun4()");
+    public void testCall4() throws IOException {
+        log.info("testCall4()");
         
         Generator instance = new Generator();
         instance.setInputPath(FileSystems.getDefault().getPath("src","test", "data", "expansionUrls.txt"));
@@ -190,7 +191,7 @@ public class GeneratorTest {
         Path outputPath = FileSystems.getDefault().getPath("target","test", "data", "catalog.xml");
         instance.setOutputPath(outputPath);
 
-        instance.run();
+        instance.call();
         
         Path outputPathJson = outputPath.resolveSibling("catalog.xml.json");
         Path outputPathHtml = outputPath.resolveSibling("catalog.xml.html");

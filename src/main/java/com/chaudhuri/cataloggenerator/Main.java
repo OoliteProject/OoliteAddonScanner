@@ -3,6 +3,7 @@
 
 package com.chaudhuri.cataloggenerator;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -53,11 +54,15 @@ public class Main {
             }
 
             log.info(Main.class.getPackage().getImplementationTitle() + " version " + Main.class.getPackage().getImplementationVersion());
-            generator.run();
+            generator.call();
+        } catch (IOException e) {
+            log.error("Generator failed.", e);
+            System.exit(1);
         } catch (MissingOptionException e) {
             log.error("Wrong invocation. Options missing: {}", e.getMissingOptions());
             
-            new HelpFormatter().printHelp(Main.class.getName() + "[OPTION]...", options);
+            new HelpFormatter().printHelp(Main.class.getName() + " [OPTION]...", options);
+            System.exit(2);
         }
     }
 }

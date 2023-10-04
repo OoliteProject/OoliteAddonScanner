@@ -17,10 +17,12 @@ import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -46,7 +48,7 @@ import org.xml.sax.SAXException;
  * 
  * @author hiran
  */
-public class Generator implements Runnable {
+public class Generator implements Callable<Object> {
     private static final Logger log = LogManager.getLogger();
 
     private Path inputPath;
@@ -237,7 +239,7 @@ public class Generator implements Runnable {
     }
 
     @Override
-    public void run() {
+    public Object call() throws IOException {
         if (inputPath == null) {
             throw new IllegalStateException("inputPath must not be null.");
         }
@@ -253,6 +255,7 @@ public class Generator implements Runnable {
         List<ExpansionManifest> catalog = null;
         try {
             catalog = Files.lines(inputPath)
+                    .parallel()
                     .filter(e -> !e.startsWith("#"))
                     .filter(e -> !e.isBlank())
                     .map(e -> getManifestFromUrl(e))
@@ -260,15 +263,17 @@ public class Generator implements Runnable {
             
             log.info("Found {} manifests", catalog.size());
         } catch (IOException e) {
-            log.error("Could not read input {}", inputPath.toAbsolutePath(), e);
-            return;
+            throw new IOException(String.format("Could not read input %s", inputPath.toAbsolutePath()), e);
         }
 
         final List<ExpansionManifest> fCatalog = catalog;
         Arrays.asList(outputFormat.split(",")).stream()
             .forEach(format -> {
                 try {
-                    Files.createDirectories(outputPath.getParent());
+                    Path parent = outputPath.getParent();
+                    if (parent != null && !Files.exists(parent, LinkOption.NOFOLLOW_LINKS)) {
+                        Files.createDirectories(parent);
+                    }
                     
                     Path myOutputPath = outputPath;
                     if (!myOutputPath.toString().endsWith("." + format)) {
@@ -296,9 +301,11 @@ public class Generator implements Runnable {
                     
                     log.info("Wrote {}", myOutputPath.toAbsolutePath());
                 } catch (Exception ex) {
-                    log.error("cannot write {} output", format, ex);
+                    throw new RuntimeException(String.format("Cannot write to %s in %s", format, outputPath.toAbsolutePath()), ex);
                 }
             });
+        
+        return "success";
     }
 
     private void writeJson(List<ExpansionManifest> catalog, OutputStream out) throws ParserConfigurationException, TransformerConfigurationException, TransformerException {
