@@ -15,12 +15,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ConnectException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -55,6 +57,7 @@ public class Generator implements Callable<Object> {
     private Path outputPath;
     private Path tempDir;
     private Path cacheDIR = ExpansionCache.DEFAULT_CACHE_DIR.toPath();
+    private boolean pedantic;
     
     /**
      * Can be a comma delimited list of formats.
@@ -68,6 +71,24 @@ public class Generator implements Callable<Object> {
      * Creates a new instance.
      */
     public Generator() {
+    }
+
+    /**
+     * Returns whether pedantic mode is activated.
+     * 
+     * @return true if activated
+     */
+    public boolean isPedantic() {
+        return pedantic;
+    }
+
+    /**
+     * Sets whether pedantic mode is activated.
+     * 
+     * @param pedantic true if activated
+     */
+    public void setPedantic(boolean pedantic) {
+        this.pedantic = pedantic;
     }
 
     /**
@@ -267,6 +288,46 @@ public class Generator implements Callable<Object> {
         
         return expansion.getManifest();
     }
+    
+    private boolean isOrdered(List<String> urls) throws MalformedURLException {
+        boolean result = true;
+        
+        URL lastUrl = null;
+        String lastString = null;
+        int lineCount = 0;
+        int violations = 0;
+        for (String url: urls) {
+            lineCount++;
+            if (url.startsWith("#") | url.isBlank()) {
+                continue;
+            }
+            
+            URL thisUrl = new URL(url);
+            if (lastUrl == null) {
+                lastUrl = thisUrl;
+                lastString = thisUrl.getHost() + thisUrl.getPort() + thisUrl.getPath() + thisUrl.getFile() + thisUrl.getProtocol();
+            } else {
+                String thisString = thisUrl.getHost() + thisUrl.getPort() + thisUrl.getPath() + thisUrl.getFile() + thisUrl.getProtocol();
+                int x = lastString.compareTo(thisString);
+                if (x == 0) {
+                    log.warn("Duplicate url detected in line {}: {}", lineCount, url);
+                    violations++;
+                    result = false;
+                } else if ( x > 0) {
+                    log.warn("Wrong sort order detected in line {}: {}", lineCount, url);
+                    violations++;
+                    result = false;
+                }
+                lastUrl = thisUrl;
+                lastString = thisString;
+            }
+        }
+        
+        if (violations > 0) {
+            log.error("Found {} sort order violations.", violations);
+        }
+        return result;
+    }
 
     @Override
     public Object call() throws IOException {
@@ -281,22 +342,36 @@ public class Generator implements Callable<Object> {
         }
         
         init();
+
+        // read data
+        List<String> urls = Files.lines(inputPath).toList();
+        
+        // check sort order
+        if (pedantic) {
+            if (!isOrdered(urls)) {
+                throw new IOException("Input data not good.");
+            }
+        }
         
         // create the catalog
         List<ExpansionManifest> catalog = null;
-        try {
-            catalog = Files.lines(inputPath)
+        //try {
+            catalog = urls.stream()
                     .parallel()
                     .filter(e -> !e.startsWith("#"))
                     .filter(e -> !e.isBlank())
-                    .map(e -> getManifestFromUrl(e))
+                    .map(e -> {
+                        ExpansionManifest em = getManifestFromUrl(e);
+                        log.info("Parsed {}", e);
+                        return em;
+                    })
                     .filter(m -> m != null)
                     .collect(Collectors.toList());
             
             log.info("Found {} manifests", catalog.size());
-        } catch (IOException e) {
-            throw new IOException(String.format("Could not read input %s", inputPath.toAbsolutePath()), e);
-        }
+//        } catch (IOException e) {
+//            throw new IOException(String.format("Could not read input %s", inputPath.toAbsolutePath()), e);
+//        }
 
         // serialize the catalog
         final List<ExpansionManifest> fCatalog = catalog;

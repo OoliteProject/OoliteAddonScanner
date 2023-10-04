@@ -37,6 +37,7 @@ public class Main {
         options.addRequiredOption("i", "in", true, "Input file (one URL per line)");
         options.addRequiredOption("o", "out", true, "Output file");
         options.addOption("c", "cache", true, "Location to cache downloaded expansions");
+        options.addOption("p", "pedantic", false, "Pedantic mode - requires the URLs to be sorted");
         options.addOption("f", "format", true, "Output format. A comma separated list of [html, json, plist, xml]. Defaults to plist");
         
         try {
@@ -56,6 +57,7 @@ public class Main {
             if (commandline.hasOption("c")) {
                 generator.setCacheDIR(Path.of(commandline.getOptionValue("cache")));
             }
+            generator.setPedantic(commandline.hasOption("pedantic"));
 
             log.info(Main.class.getPackage().getImplementationTitle() + " version " + Main.class.getPackage().getImplementationVersion());
             generator.call();
