@@ -344,7 +344,8 @@ public class Generator implements Callable<Object> {
         init();
 
         // read data
-        List<String> urls = Files.lines(inputPath).toList();
+        List<String> urls = Files.lines(inputPath)
+                .collect(Collectors.toList());
         
         // check sort order
         if (pedantic) {
