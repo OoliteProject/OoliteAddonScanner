@@ -196,7 +196,13 @@ public class Generator implements Callable<Object> {
         }
     }
 
-    
+    /**
+     * Scans an OXZ without extracting the whole archive.
+     * 
+     * @param zin the OXZ inputstream
+     * @param urlString the url where it came from
+     * @return the expansion manifest or null if not found
+     */
     ExpansionManifest getManifestFromOXZ(ZipInputStream zin, String urlString) {
         log.debug("getManifestFromOXZ({}, {})", zin, urlString);
         
