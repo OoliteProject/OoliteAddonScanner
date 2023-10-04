@@ -202,6 +202,7 @@ public class Generator implements Callable<Object> {
         
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
+        expansion.setDownloadUrl(urlString);
 
         try {
             ZipEntry zentry = null;
@@ -260,6 +261,7 @@ public class Generator implements Callable<Object> {
                     .filter(e -> !e.startsWith("#"))
                     .filter(e -> !e.isBlank())
                     .map(e -> getManifestFromUrl(e))
+                    .filter(m -> m != null)
                     .collect(Collectors.toList());
             
             log.info("Found {} manifests", catalog.size());
