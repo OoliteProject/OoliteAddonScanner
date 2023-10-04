@@ -201,6 +201,9 @@ public class AddonsUtil {
      */
     public static void readShips(String url, InputStream in, Registry registry, Expansion expansion) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         log.debug("readShips(...)");
+        if (url == null || url.equals("null")) {
+            throw new IllegalArgumentException("url must not be null");
+        }
         if (in == null) {
             throw new IllegalArgumentException("in must not be null");
         }
@@ -246,6 +249,9 @@ public class AddonsUtil {
      */
     public static void readEquipment(String url, InputStream in, Registry registry, Expansion expansion) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException {
         log.debug("readEquipment(...)");
+        if (url == null || url.equals("null")) {
+            throw new IllegalArgumentException("url must not be null");
+        }
         if (in == null) {
             throw new IllegalArgumentException("in must not be null");
         }

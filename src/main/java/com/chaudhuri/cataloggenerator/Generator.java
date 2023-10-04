@@ -252,6 +252,7 @@ public class Generator implements Callable<Object> {
         
         init();
         
+        // create the catalog
         List<ExpansionManifest> catalog = null;
         try {
             catalog = Files.lines(inputPath)
@@ -266,6 +267,7 @@ public class Generator implements Callable<Object> {
             throw new IOException(String.format("Could not read input %s", inputPath.toAbsolutePath()), e);
         }
 
+        // serialize the catalog
         final List<ExpansionManifest> fCatalog = catalog;
         Arrays.asList(outputFormat.split(",")).stream()
             .forEach(format -> {
@@ -319,6 +321,9 @@ public class Generator implements Callable<Object> {
     }
     
     private Document generateXml(List<ExpansionManifest> catalog) throws ParserConfigurationException {
+        if (catalog == null) {
+            throw new IllegalArgumentException("catalog must not be null");
+        }
         DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document doc = db.newDocument();
         Element root = doc.createElement("catalog");
