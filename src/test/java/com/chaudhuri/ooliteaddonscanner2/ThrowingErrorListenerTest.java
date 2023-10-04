@@ -104,6 +104,10 @@ public class ThrowingErrorListenerTest {
     
     private class TestRecognizer extends Recognizer {
 
+        /**
+         * This method is marked as deprecated but we have to implement it?
+         * @return 
+         */
         @Override
         public String[] getTokenNames() {
             return new String[]{"zero", "one", "two"};
