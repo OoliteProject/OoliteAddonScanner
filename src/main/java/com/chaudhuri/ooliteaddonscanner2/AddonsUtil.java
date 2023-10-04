@@ -219,7 +219,11 @@ public class AddonsUtil {
             in.reset();
 
             Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(in, null);
-            log.info("Parsed {} ({} ships)", expansion.getName(), shipList.size());
+            if (expansion.getName() != null) {
+                log.info("Parsed {} ({} ships)", expansion.getName(), shipList.size());
+            } else {
+                log.info("Parsed {} ({} ships)", url, shipList.size());
+            }
             registry.addShipList(expansion, shipList);
         } else {
             in.reset();
@@ -260,7 +264,11 @@ public class AddonsUtil {
             in.reset();
             List<Object> equipmentList = XMLPlistParser.parseList(in, null);
             expansion.addWarning("Found XML equipment list");
-            log.info("Parsed {} ({} items of equipment)", expansion.getName(), equipmentList.size());
+            if (expansion.getName() != null) {
+                log.info("Parsed {} ({} items of equipment)", expansion.getName(), equipmentList.size());
+            } else {
+                log.info("Parsed {} ({} items of equipment)", url, equipmentList.size());
+            }
             registry.addEquipmentList(expansion, (List)equipmentList.get(0));
         } else {
             in.reset();
