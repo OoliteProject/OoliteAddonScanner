@@ -427,6 +427,29 @@ public class Generator implements Callable<Object> {
         return result;
     }
     
+    private Element createDependencyList(Document doc, String name, List<Expansion.Dependency> dependencies) {
+        final Element result = doc.createElement(name);
+        
+        dependencies.stream().forEach((dependency) -> {
+            Element d = doc.createElement("dependency");
+            d.appendChild(createElement(doc, "identifier", dependency.getIdentifier()));
+            String v = dependency.getVersion();
+            if (v == null) {
+                v = "0";
+            }
+            d.appendChild(createElement(doc, "version", v));
+            if (dependency.getMaxVersion() != null) {
+                d.appendChild(createElement(doc, "maximum_version", dependency.getMaxVersion()));
+            }
+            if (dependency.getDescription()!= null) {
+                d.appendChild(createElement(doc, "description", dependency.getDescription()));
+            }
+            result.appendChild(d);
+        });
+        
+        return  result;
+    }
+    
     private Document generateXml(List<ExpansionManifest> catalog) throws ParserConfigurationException {
         if (catalog == null) {
             throw new IllegalArgumentException("catalog must not be null");
@@ -450,10 +473,10 @@ public class Generator implements Callable<Object> {
             emNode.appendChild(createElement(doc, "download_url", em.getDownloadUrl()));
             emNode.appendChild(createElement(doc, "information_url", em.getInformationUrl()));
             emNode.appendChild(createElement(doc, "file_size", em.getFileSize()));
-            emNode.appendChild(createElement(doc, "requires_oxps", String.valueOf(em.getRequiresOxps())));
-            emNode.appendChild(createElement(doc, "optional_oxps", String.valueOf(em.getOptionalOxps())));
+            emNode.appendChild(createDependencyList(doc, "requires_oxps", em.getRequiresOxps()));
+            emNode.appendChild(createDependencyList(doc, "optional_oxps", em.getOptionalOxps()));
             emNode.appendChild(createElement(doc, "tags", em.getTags()));
-            emNode.appendChild(createElement(doc, "conflict_oxps", String.valueOf(em.getConflictOxps())));
+            emNode.appendChild(createDependencyList(doc, "conflict_oxps", em.getConflictOxps()));
             root.appendChild(emNode);
         });
         

@@ -16,6 +16,31 @@
     <xsl:template match="manifest">  {
     "identifier" = "<xsl:value-of select="@identifier"/>";
     "version" = "<xsl:value-of select="@version"/>";
-<xsl:for-each select="*">    "<xsl:value-of select="name()"/>" = "<xsl:value-of select="."/>";
-</xsl:for-each>  }</xsl:template>
+<xsl:apply-templates select="*">
+        <xsl:with-param name="nesting"><xsl:text>    </xsl:text></xsl:with-param>
+    </xsl:apply-templates>
+  }</xsl:template>
+  
+  
+  <xsl:template match="requires_oxps|optional_oxps|conflict_oxps">
+      <xsl:param name="nesting"/><xsl:value-of select="$nesting"/>"<xsl:value-of select="name()"/>" = (
+<xsl:for-each select="*"><xsl:if test="position()>1">,
+</xsl:if><xsl:apply-templates select=".">
+          <xsl:with-param name="nesting"><xsl:value-of select="$nesting"/><xsl:text>    </xsl:text></xsl:with-param>
+      </xsl:apply-templates></xsl:for-each><xsl:text>
+</xsl:text><xsl:value-of select="$nesting"/>);
+</xsl:template>
+
+  <xsl:template match="dependency">
+    <xsl:param name="nesting"/><xsl:value-of select="$nesting"/>{
+<xsl:apply-templates select="*">
+    <xsl:with-param name="nesting"><xsl:value-of select="$nesting"/><xsl:text>  </xsl:text></xsl:with-param>
+</xsl:apply-templates>
+<xsl:value-of select="$nesting"/>}</xsl:template>
+
+  <xsl:template match="*">
+      <xsl:param name="nesting"/>
+<xsl:value-of select="$nesting"/>"<xsl:value-of select="name()"/>" = "<xsl:value-of select="."/>";
+</xsl:template>
+
 </xsl:stylesheet>
