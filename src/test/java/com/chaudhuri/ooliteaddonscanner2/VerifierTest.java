@@ -258,9 +258,9 @@ public class VerifierTest {
         assertEquals("Category mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(2));
         assertEquals("Author mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(3));
         assertEquals("Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(4));
-        assertEquals("Tags mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(5));
+        assertEquals("Tags mismatch between OXP Manifest and Expansion Manager compare with undefined value('n' vs 'null')", registry.getWarnings().get(5));
         assertEquals("Required Oolite Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(6));
-        assertEquals("Maximum Oolite Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(7));
+        assertEquals("Maximum Oolite Version mismatch between OXP Manifest and Expansion Manager compare with undefined value('n' vs 'null')", registry.getWarnings().get(7));
         assertEquals("Information URL mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(8));
         assertEquals("JavaScript with fetch", registry.getWarnings().get(9));
         assertEquals("JavaScript with url", registry.getWarnings().get(10));

@@ -49,6 +49,12 @@ public class Verifier {
      * @return the descriptive string of difference
      */
     public static String findDiffereringPosition(String s1, String s2) {
+        if (s1 == null) {
+            throw new IllegalArgumentException("s1 must not be null");
+        }
+        if (s2 == null) {
+            return "compare with undefined value";
+        }
         
         // compare the common string length
         for (int i=0; i<Math.min(s1.length(), s2.length()); i++) {
