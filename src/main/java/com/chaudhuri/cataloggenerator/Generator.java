@@ -21,8 +21,8 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.time.Instant;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -233,6 +233,12 @@ public class Generator implements Callable<Object> {
                 em.setFileSize(null);
             }
             em.setDownloadUrl(urlString);
+            
+            Instant i = cache.getLastModified(urlString);
+            if (i != null) {
+                em.setUploadDate(i.getEpochSecond());
+            }
+            
             return em;
         } catch (IOException e) {
             log.error("Could not access plugin {}", urlString, e);
@@ -343,11 +349,11 @@ public class Generator implements Callable<Object> {
         
         init();
 
-        // read data
+        // read url list
         List<String> urls = Files.lines(inputPath)
                 .collect(Collectors.toList());
         
-        // check sort order
+        // check sort order of url list
         if (pedantic) {
             if (!isOrdered(urls)) {
                 throw new IOException("Input data not good.");
@@ -356,23 +362,19 @@ public class Generator implements Callable<Object> {
         
         // create the catalog
         List<ExpansionManifest> catalog = null;
-        //try {
-            catalog = urls.stream()
-                    .parallel()
-                    .filter(e -> !e.startsWith("#"))
-                    .filter(e -> !e.isBlank())
-                    .map(e -> {
-                        ExpansionManifest em = getManifestFromUrl(e);
-                        log.info("Parsed {}", e);
-                        return em;
-                    })
-                    .filter(m -> m != null)
-                    .collect(Collectors.toList());
-            
-            log.info("Found {} manifests", catalog.size());
-//        } catch (IOException e) {
-//            throw new IOException(String.format("Could not read input %s", inputPath.toAbsolutePath()), e);
-//        }
+        catalog = urls.stream()
+                .parallel()
+                .filter(e -> !e.startsWith("#"))
+                .filter(e -> !e.isBlank())
+                .map(e -> {
+                    ExpansionManifest em = getManifestFromUrl(e);
+                    log.info("Parsed {}", e);
+                    return em;
+                })
+                .filter(m -> m != null)
+                .collect(Collectors.toList());
+
+        log.info("Found {} manifests", catalog.size());
 
         // serialize the catalog
         final List<ExpansionManifest> fCatalog = catalog;
@@ -473,9 +475,16 @@ public class Generator implements Callable<Object> {
             emNode.appendChild(createElement(doc, "download_url", em.getDownloadUrl()));
             emNode.appendChild(createElement(doc, "information_url", em.getInformationUrl()));
             emNode.appendChild(createElement(doc, "file_size", em.getFileSize()));
+            emNode.appendChild(createElement(doc, "tags", em.getTags()));
+            if (em.getUploadDate() != null) {
+//                Element e = doc.createElement("upload_date");
+//                e.appendChild(doc.createTextNode(String.valueOf(em.getUploadDate())));
+//                emNode.appendChild(e);
+
+                emNode.appendChild(createElement(doc, "upload_date", String.valueOf(em.getUploadDate())));
+            }
             emNode.appendChild(createDependencyList(doc, "requires_oxps", em.getRequiresOxps()));
             emNode.appendChild(createDependencyList(doc, "optional_oxps", em.getOptionalOxps()));
-            emNode.appendChild(createElement(doc, "tags", em.getTags()));
             emNode.appendChild(createDependencyList(doc, "conflict_oxps", em.getConflictOxps()));
             root.appendChild(emNode);
         });

@@ -4,6 +4,7 @@ package com.chaudhuri.ooliteaddonscanner2;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.time.Instant;
@@ -264,5 +265,55 @@ public class ExpansionCacheTest {
         assertFalse(emptyDir.isDirectory(), "emtpy directory should have been cleaned away but is not");
     }
     
+    @Test
+    public void testGetLastModified() throws IOException {
+        log.info("testGetLastModified");
+        
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+
+        ExpansionCache cache = new ExpansionCache(testCache);
+        
+        try {
+            cache.getLastModified(null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("url must not be null", e.getMessage());
+            log.debug("caught expected exception");
+        }
+    }
     
+    @Test
+    public void testGetLastModified2() throws IOException {
+        log.info("testGetLastModified2");
+        
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+
+        ExpansionCache cache = new ExpansionCache(testCache);
+        
+        try {
+            cache.getLastModified("hallo");
+            fail("expected exception");
+        } catch (MalformedURLException e) {
+            assertEquals("no protocol: hallo", e.getMessage());
+            log.debug("caught expected exception");
+        }
+    }
+    
+    @Test
+    public void testGetLastModified3() throws IOException {
+        log.info("testGetLastModified3");
+        
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+
+        ExpansionCache cache = new ExpansionCache(testCache);
+        
+        Instant i = cache.getLastModified("https://cim.sotl.org.uk/games/files/oolite/Escort_Formations_1.1.oxz");
+        assertEquals("2014-04-12T15:46:23Z", String.valueOf(i));
+    }
 }

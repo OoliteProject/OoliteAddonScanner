@@ -21,7 +21,6 @@
     </xsl:apply-templates>
   }</xsl:template>
   
-  
   <xsl:template match="requires_oxps|optional_oxps|conflict_oxps">
       <xsl:param name="nesting"/><xsl:value-of select="$nesting"/>"<xsl:value-of select="name()"/>" = (
 <xsl:for-each select="*"><xsl:if test="position()>1">,
@@ -37,6 +36,11 @@
     <xsl:with-param name="nesting"><xsl:value-of select="$nesting"/><xsl:text>  </xsl:text></xsl:with-param>
 </xsl:apply-templates>
 <xsl:value-of select="$nesting"/>}</xsl:template>
+
+  <xsl:template match="upload_date">
+      <xsl:param name="nesting"/>
+<xsl:value-of select="$nesting"/>"<xsl:value-of select="name()"/>" = <xsl:value-of select="."/>;
+</xsl:template>
 
   <xsl:template match="*">
       <xsl:param name="nesting"/>

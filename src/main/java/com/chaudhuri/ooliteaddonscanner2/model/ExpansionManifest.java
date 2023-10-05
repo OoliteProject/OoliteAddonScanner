@@ -27,6 +27,7 @@ public class ExpansionManifest implements Warnable {
     private String tags;
     private String title;
     private String version;
+    private Long uploadDate;
     
     private List<String> warnings;
     
@@ -35,6 +36,14 @@ public class ExpansionManifest implements Warnable {
      */
     public ExpansionManifest() {
         warnings = new ArrayList<>();
+    }
+
+    public Long getUploadDate() {
+        return uploadDate;
+    }
+
+    public void setUploadDate(Long uploadDate) {
+        this.uploadDate = uploadDate;
     }
 
     /**

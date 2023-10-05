@@ -3,11 +3,13 @@
 package com.chaudhuri.ooliteaddonscanner2;
 
 import com.owlike.genson.Genson;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -17,12 +19,16 @@ import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.Files;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.nio.file.attribute.FileTime;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.logging.Level;
 import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -375,6 +381,54 @@ public class ExpansionCache {
 
         File cached = getCachedFile(url);
         return new FileInputStream(cached);
+    }
+    
+    public Instant getLastModified(String url) throws IOException {
+        log.debug("getLastModified({})", url);
+        if (url == null) {
+            throw new IllegalArgumentException("url must not be null");
+        }
+        
+        // run a custom HTTP request - see https://www.baeldung.com/java-http-request
+        URL u = new URL(url);
+        URLConnection uc = u.openConnection();
+        if (uc instanceof HttpURLConnection) {
+            HttpURLConnection con = (HttpURLConnection)uc;
+            try {
+                con.setRequestMethod("HEAD");
+                con.setConnectTimeout(5000);
+                con.setReadTimeout(5000);
+                con.connect();
+
+                log.warn("received status {}: {}", con.getResponseCode(), con.getResponseMessage());
+                Optional<Map.Entry<String, List<String>>> x = con.getHeaderFields().entrySet().stream()
+                        .filter(entry -> "Last-Modified".equals(entry.getKey()))
+                        .findFirst();
+
+                if (x.isPresent()) {
+                    SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+                    try {
+                        Date d = format.parse(x.get().getValue().get(0));
+                        log.warn("last modified {}", d);
+                        return d.toInstant();
+                    } catch (ParseException ex) {
+                        log.error("could not parse header {}", x.get().getValue(), ex);
+                    }
+                }
+
+                try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        log.warn("received line {}", line);
+                    }
+                }
+
+            } finally {
+                con.disconnect();
+            }
+        }
+        
+        return null;
     }
     
     /** Removes the cached file.
