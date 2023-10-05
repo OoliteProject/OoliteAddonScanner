@@ -117,8 +117,16 @@
                 </tr>
                 <tr>
                     <td>Conflict Expansions</td>
-                    <td>${ conflict_oxps!"" }</td>
-                    <td>${ manifest.conflict_oxps!"" }</td>
+                    <td>
+                        <#list conflictOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
+                    <td>
+                        <#list manifest.conflictOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
                 </tr>
                 <tr>
                     <td>Information URL</td>
