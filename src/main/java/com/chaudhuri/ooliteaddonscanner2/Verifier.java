@@ -124,11 +124,13 @@ public class Verifier {
     }
 
     private static void verifyExpansion7(Expansion expansion) {   // check tags
-        String l1 = String.valueOf(expansion.getTags());
-        String l2 = String.valueOf(expansion.getManifest().getTags());
+        String l1 = expansion.getTags();
+        String l2 = expansion.getManifest().getTags();
 
-        if (!l1.contentEquals(l2)) {
-            expansion.addWarning("Tags mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
+        if (needsWarning(l1, l2)) {
+            expansion.addWarning("Tags mismatch between OXP Manifest and Expansion Manager "
+                    +findDiffereringPosition(l1, l2)
+                    +"('" + l1 + "' vs '" + l2 + "')");
         }
     }
 
@@ -140,13 +142,38 @@ public class Verifier {
             expansion.addWarning("Required Oolite Version mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
         }
     }
+    
+    private static boolean needsWarning(String l1, String l2) {
+        if (l1 == null) {
+            if (l2 == null) {
+                return false;
+            }
+            if (l2.isBlank()) {
+                return false;
+            }
+            
+            return true;
+        } else {
+            if (l2 == null) {
+                if (l1.isBlank()) {
+                    return false;
+                } else {
+                    return true;
+                }
+            } else {
+                return !l1.contentEquals(l2);
+            }
+        }
+    }
 
     private static void verifyExpansion9(Expansion expansion) {   // check maximum oolite version
-        String l1 = String.valueOf(expansion.getMaximumOoliteVersion());
-        String l2 = String.valueOf(expansion.getManifest().getMaximumOoliteVersion());
+        String l1 = expansion.getMaximumOoliteVersion();
+        String l2 = expansion.getManifest().getMaximumOoliteVersion();
 
-        if (!l1.contentEquals(l2)) {
-            expansion.addWarning("Maximum Oolite Version mismatch between OXP Manifest and Expansion Manager "+findDiffereringPosition(l1, l2));
+        if (needsWarning(l1, l2)) {
+            expansion.addWarning("Maximum Oolite Version mismatch between OXP Manifest and Expansion Manager "
+                    +findDiffereringPosition(l1, l2)
+                    +"('" + l1 + "' vs '" + l2 + "')");
         }
     }
 
