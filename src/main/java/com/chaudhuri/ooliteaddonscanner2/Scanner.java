@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
@@ -205,7 +206,6 @@ public class Scanner implements Runnable {
         this.maxExpansions = maxExpansions;
     }
 
-
     /**
      * Scans all wiki pages according to registry content.
      * Problems are reported as warnings on the registry's elements.
@@ -216,7 +216,7 @@ public class Scanner implements Runnable {
         log.debug("scanWikiPages({})", reg);
         
         Instant start = Instant.now();
-        ThreadPoolExecutor tpe = (ThreadPoolExecutor)Executors.newFixedThreadPool(24);
+        ThreadPoolExecutor tpe = (ThreadPoolExecutor)Executors.newFixedThreadPool(24, new NamedThreadFactory("WikiScanner"));
         
         log.debug("Submitting expansions...");
         for (Wikiworthy w: reg.getExpansions()) {
