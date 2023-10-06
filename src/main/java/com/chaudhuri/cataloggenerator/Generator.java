@@ -483,15 +483,8 @@ public class Generator implements Callable<Object> {
                     tags.appendChild(t);
                 });
                 emNode.appendChild(tags);
-                //emNode.appendChild(createElement(doc, "tags", em.getTags()));
-            } else {
-                emNode.appendChild(createElement(doc, "tags", "()"));
             }
             if (em.getUploadDate() != null) {
-//                Element e = doc.createElement("upload_date");
-//                e.appendChild(doc.createTextNode(String.valueOf(em.getUploadDate())));
-//                emNode.appendChild(e);
-
                 emNode.appendChild(createElement(doc, "upload_date", String.valueOf(em.getUploadDate())));
             }
             emNode.appendChild(createDependencyList(doc, "requires_oxps", em.getRequiresOxps()));

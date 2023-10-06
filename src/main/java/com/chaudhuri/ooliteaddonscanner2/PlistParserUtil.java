@@ -15,6 +15,7 @@ import java.util.List;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -84,6 +85,18 @@ public class PlistParserUtil {
         log.warn("getStringList({})", vc);
         
         List<String> result = new ArrayList<>();
+        for (int i=0; i < vc.getChildCount(); i++) {
+            ParseTree child = vc.getChild(i);
+            if (child instanceof PlistParser.ListContext) {
+                PlistParser.ListContext lc = (PlistParser.ListContext)child;
+                for (int j=0; j<lc.getChildCount(); j++) {
+                    ParseTree listitem = lc.getChild(j);
+                    if (listitem instanceof PlistParser.ValueContext) {
+                        result.add(listitem.getText());
+                    }
+                }
+            }
+        }
         return result;
     }
 }

@@ -38,9 +38,15 @@
 <xsl:value-of select="$nesting"/>}</xsl:template>
 
   <!-- fields that are rendered without quoted values -->
-  <xsl:template match="upload_date|file_size|tags">
+  <xsl:template match="upload_date|file_size">
       <xsl:param name="nesting"/>
 <xsl:value-of select="$nesting"/>"<xsl:value-of select="name()"/>" = <xsl:value-of select="."/>;
+</xsl:template>
+
+  <!-- fields that are rendered as list -->
+  <xsl:template match="tags">
+      <xsl:param name="nesting"/>
+<xsl:value-of select="$nesting"/>"<xsl:value-of select="name()"/>" = ("<xsl:value-of select="tag" separator="&quot;, &quot;"/>");
 </xsl:template>
 
   <!-- fields that are rendered with quoted values -->
