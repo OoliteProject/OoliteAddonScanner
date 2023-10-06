@@ -475,7 +475,11 @@ public class Generator implements Callable<Object> {
             emNode.appendChild(createElement(doc, "download_url", em.getDownloadUrl()));
             emNode.appendChild(createElement(doc, "information_url", em.getInformationUrl()));
             emNode.appendChild(createElement(doc, "file_size", em.getFileSize()));
-            emNode.appendChild(createElement(doc, "tags", em.getTags()));
+            if (em.getTags() != null && !em.getTags().isBlank()) {
+                emNode.appendChild(createElement(doc, "tags", em.getTags()));
+            } else {
+                emNode.appendChild(createElement(doc, "tags", "()"));
+            }
             if (em.getUploadDate() != null) {
 //                Element e = doc.createElement("upload_date");
 //                e.appendChild(doc.createTextNode(String.valueOf(em.getUploadDate())));
