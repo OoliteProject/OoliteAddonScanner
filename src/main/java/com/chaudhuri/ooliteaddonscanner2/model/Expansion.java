@@ -112,7 +112,7 @@ public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
     private String informationUrl;
     private String license;
     private String uploadDate;
-    private String tags;
+    private List<String> tags;
     private List<Dependency> requiresOxps = new ArrayList<>();
     private List<Dependency> optionalOxps = new ArrayList<>();
     private List<Dependency> conflictOxps = new ArrayList<>();
@@ -431,7 +431,7 @@ public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
      * 
      * @return the tags
      */
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
@@ -440,7 +440,7 @@ public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
      * 
      * @param tags the tags
      */
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 

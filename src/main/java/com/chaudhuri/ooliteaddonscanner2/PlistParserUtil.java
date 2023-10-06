@@ -10,15 +10,20 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
  * @author hiran
  */
 public class PlistParserUtil {
+    private static final Logger log = LogManager.getLogger();
     
     /**
      * Prevent instances from getting created.
@@ -75,4 +80,10 @@ public class PlistParserUtil {
         return prepareParser(data, source).dictionary();
     }
     
+    public static List<String> getStringList(PlistParser.ValueContext vc) {
+        log.warn("getStringList({})", vc);
+        
+        List<String> result = new ArrayList<>();
+        return result;
+    }
 }

@@ -24,7 +24,7 @@ public class ExpansionManifest implements Warnable {
     private List<Expansion.Dependency> optionalOxps = new ArrayList<>();
     private String requiredOoliteVersion;
     private List<Expansion.Dependency> requiresOxps = new ArrayList<>();
-    private String tags;
+    private List<String> tags;
     private String title;
     private String version;
     private Long uploadDate;
@@ -249,7 +249,7 @@ public class ExpansionManifest implements Warnable {
      * 
      * @return the tags
      */
-    public String getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
@@ -258,7 +258,7 @@ public class ExpansionManifest implements Warnable {
      * 
      * @param tags the tags
      */
-    public void setTags(String tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 

@@ -30,6 +30,7 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -311,7 +312,8 @@ public class AddonsUtil {
             oxp.setAuthor(((Map<String, String>)manifest.get("author")).get("login"));
             oxp.setVersion(String.valueOf(manifest.get("tag_name")));
             oxp.setUploadDate(String.valueOf(manifest.get("published_at")));
-            oxp.setTags(String.valueOf(manifest.get("target_commitish")) + " " + tag);
+            // TODO: Fix tags to contain something like String.valueOf(manifest.get("target_commitish")) + " " + tag
+            oxp.setTags(new ArrayList<>());
             
             ExpansionManifest oxpManifest = new ExpansionManifest();
             oxpManifest.setDescription(oxp.getDescription());

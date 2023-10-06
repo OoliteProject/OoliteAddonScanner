@@ -130,8 +130,8 @@ public class Verifier {
     }
 
     private static void verifyExpansion7(Expansion expansion) {   // check tags
-        String l1 = expansion.getTags();
-        String l2 = expansion.getManifest().getTags();
+        String l1 = String.valueOf(expansion.getTags());
+        String l2 = String.valueOf(expansion.getManifest().getTags());
 
         if (needsWarning(l1, l2)) {
             expansion.addWarning("Tags mismatch between OXP Manifest and Expansion Manager "
