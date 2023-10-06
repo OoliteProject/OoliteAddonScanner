@@ -2,6 +2,7 @@
  */
 package com.chaudhuri.ooliteaddonscanner2.model;
 
+import java.util.Arrays;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -198,8 +199,8 @@ public class ExpansionManifestTest {
         ExpansionManifest manifest = new ExpansionManifest();
         assertNull(manifest.getTags());
         
-        manifest.setTags("some");
-        assertEquals("some", manifest.getTags());
+        manifest.setTags(Arrays.asList(new String[]{"some"}));
+        assertEquals("[some]", String.valueOf(manifest.getTags()));
     }
     
     /**

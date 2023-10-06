@@ -7,6 +7,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import java.util.ArrayList;
+import java.util.Arrays;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -236,7 +237,7 @@ public class VerifierTest {
         expansion.setCategory("n");
         expansion.setAuthor("n");
         expansion.setVersion("n");
-        expansion.setTags("n");
+        expansion.setTags(Arrays.asList(new String[]{"n"}));
         expansion.setRequiredOoliteVersion("n");
         expansion.setMaximumOoliteVersion("n");
         expansion.setRequiresOxps(new ArrayList<>());
@@ -258,7 +259,7 @@ public class VerifierTest {
         assertEquals("Category mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(2));
         assertEquals("Author mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(3));
         assertEquals("Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(4));
-        assertEquals("Tags mismatch between OXP Manifest and Expansion Manager compare with undefined value('n' vs 'null')", registry.getWarnings().get(5));
+        assertEquals("Tags mismatch between OXP Manifest and Expansion Manager at character position 0001 (LEFT SQUARE BRACKET vs LATIN SMALL LETTER N)('[n]' vs 'null')", registry.getWarnings().get(5));
         assertEquals("Required Oolite Version mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(6));
         assertEquals("Maximum Oolite Version mismatch between OXP Manifest and Expansion Manager compare with undefined value('n' vs 'null')", registry.getWarnings().get(7));
         assertEquals("Information URL mismatch between OXP Manifest and Expansion Manager string length at character position 1", registry.getWarnings().get(8));
