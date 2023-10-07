@@ -409,7 +409,7 @@ public class ExpansionCache {
                     SimpleDateFormat format = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
                     try {
                         Date d = format.parse(x.get().getValue().get(0));
-                        log.warn("last modified {}", d);
+                        log.trace("last modified {}", d);
                         return d.toInstant();
                     } catch (ParseException ex) {
                         log.error("could not parse header {}", x.get().getValue(), ex);

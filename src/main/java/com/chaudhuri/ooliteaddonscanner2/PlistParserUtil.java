@@ -82,7 +82,7 @@ public class PlistParserUtil {
     }
     
     public static List<String> getStringList(PlistParser.ValueContext vc) {
-        log.warn("getStringList({})", vc);
+        log.debug("getStringList({})", vc);
         
         List<String> result = new ArrayList<>();
         for (int i=0; i < vc.getChildCount(); i++) {
