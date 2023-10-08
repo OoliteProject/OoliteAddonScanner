@@ -334,6 +334,29 @@ public class Generator implements Callable<Object> {
         }
         return result;
     }
+    
+    private boolean checkAllHaveLastModified(List<String> urls) throws IOException {
+        boolean result = true;
+        
+        int lineCount = 0;
+        int violations = 0;
+        for (String url: urls) {
+            lineCount++;
+            if (url.startsWith("#") | url.isBlank()) {
+                continue;
+            }
+            
+            Instant i = ExpansionCache.getLastModified(url);
+            if (i == null) {
+                log.warn("No lastModified on line {}: {}", lineCount, url);
+                violations++;
+                result = false;
+            }
+        }
+        
+        log.warn("Found {} urls with no lastModified header", violations);
+        return result;
+    }
 
     @Override
     public Object call() throws IOException {
@@ -355,6 +378,9 @@ public class Generator implements Callable<Object> {
         
         // check sort order of url list
         if (pedantic) {
+            if (!checkAllHaveLastModified(urls)) {
+                throw new IOException("Input data not good.");
+            }
             if (!isOrdered(urls)) {
                 throw new IOException("Input data not good.");
             }

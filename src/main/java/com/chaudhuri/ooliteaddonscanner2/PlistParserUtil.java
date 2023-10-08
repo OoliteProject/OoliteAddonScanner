@@ -81,6 +81,13 @@ public class PlistParserUtil {
         return prepareParser(data, source).dictionary();
     }
     
+    /**
+     * Parses a list of strings from a valuecontext.
+     * Used for e.g. parsing tags from a plist.
+     * 
+     * @param vc the valuecontext
+     * @return the list of strings
+     */
     public static List<String> getStringList(PlistParser.ValueContext vc) {
         log.debug("getStringList({})", vc);
         

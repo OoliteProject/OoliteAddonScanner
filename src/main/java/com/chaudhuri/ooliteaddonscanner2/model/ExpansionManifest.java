@@ -38,10 +38,20 @@ public class ExpansionManifest implements Warnable {
         warnings = new ArrayList<>();
     }
 
+    /**
+     * Returns the date when this expansion was uploaded.
+     * 
+     * @return the date in seconds since the epoch
+     */
     public Long getUploadDate() {
         return uploadDate;
     }
 
+    /**
+     * Sets the date when this expansion was uploaded.
+     * 
+     * @param uploadDate the date in seconds since the epoch
+     */
     public void setUploadDate(Long uploadDate) {
         this.uploadDate = uploadDate;
     }

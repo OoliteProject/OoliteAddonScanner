@@ -28,7 +28,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.regex.Pattern;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -383,7 +382,15 @@ public class ExpansionCache {
         return new FileInputStream(cached);
     }
     
-    public Instant getLastModified(String url) throws IOException {
+    /**
+     * Returns the last-modified header from given URL.
+     * This method does not follow redirects.
+     * 
+     * @param url the url to inspect.
+     * @return the last-modified data, or null if not present
+     * @throws IOException something went wrong
+     */
+    public static Instant getLastModified(String url) throws IOException {
         log.debug("getLastModified({})", url);
         if (url == null) {
             throw new IllegalArgumentException("url must not be null");
@@ -400,7 +407,7 @@ public class ExpansionCache {
                 con.setReadTimeout(5000);
                 con.connect();
 
-                log.warn("received status {}: {}", con.getResponseCode(), con.getResponseMessage());
+                log.trace("On {} received status {}: {}", u, con.getResponseCode(), con.getResponseMessage());
                 Optional<Map.Entry<String, List<String>>> x = con.getHeaderFields().entrySet().stream()
                         .filter(entry -> "Last-Modified".equals(entry.getKey()))
                         .findFirst();
