@@ -402,8 +402,26 @@ public class Generator implements Callable<Object> {
                 .collect(Collectors.toList());
 
         log.info("Found {} manifests", catalog.size());
+        
+        // sort the catalog
+        catalog.sort((em1, em2) -> {
+            int result = 0;
+            result = em1.getIdentifier().compareTo(em2.getIdentifier());
+            if (result != 0) {
+                return result;
+            }
+            result = em1.getVersion().compareTo(em2.getVersion());
+            if (result != 0) {
+                return result;
+            }
+            result = em1.getDownloadUrl().compareTo(em2.getDownloadUrl());
+            if (result != 0) {
+                return result;
+            }
+            return 0;
+        });
 
-        // serialize the catalog
+        // serialize the catalog into each output format
         final List<ExpansionManifest> fCatalog = catalog;
         Arrays.asList(outputFormat.split(",")).stream()
             .forEach(format -> {
