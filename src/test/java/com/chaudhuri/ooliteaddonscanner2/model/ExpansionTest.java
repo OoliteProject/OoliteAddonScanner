@@ -275,7 +275,7 @@ public class ExpansionTest {
         log.info("testSetGetTags");
 
         Expansion expansion = new Expansion();
-        assertNull(expansion.getTags());
+        assertNotNull(expansion.getTags());
         
         expansion.setTags(Arrays.asList(new String[]{"blah"}));
         assertEquals("[blah]", String.valueOf(expansion.getTags()));

@@ -112,7 +112,7 @@ public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
     private String informationUrl;
     private String license;
     private String uploadDate;
-    private List<String> tags;
+    private List<String> tags = new ArrayList<>();
     private List<Dependency> requiresOxps = new ArrayList<>();
     private List<Dependency> optionalOxps = new ArrayList<>();
     private List<Dependency> conflictOxps = new ArrayList<>();

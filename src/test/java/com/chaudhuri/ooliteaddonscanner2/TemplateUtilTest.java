@@ -8,8 +8,8 @@ import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.TreeMap;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterEach;
@@ -276,6 +276,33 @@ public class TemplateUtilTest {
         expansion.setCategory("category");
         expansion.setAuthor("author");
         expansion.setVersion("version");
+        registry.addExpansion(expansion);
+
+        File outputdir = new File(tempCacheDir, "testPrintExpansions4");
+        outputdir.mkdirs();
+        
+        TemplateEngine templateEngine = new TemplateEngine();
+        
+        assertTrue(outputdir.isDirectory());
+        TemplateUtil.printExpansions(registry, outputdir, templateEngine);
+        assertTrue(new File(outputdir, "expansions/myId.html").isFile());
+    }
+
+    /**
+     * Test of printExpansions method, of class TemplateUtil.
+     */
+    @Test
+    public void testPrintExpansions5() throws Exception {
+        log.info("printExpansions5");
+        
+        Registry registry = new Registry();
+        Expansion expansion = new Expansion("myId");
+        expansion.setTitle("myOxp");
+        expansion.setDescription("description");
+        expansion.setCategory("category");
+        expansion.setAuthor("author");
+        expansion.setVersion("version");
+        expansion.getManifest().setTags(Arrays.asList(new String[]{"tag", "one", "two"}));
         registry.addExpansion(expansion);
 
         File outputdir = new File(tempCacheDir, "testPrintExpansions4");

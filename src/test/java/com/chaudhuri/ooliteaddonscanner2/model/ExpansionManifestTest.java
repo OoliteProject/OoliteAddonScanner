@@ -197,7 +197,8 @@ public class ExpansionManifestTest {
         log.info("testSetGetTags");
         
         ExpansionManifest manifest = new ExpansionManifest();
-        assertNull(manifest.getTags());
+        assertNotNull(manifest.getTags());
+        assertEquals(0, manifest.getTags().size());
         
         manifest.setTags(Arrays.asList(new String[]{"some"}));
         assertEquals("[some]", String.valueOf(manifest.getTags()));

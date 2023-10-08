@@ -24,7 +24,7 @@ public class ExpansionManifest implements Warnable {
     private List<Expansion.Dependency> optionalOxps = new ArrayList<>();
     private String requiredOoliteVersion;
     private List<Expansion.Dependency> requiresOxps = new ArrayList<>();
-    private List<String> tags;
+    private List<String> tags = new ArrayList<>();
     private String title;
     private String version;
     private Long uploadDate;

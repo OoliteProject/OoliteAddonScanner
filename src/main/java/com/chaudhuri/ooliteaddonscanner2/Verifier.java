@@ -84,7 +84,7 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion2(Expansion expansion) {   // check identifier
+    private static void verifyExpansionIdentifier(Expansion expansion) {   // check identifier
         String l1 = String.valueOf(expansion.getIdentifier());
         String l2 = String.valueOf(expansion.getManifest().getIdentifier());
 
@@ -330,7 +330,7 @@ public class Verifier {
      */
     public static void verify(Expansion expansion, Registry registry) {
         verifyExpansion1(expansion);
-        verifyExpansion2(expansion);
+        verifyExpansionIdentifier(expansion);
         verifyExpansion3(expansion);
         verifyExpansion4(expansion);
         verifyExpansion5(expansion);
