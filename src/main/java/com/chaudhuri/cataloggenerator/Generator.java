@@ -9,6 +9,7 @@ import com.chaudhuri.ooliteaddonscanner2.Registry;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.owlike.genson.Genson;
+import com.owlike.genson.GensonBuilder;
 import java.io.BufferedInputStream;
 import java.io.EOFException;
 import java.io.File;
@@ -446,7 +447,11 @@ public class Generator implements Callable<Object> {
     }
 
     private void writeJson(List<ExpansionManifest> catalog, OutputStream out) throws ParserConfigurationException, TransformerConfigurationException, TransformerException {
-        new Genson().serialize(catalog, out);
+        new GensonBuilder()
+                .useIndentation(true)
+                .withConverter(new ExpansionManifestConverter(), ExpansionManifest.class)
+                .create()
+                .serialize(catalog, out);
     }
 
     private Element createElement(Document doc, String name, String content) {
