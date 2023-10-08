@@ -76,8 +76,8 @@
                 </tr>
                 <tr>
                     <td>Tags</td>
-                    <td>${ tags!"" }</td>
-                    <td>${ manifest.tags!"" }</td>
+                    <td>${ tags?join(", ") }</td>
+                    <td>${ manifest.tags?join(", ") }</td>
                 </tr>
                 <tr>
                     <td>Required Oolite Version</td>
