@@ -3,6 +3,7 @@
 
 package com.chaudhuri.cataloggenerator;
 
+import com.chaudhuri.ooliteaddonscanner2.model.Expansion.Dependency;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.owlike.genson.Context;
 import com.owlike.genson.Converter;
@@ -37,10 +38,43 @@ public class ExpansionManifestConverter implements Converter<ExpansionManifest> 
         writer.writeNumber("upload_date", em.getUploadDate());
         writer.writeName("tags");
         writer.beginArray();
-        writer.endArray();
         for (String t: em.getTags()) {
             writer.writeValue(t);
         }
+        writer.endArray();
+        writer.writeName("conflict_oxps");
+        writer.beginArray();
+        for (Dependency dep: em.getConflictOxps()) {
+            writer.beginObject();
+            writer.writeString("identifier", dep.getIdentifier());
+            writer.writeString("version", dep.getVersion());
+            writer.writeString("maximum_version", dep.getMaxVersion());
+            writer.writeString("description", dep.getDescription());
+            writer.endObject();
+        }
+        writer.endArray();
+        writer.writeName("optional_oxps");
+        writer.beginArray();
+        for (Dependency dep: em.getOptionalOxps()) {
+            writer.beginObject();
+            writer.writeString("identifier", dep.getIdentifier());
+            writer.writeString("version", dep.getVersion());
+            writer.writeString("maximum_version", dep.getMaxVersion());
+            writer.writeString("description", dep.getDescription());
+            writer.endObject();
+        }
+        writer.endArray();
+        writer.writeName("requires_oxps");
+        writer.beginArray();
+        for (Dependency dep: em.getRequiresOxps()) {
+            writer.beginObject();
+            writer.writeString("identifier", dep.getIdentifier());
+            writer.writeString("version", dep.getVersion());
+            writer.writeString("maximum_version", dep.getMaxVersion());
+            writer.writeString("description", dep.getDescription());
+            writer.endObject();
+        }
+        writer.endArray();
         writer.endObject();
     }
 
