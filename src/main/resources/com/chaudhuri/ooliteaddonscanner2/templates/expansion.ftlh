@@ -152,14 +152,14 @@
                     <td>${ uploadDate!"n/a" }</td>
                 </tr>
             </table>
-        <#else>
+        <#else><!-- oolite.core -->
             <table border='1'>
                 <tr><td>Identifier</td><td>${ identifier }</td></tr>
                 <tr><td>Title</td><td>${ title }</td></tr>
                 <tr><td>Category</td><td>${ category }</td></tr>
                 <tr><td>Author</td><td>${ author }</td></tr>
                 <tr><td>Version</td><td>${ version }</td></tr>
-                <tr><td>Tags</td><td>${ tags!"" }</td></tr>
+                <tr><td>Tags</td><td>${ tags?join(", ") }</td></tr>
                 <tr><td>Required Oolite Version</td><td>${ requiredOoliteVersion!"" }</td></tr>
                 <tr><td>Maximum Oolite Version</td><td>${ maximumOoliteVersion!"" }</td></tr>
                 <tr>
