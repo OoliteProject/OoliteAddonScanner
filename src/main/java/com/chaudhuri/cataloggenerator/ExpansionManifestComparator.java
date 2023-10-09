@@ -25,6 +25,13 @@ public class ExpansionManifestComparator implements Comparator<ExpansionManifest
                 return 1;
             }
         }
+        
+        // em1 is not null
+        if (em2 == null) {
+            return -1;
+        }
+        
+        // both em1 and em2 are not null
         if (em1.getIdentifier() == null) {
             return -1;
         } else {
@@ -34,8 +41,14 @@ public class ExpansionManifestComparator implements Comparator<ExpansionManifest
             }
         }
         if (em1.getVersion() == null) {
+            if (em2.getVersion() == null) {
+                return 0;
+            }
             return -1;
         } else {
+            if (em2.getVersion()==null) {
+                return -1;
+            }
             result = em1.getVersion().compareTo(em2.getVersion());
             if (result != 0) {
                 return result;
@@ -44,6 +57,9 @@ public class ExpansionManifestComparator implements Comparator<ExpansionManifest
         if (em1.getDownloadUrl()== null) {
             return -1;
         } else {
+            if (em2.getDownloadUrl() == null) {
+                return -1;
+            }
             result = em1.getDownloadUrl().compareTo(em2.getDownloadUrl());
             if (result != 0) {
                 return result;

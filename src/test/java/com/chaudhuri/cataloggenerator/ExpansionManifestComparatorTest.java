@@ -75,4 +75,177 @@ public class ExpansionManifestComparatorTest {
         assertEquals(1, instance.compare(em1, em2));
     }
 
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare4() {
+        System.out.println("compare4");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        ExpansionManifest em2 = null;
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(-1, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare5() {
+        System.out.println("compare5");
+        ExpansionManifest em1 = new ExpansionManifest();
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("id");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(-1, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare6() {
+        System.out.println("compare6");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("id");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(0, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare7() {
+        System.out.println("compare7");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        em1.setVersion("1");
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("id");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(-1, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare8() {
+        System.out.println("compare8");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        em1.setVersion("1");
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("1");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(56, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare9() {
+        System.out.println("compare9");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        em1.setVersion("1");
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("id");
+        em2.setVersion("1");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(-1, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare10() {
+        System.out.println("compare10");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        em1.setVersion("1");
+        em1.setDownloadUrl("uri");
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("id");
+        em2.setVersion("1");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(-1, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare11() {
+        System.out.println("compare11");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        em1.setVersion("1");
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("id");
+        em2.setVersion("1");
+        em2.setDownloadUrl("uri");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(-1, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare12() {
+        System.out.println("compare12");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        em1.setVersion("1");
+        em1.setDownloadUrl("uri");
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("id");
+        em2.setVersion("1");
+        em2.setDownloadUrl("uri");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(0, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare13() {
+        System.out.println("compare13");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        em1.setVersion("1");
+        em1.setDownloadUrl("uri1");
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("id");
+        em2.setVersion("1");
+        em2.setDownloadUrl("uri2");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(-1, instance.compare(em1, em2));
+    }
+
+    /**
+     * Test of compare method, of class ExpansionManifestComparator.
+     */
+    @Test
+    public void testCompare14() {
+        System.out.println("compare14");
+        ExpansionManifest em1 = new ExpansionManifest();
+        em1.setIdentifier("id");
+        em1.setVersion("1");
+        em1.setDownloadUrl("uri2");
+        ExpansionManifest em2 = new ExpansionManifest();
+        em2.setIdentifier("id");
+        em2.setVersion("1");
+        em2.setDownloadUrl("uri1");
+        ExpansionManifestComparator instance = new ExpansionManifestComparator();
+        assertEquals(1, instance.compare(em1, em2));
+    }
 }
