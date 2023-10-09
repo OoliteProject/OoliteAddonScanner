@@ -8,7 +8,6 @@ import com.chaudhuri.ooliteaddonscanner2.ExpansionCache;
 import com.chaudhuri.ooliteaddonscanner2.Registry;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
-import com.owlike.genson.Genson;
 import com.owlike.genson.GensonBuilder;
 import java.io.BufferedInputStream;
 import java.io.EOFException;

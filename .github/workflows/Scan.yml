@@ -33,6 +33,7 @@ jobs:
         run: |
           B=$(basename "OoliteAddonScanner*")
           java -jar $B/$B.jar
+          compgen -f target/OoliteExpansionIndex-*.zip
 
       - name: Remove old OoliteExpansionIndex releases
         if: github.ref == 'refs/heads/main'

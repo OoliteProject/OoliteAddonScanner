@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Genson converter to serialize ExpansionManifest
+ * Genson converter to serialize ExpansionManifest.
  * @author hiran
  */
 public class ExpansionManifestConverter implements Converter<ExpansionManifest> {
