@@ -404,7 +404,8 @@ public class Scanner implements Runnable {
                 TemplateUtil.printShips(registry, outputDir, templateEngine);
                 templateEngine.process(registry, "wikiIindex.ftlh", new File(outputDir, "wiki.txt"));
 
-                AddonsUtil.zipup(outputDir);
+                File result = AddonsUtil.zipup(outputDir);
+                log.info("Created {}", result);
             }
 
             if (customSearches != null && !customSearches.isEmpty()) {

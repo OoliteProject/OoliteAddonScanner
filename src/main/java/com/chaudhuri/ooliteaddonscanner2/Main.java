@@ -72,6 +72,7 @@ public class Main {
             scanner.run();
 
             if (scanner.isSuccessful()) {
+                log.info("Success. Terminating...");
                 System.exit(0);
             } else {
                 log.error("Could not scan", scanner.getFailure());
