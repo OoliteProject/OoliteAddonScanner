@@ -32,7 +32,7 @@ jobs:
       - name: Run AddonScanner
         run: |
           B=$(basename "OoliteAddonScanner*")
-          java -jar $B/$B.jar
+          java -jar $B/$B.jar --out target/OoliteExpansionIndex
           compgen -f target/OoliteExpansionIndex-*.zip
 
       - name: Remove old OoliteExpansionIndex releases
