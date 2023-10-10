@@ -33,7 +33,7 @@ public class Main {
 
         Options options = new Options();
         options.addOption("c", "cache", true, "Path where to cache the expansions so they do not have to be downloaded for every run");
-        options.addRequiredOption("o", "output", true, "Path where to write result files");
+        options.addRequiredOption("o", "out", true, "Path where to write result files");
         options.addOption("m", Scanner.MAX_EXPANSION, true, "Maximum amount of expansions to parse");
         options.addOption("u", "url", true, "URL for downloading the expansions list");
         options.addOption("s", "customSearch", true, "File with custom searches. Use of this will deactivate the full index (unless forced via --fullIndex)");

@@ -28,11 +28,20 @@ jobs:
       - name: get date
         run: |
           echo "TODAY=$(date +'%Y%m%d')" >> $GITHUB_ENV
+
+      - name: Restore expansions cache
+        id: cache-restore
+        uses: actions/cache/restore@v3
+        with:
+          path: |
+            expansion-cache
+          key: ${{ runner.os }}-expansion_cache
+
           
       - name: Run AddonScanner
         run: |
           B=$(basename "OoliteAddonScanner*")
-          java -jar $B/$B.jar --out target/OoliteExpansionIndex
+          java -jar $B/$B.jar --out target/OoliteExpansionIndex --cache expansion-cache
           compgen -f target/OoliteExpansionIndex-*.zip
 
       - name: Remove old OoliteExpansionIndex releases
@@ -58,3 +67,10 @@ jobs:
           files: |
             target/OoliteExpansionIndex-*.zip
             
+      - name: Save Expansions Cache
+        id: cache-save
+        uses: actions/cache/save@v3
+        with:
+          path: |
+            expansion-cache
+          key: ${{ runner.os }}-expansion_cache
