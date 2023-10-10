@@ -52,6 +52,7 @@ public class Scanner implements Runnable {
     private int maxExpansions = Integer.MAX_VALUE;
     private boolean fullIndex = false;
     private boolean zip = false;
+    private boolean readModels = false;
     
     /** Runtime error that caused the scanner to break. */
     private Throwable failure;
@@ -68,10 +69,38 @@ public class Scanner implements Runnable {
         this.catalogUrl = new URL("http://addons.oolite.space/api/1.0/overview");
     }
 
+    /**
+     * Returns whether this scanner will read ship models.
+     * 
+     * @return true if ship models will be parsed
+     */
+    public boolean isReadModels() {
+        return readModels;
+    }
+
+    /**
+     * Sets whether this scanner will read ship models.
+     * 
+     * @param readModels true if ship models shall be parsed
+     */
+    public void setReadModels(boolean readModels) {
+        this.readModels = readModels;
+    }
+
+    /**
+     * Returns whether this scanner will create a zip archive.
+     * 
+     * @return true if the zip will be created
+     */
     public boolean isZip() {
         return zip;
     }
 
+    /**
+     * Sets whether this scanner will create a zip archive.
+     * 
+     * @return true if the zip shall be created
+     */
     public void setZip(boolean zip) {
         this.zip = zip;
     }
@@ -393,7 +422,9 @@ public class Scanner implements Runnable {
             if (fullIndex || customSearches == null || customSearches.isEmpty()) {
                 AddonsUtil.readOxps(cache, registry);
 
-                AddonsUtil.readShipModels(cache, registry);
+                if (readModels) {
+                    AddonsUtil.readShipModels(cache, registry);
+                }
 
                 log.info("Parsed {} OXPs", registry.getExpansions().size());
                 log.info("Parsed {} equipment", registry.getEquipment().size());

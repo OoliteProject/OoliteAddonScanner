@@ -35,6 +35,7 @@ public class Main {
         options.addOption("c", "cache", true, "Path where to cache the expansions so they do not have to be downloaded for every run");
         options.addRequiredOption("o", "out", true, "Path where to write result files");
         options.addOption("m", Scanner.MAX_EXPANSION, true, "Maximum amount of expansions to parse");
+        options.addOption("M", "models", true, "Parse ship models");
         options.addOption("u", "url", true, "URL for downloading the expansions list");
         options.addOption("s", "customSearch", true, "File with custom searches. Use of this will deactivate the full index (unless forced via --fullIndex)");
         options.addOption("f", "fullIndex", false, "Build full index, even with custom searches");
@@ -70,6 +71,7 @@ public class Main {
             }
             scanner.setFullIndex(commandline.hasOption("fullIndex"));
             scanner.setZip(commandline.hasOption("zip"));
+            scanner.setReadModels(commandline.hasOption("models"));
 
             scanner.run();
 
