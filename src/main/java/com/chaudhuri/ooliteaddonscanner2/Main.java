@@ -53,8 +53,8 @@ public class Main {
                 String urlStr = commandline.getOptionValue("url");
                 scanner.setCatalogUrl(new URL(urlStr));
             }
-            if (commandline.hasOption("output")) {
-                String outputDirStr = commandline.getOptionValue("output");
+            if (commandline.hasOption("out")) {
+                String outputDirStr = commandline.getOptionValue("out");
                 File outputdir = new File(outputDirStr);
                 scanner.setOutputDir(outputdir);
             }
