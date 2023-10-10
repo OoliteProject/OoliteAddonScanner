@@ -364,8 +364,10 @@ public class Scanner implements Runnable {
     public void run() {
         try {
             if (! outputDir.exists()) {
-                log.info("Creating output directory {}", outputDir);
+                log.info("Creating output directory {}", outputDir.getAbsolutePath());
                 outputDir.mkdirs();
+            } else {
+                log.info("Using output directory {}", outputDir.getAbsolutePath());
             }
             
             registry = new Registry();

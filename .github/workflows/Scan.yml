@@ -3,11 +3,11 @@ on:
   schedule:
     - cron: '0 1 1 * *'
   workflow_dispatch:
-  workflow_run:
-    workflows: ["Build"]
-    branches: [main]
-    types:
-      - completed
+#  workflow_run:
+#    workflows: ["Build"]
+#    branches: [main]
+#    types:
+#      - completed
       
 jobs:
   scan:
