@@ -38,6 +38,7 @@ public class Main {
         options.addOption("u", "url", true, "URL for downloading the expansions list");
         options.addOption("s", "customSearch", true, "File with custom searches. Use of this will deactivate the full index (unless forced via --fullIndex)");
         options.addOption("f", "fullIndex", false, "Build full index, even with custom searches");
+        options.addOption("z", "zip", false, "Zip up result files");
                 
         try {
             CommandLine commandline = new DefaultParser().parse(options, args);
@@ -68,6 +69,7 @@ public class Main {
                 }
             }
             scanner.setFullIndex(commandline.hasOption("fullIndex"));
+            scanner.setZip(commandline.hasOption("zip"));
 
             scanner.run();
 

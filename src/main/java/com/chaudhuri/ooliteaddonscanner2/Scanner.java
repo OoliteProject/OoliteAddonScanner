@@ -51,6 +51,7 @@ public class Scanner implements Runnable {
     private File outputDir = new File("output");
     private int maxExpansions = Integer.MAX_VALUE;
     private boolean fullIndex = false;
+    private boolean zip = false;
     
     /** Runtime error that caused the scanner to break. */
     private Throwable failure;
@@ -65,6 +66,14 @@ public class Scanner implements Runnable {
      */
     public Scanner() throws MalformedURLException {
         this.catalogUrl = new URL("http://addons.oolite.space/api/1.0/overview");
+    }
+
+    public boolean isZip() {
+        return zip;
+    }
+
+    public void setZip(boolean zip) {
+        this.zip = zip;
     }
 
     /**
@@ -404,8 +413,10 @@ public class Scanner implements Runnable {
                 TemplateUtil.printShips(registry, outputDir, templateEngine);
                 templateEngine.process(registry, "wikiIindex.ftlh", new File(outputDir, "wiki.txt"));
 
-                File result = AddonsUtil.zipup(outputDir);
-                log.info("Created {}", result.getAbsolutePath());
+                if (zip) {
+                    File result = AddonsUtil.zipup(outputDir);
+                    log.info("Created {}", result.getAbsolutePath());
+                }
             }
 
             if (customSearches != null && !customSearches.isEmpty()) {
