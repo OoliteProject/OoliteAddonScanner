@@ -54,11 +54,30 @@ public class ExpansionCache {
     /** Base url to download releases from. Can be overridden for unit tests. */
     private String baseUrl = "https://api.github.com/repos";
     
+    private int cacheHits;
+    private int cacheMisses;
+    
     /**
      * Creates a new ExpansionCache.
      */
     public ExpansionCache() {
         this(DEFAULT_CACHE_DIR);
+    }
+
+    public int getCacheHits() {
+        return cacheHits;
+    }
+
+    public void setCacheHits(int cacheHits) {
+        this.cacheHits = cacheHits;
+    }
+
+    public int getCacheMisses() {
+        return cacheMisses;
+    }
+
+    public void setCacheMisses(int cacheMisses) {
+        this.cacheMisses = cacheMisses;
     }
     
     /**
@@ -358,10 +377,12 @@ public class ExpansionCache {
             Date local = new Date(localFile.lastModified());
             if (local.after(online)) {            
                 log.debug("Already in cache: {}", localFile);
+                cacheHits++;
                 return;
             }
         }
 
+        cacheMisses++;
         doDownload(u, localFile);
     }
     
@@ -407,7 +428,9 @@ public class ExpansionCache {
                 con.setReadTimeout(5000);
                 con.connect();
 
-                log.trace("On {} received status {}: {}", u, con.getResponseCode(), con.getResponseMessage());
+                if (con.getResponseCode() >= 300 && con.getResponseCode()<400) {
+                    log.warn("On {} received status {}: {}", u, con.getResponseCode(), con.getResponseMessage());
+                }
                 Optional<Map.Entry<String, List<String>>> x = con.getHeaderFields().entrySet().stream()
                         .filter(entry -> "Last-Modified".equals(entry.getKey()))
                         .findFirst();

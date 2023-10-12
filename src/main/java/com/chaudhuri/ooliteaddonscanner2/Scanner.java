@@ -458,6 +458,8 @@ public class Scanner implements Runnable {
                 props.put("searches", customSearches);
                 templateEngine.process(props, "customSearches.ftlh", new File(outputDir, "customSearches.html"));
             }
+            
+            log.info("We had {} cache hits in {} lookups", cache.getCacheHits(), cache.getCacheHits()+cache.getCacheMisses());
 
         } catch (Exception e) {
             failure = new Exception("Scan failed", e);
