@@ -23,6 +23,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
@@ -357,6 +358,33 @@ public class Generator implements Callable<Object> {
         log.warn("Found {} urls with no lastModified header", violations);
         return result;
     }
+    
+    boolean isDistinct(List<String> list) {
+        if (list == null) {
+            throw new IllegalArgumentException("list must not be null");
+        }
+        
+        boolean result = true;
+        HashSet<String> hash = new HashSet<>();
+        
+        int count = 0;
+        for (String line: list) {
+            count++;
+
+            if (line.startsWith("#") | line.isBlank()) {
+                continue;
+            }
+
+            if (hash.contains(line)) {
+                log.warn("Duplicate url detected in line {}: {}", count, line);
+                result = false;
+            } else {
+                hash.add(line);
+            }
+        }
+        
+        return result;
+    }
 
     @Override
     public Object call() throws IOException {
@@ -376,6 +404,11 @@ public class Generator implements Callable<Object> {
         List<String> urls = Files.lines(inputPath)
                 .collect(Collectors.toList());
         
+        // uniqueness
+        if (!isDistinct(urls)) {
+            throw new IOException("Input data not good.");
+        }
+        
         // check sort order of url list
         if (pedantic) {
             if (!checkAllHaveLastModified(urls)) {
@@ -385,7 +418,7 @@ public class Generator implements Callable<Object> {
                 throw new IOException("Input data not good.");
             }
         }
-        
+
         // create the catalog
         List<ExpansionManifest> catalog = null;
         catalog = urls.stream()
@@ -444,7 +477,8 @@ public class Generator implements Callable<Object> {
                     throw new RuntimeException(String.format("Cannot write to %s in %s", format, outputPath.toAbsolutePath()), ex);
                 }
             });
-        
+
+        log.info("We had {} cache hits in {} lookups", cache.getCacheHits(), cache.getCacheHits()+cache.getCacheMisses());
         return "success";
     }
 

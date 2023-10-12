@@ -12,6 +12,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.zip.ZipInputStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -237,5 +240,49 @@ public class GeneratorTest {
         assertEquals("oolite.oxp.ArexackHeretic.ThargornThreat", em.getIdentifier());
         assertEquals("1.5.2", em.getVersion());
         assertEquals("Thargorn Threat", em.getTitle());
+    }
+    
+    @Test
+    public void testIsDistinct() {
+        log.info("testIsDistinct");
+        
+        Generator instance = new Generator();
+        try {
+            instance.isDistinct(null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("list must not be null", e.getMessage());
+            log.debug("caught expected exception");
+        }
+    }
+    
+    @Test
+    public void testIsDistinct1() {
+        log.info("testIsDistinct1");
+        
+        List<String> urls = Arrays.asList(new String[]{});
+        
+        Generator instance = new Generator();
+        instance.isDistinct(urls);
+    }
+    
+    @Test
+    public void testIsDistinct2() {
+        log.info("testIsDistinct2");
+        
+        List<String> urls = Arrays.asList(new String[]{"a", "ab", "b"});
+        
+        Generator instance = new Generator();
+        assertTrue(instance.isDistinct(urls));
+    }
+    
+    @Test
+    public void testIsDistinct3() {
+        log.info("testIsDistinct3");
+        
+        List<String> urls = Arrays.asList(new String[]{"a", "ab", "b", "ab"});
+        
+        Generator instance = new Generator();
+        assertFalse(instance.isDistinct(urls));
     }
 }
