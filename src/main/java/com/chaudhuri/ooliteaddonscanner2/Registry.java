@@ -2,6 +2,7 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
+import com.chaudhuri.ooliteaddonscanner2.plist.PlistParserUtil;
 import com.chaudhuri.plist.PlistParser;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;

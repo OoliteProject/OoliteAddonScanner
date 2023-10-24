@@ -10,15 +10,15 @@
     <Logger level="info" name="com.chaudhuri.cataloggenerator.ExpansionManifestConverter"/>
     <Logger level="info" name="com.chaudhuri.cataloggenerator.Generator"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.AddonsUtil"/>
-    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCache"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCache"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Main"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.model.CustomSearch"/>
-    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.PlistParserUtil"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.plist.PlistParserUtil"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Registry"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Scanner"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.TemplateEngine"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Wiki"/>
-    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.XMLPlistParser"/>
     <Root level="TRACE">
       <AppenderRef ref="Console"/>
     </Root>

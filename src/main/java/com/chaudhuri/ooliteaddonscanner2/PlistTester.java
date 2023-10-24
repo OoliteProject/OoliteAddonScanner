@@ -2,6 +2,7 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
+import com.chaudhuri.ooliteaddonscanner2.plist.CountingErrorListener;
 import com.chaudhuri.plist.PlistLexer;
 import com.chaudhuri.plist.PlistParser;
 import java.io.FileInputStream;
@@ -10,16 +11,9 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
-import java.util.BitSet;
-import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -44,56 +38,6 @@ public class PlistTester {
     private static void dumpPT(ParseTree pt, String prefix) {
         System.out.print(prefix); System.out.println(pt.getClass().getName());
     }
-    
-    private static class ErrorListener implements ANTLRErrorListener {
-        
-        private int syntaxErrorCount;
-        private int ambiguityCount;
-        private int attemptFullContextCount;
-        private int contextSensitivityCount;
-
-        @Override
-        public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int i, int i1, String string, RecognitionException re) {
-            syntaxErrorCount++;
-        }
-
-        @Override
-        public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean bln, BitSet bitset, ATNConfigSet atncs) {
-            ambiguityCount++;
-        }
-
-        @Override
-        public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitset, ATNConfigSet atncs) {
-            attemptFullContextCount++;
-        }
-
-        @Override
-        public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atncs) {
-            contextSensitivityCount++;
-        }
-        
-        public boolean hasErrors() {
-            return (syntaxErrorCount + ambiguityCount + attemptFullContextCount + contextSensitivityCount) > 0;
-        }
-
-        public int getSyntaxErrorCount() {
-            return syntaxErrorCount;
-        }
-
-        public int getAmbiguityCount() {
-            return ambiguityCount;
-        }
-
-        public int getAttemptFullContextCount() {
-            return attemptFullContextCount;
-        }
-
-        public int getContextSensitivityCount() {
-            return contextSensitivityCount;
-        }
-        
-        
-    }
 
     /**
      * Main entry point for the batch version of the plist tester.
@@ -107,7 +51,7 @@ public class PlistTester {
             plistFilePath = args[0];
         }
 
-        ErrorListener el = new ErrorListener();
+        CountingErrorListener el = new CountingErrorListener();
         
         InputStream in = new FileInputStream(plistFilePath);
         ReadableByteChannel channel = Channels.newChannel(in);

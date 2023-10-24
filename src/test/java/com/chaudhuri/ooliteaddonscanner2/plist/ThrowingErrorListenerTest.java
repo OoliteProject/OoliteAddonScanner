@@ -1,7 +1,8 @@
 /*
  */
-package com.chaudhuri.ooliteaddonscanner2;
+package com.chaudhuri.ooliteaddonscanner2.plist;
 
+import com.chaudhuri.ooliteaddonscanner2.plist.ThrowingErrorListener;
 import org.antlr.v4.runtime.CommonToken;
 import org.antlr.v4.runtime.IntStream;
 import org.antlr.v4.runtime.Recognizer;

@@ -1,6 +1,6 @@
 /*
  */
-package com.chaudhuri.ooliteaddonscanner2;
+package com.chaudhuri.ooliteaddonscanner2.plist;
 
 import com.chaudhuri.plist.PlistLexer;
 import com.chaudhuri.plist.PlistParser;
@@ -12,6 +12,7 @@ import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import org.antlr.v4.runtime.ANTLRErrorListener;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -44,6 +45,19 @@ public class PlistParserUtil {
     public static PlistParser prepareParser(InputStream data, String source) throws IOException {
         ThrowingErrorListener errorListener = new ThrowingErrorListener();
 
+        return prepareParser(data, source, errorListener);
+    }
+    
+    /**
+     * Creates a parser prepared with throwing ErrorListener to read from
+     * the given InputStream.
+     * 
+     * @param data the input stream to read from
+     * @param source the source of the stream so we have good error messages
+     * @return the created parser
+     * @throws IOException something went wrong
+     */
+    public static PlistParser prepareParser(InputStream data, String source, ANTLRErrorListener errorListener) throws IOException {
         ReadableByteChannel channel = Channels.newChannel(data);
         CharStream charStream = CharStreams.fromChannel(channel, StandardCharsets.UTF_8, 4096, CodingErrorAction.REPLACE, source, -1);
         PlistLexer lexer = new PlistLexer(charStream);
@@ -79,6 +93,30 @@ public class PlistParserUtil {
      */
     public static PlistParser.DictionaryContext parsePlistDictionary(InputStream data, String source) throws IOException {
         return prepareParser(data, source).dictionary();
+    }
+    
+    /**
+     * Parses a plist dictionary or list from the given inputstream.
+     * 
+     * @param data the inputstream to read from
+     * @param source the source of the data for good error messages
+     * @return the parsed data
+     * @throws IOException something went wrong
+     */
+    public static PlistParser.ParseContext parsePlist(InputStream data, String source) throws IOException {
+        return prepareParser(data, source).parse();
+    }
+    
+    /**
+     * Parses a plist dictionary or list from the given inputstream.
+     * 
+     * @param data the inputstream to read from
+     * @param source the source of the data for good error messages
+     * @return the parsed data
+     * @throws IOException something went wrong
+     */
+    public static PlistParser.ParseContext parsePlist(InputStream data, String source, ANTLRErrorListener errorListener) throws IOException {
+        return prepareParser(data, source, errorListener).parse();
     }
     
     /**

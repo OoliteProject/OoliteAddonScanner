@@ -227,6 +227,11 @@ public class Generator implements Callable<Object> {
         try {
             ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(urlString)));
             ExpansionManifest em = getManifestFromOXZ(zin, urlString);
+            if (em == null) {
+                log.warn("No manifest in {}?", urlString);
+                return null;
+            }
+            
             File f = cache.getCachedFile(urlString);
             if (f != null && f.exists()) {
                 em.setFileSize(String.valueOf(f.length()));

@@ -1,8 +1,8 @@
-http://cim.sotl.org.uk/games/files/oolite/CameraDrones_1.4.oxz
-http://cim.sotl.org.uk/games/files/oolite/Ships_Library_0.8.oxz
-http://cim.sotl.org.uk/games/files/oolite/ShipsetCompatibility_1.4.oxz
-http://cim.sotl.org.uk/games/files/oolite/Library_Extracts_1.2.oxz
-http://wiki.alioth.net/img_auth.php/7/71/Gallery_1.21.oxz
+https://cim.sotl.org.uk/games/files/oolite/CameraDrones_1.4.oxz
+https://cim.sotl.org.uk/games/files/oolite/Library_Extracts_1.2.oxz
+https://cim.sotl.org.uk/games/files/oolite/Ships_Library_0.8.oxz
+https://cim.sotl.org.uk/games/files/oolite/ShipsetCompatibility_1.4.oxz
+https://wiki.alioth.net/img_auth.php/7/71/Gallery_1.21.oxz
 #('Draft', 'uk.org.rockthehalo.oolite.oxp.Tricky.Jaguar_Company', '1.79', 'Jaguar Company', '2.5', 6, 'Adds in an Elite group of pilots to patrol the space lanes in Anarchy, Feudal and Multi-Government systems. Jaguar Company can also be found sometimes in interstellar space.', 'http://rockthehalo.org.uk/oolite/OXPs/Jaguar_Company_2.5.oxz', 'Tricky', 16673553, 'http://wiki.alioth.net/index.php/Jaguar_Company', 'CC BY-NC-SA 3.0', '', 6, '2014-04-09 21:31:16'),
 #('Draft', 'oolite.oxp.cim.skilled-npcs', '1.79', 'Skilled NPCs', '1.2', 6, 'Enables higher-quality flight AI for routine NPCs. Can be configured with OXPConfig for even more challenge.', 'http://cim.sotl.org.uk/games/files/oolite/Skilled_NPCs_1.2.oxz', 'cim', 2563, 'http://wiki.alioth.net/index.php/Skilled_NPCs_OXP', 'CC-BY-SA 3.0', '', 2, '2017-08-25 08:35:19'),
 #('Active', 'oolite.oxp.cim.escort-formations', '1.79', 'Escort Formations', '1.1', 6, 'Vary the flight formations used by escort pilots to give some alternatives to the usual ''v'' shape.', 'http://cim.sotl.org.uk/games/files/oolite/Escort_Formations_1.1.oxz', 'cim', 2993, 'http://wiki.alioth.net/index.php/Escort_Formations', 'CC-BY-SA 3.0', '', 2, '2014-04-12 17:46:36'),

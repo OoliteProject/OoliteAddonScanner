@@ -2,12 +2,16 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
+import com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser;
+import com.chaudhuri.ooliteaddonscanner2.plist.ThrowingErrorListener;
+import com.chaudhuri.ooliteaddonscanner2.plist.PlistParserUtil;
 import static com.chaudhuri.ooliteaddonscanner2.Scanner.OOLITE_CORE;
 import static com.chaudhuri.ooliteaddonscanner2.Scanner.OXP_PATH_SCRIPTS;
 import static com.chaudhuri.ooliteaddonscanner2.Scanner.XML_HEADER;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.chaudhuri.ooliteaddonscanner2.model.Model;
+import com.chaudhuri.ooliteaddonscanner2.plist.CountingErrorListener;
 import com.chaudhuri.plist.ModelLexer;
 import com.chaudhuri.plist.ModelParser;
 import com.chaudhuri.plist.PlistLexer;
@@ -427,7 +431,8 @@ public class AddonsUtil {
         log.info("Parsed {} models successfully and failed on {} models", countSuccess, countFailure);
     }
     
-    /** reads all OXPs that the registry knows about. Which means it opens
+    /** 
+     * Reads all OXPs that the registry knows about. Which means it opens
      * all the zip files and parses files like manifest.plist, equipment.plist
      * or shipdata.plist. The result is stored back in the registry again.
      * 
@@ -564,6 +569,8 @@ public class AddonsUtil {
             oxp.addScript(zentry.getName(), sb.toString());
         } else if ("Config/world-scripts.plist".equals(zentry.getName())) {
             readScript(zin, zentry, oxp);
+        } else if (zentry.getName().endsWith(".plist")) {
+            checkPlist(zin, zentry, oxp);
         } else {
             String name = zentry.getName().toLowerCase();
             if(name.contains("read")) {
@@ -751,5 +758,53 @@ public class AddonsUtil {
             log.error("Could not zip {} to {}", directory.getAbsolutePath(), zipfile.getAbsolutePath(), e);
         }
         return zipfile;
+    }
+    
+    /**
+     * Parses an expansion's plist and adds warnings to the expansion.
+     * 
+     * @param zin
+     * @param zentry
+     * @param oxp 
+     */
+    private static void checkPlist(ZipInputStream zin, ZipEntry zentry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException {
+        log.debug("checkPlist({}, {}, {})", zin, zentry, oxp);
+        
+        InputStream in = getZipEntryStream(zin);
+        in.mark(10);
+
+        Scanner sc = new Scanner(in);
+        if (XML_HEADER.equals(sc.next())) {
+            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            in.reset();
+            
+            XMLPlistParser.parseInputStream(in, new XMLPlistParser.MySaxErrorHandler(oxp));
+        } else {
+            in.reset();
+            
+            CountingErrorListener cel = new CountingErrorListener(zentry.getName());
+            PlistParser.ParseContext lc = PlistParserUtil.parsePlist(in, oxp.getDownloadUrl()+"!"+zentry.getName(), cel);
+            if (cel.hasErrors()) {
+                List<String> errors = new ArrayList<>();
+                errors.addAll(cel.getAmbiguityErrors());
+                errors.addAll(cel.getAttemptFullContextErrors());
+                errors.addAll(cel.getContextSensitivityErrors());
+                errors.addAll(cel.getSyntaxErrors());
+                
+                errors.stream()
+                    .filter((t) -> t != null && !t.isBlank())
+                    .forEach((t) -> {
+                        
+                   oxp.addWarning(t);
+                });
+                oxp.addWarning(
+                    String.format(
+                        "Found %d issues in %s", 
+                        cel.getAmbiguityCount() + cel.getAttemptFullContextCount() + cel.getContextSensitivityCount() + cel.getSyntaxErrorCount(),
+                        zentry.getName()
+                    )
+                );
+            }
+        }
     }
 }

@@ -1,7 +1,8 @@
 /*
  */
-package com.chaudhuri.ooliteaddonscanner2;
+package com.chaudhuri.ooliteaddonscanner2.plist;
 
+import com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import java.io.InputStream;
 import java.net.URL;

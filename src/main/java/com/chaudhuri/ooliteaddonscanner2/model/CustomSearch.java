@@ -3,7 +3,7 @@
 
 package com.chaudhuri.ooliteaddonscanner2.model;
 
-import com.chaudhuri.ooliteaddonscanner2.XMLPlistParser;
+import com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;

@@ -64,18 +64,38 @@ public class ExpansionCache {
         this(DEFAULT_CACHE_DIR);
     }
 
+    /**
+     * Returns the count of cache hits.
+     * 
+     * @return the count
+     */
     public int getCacheHits() {
         return cacheHits;
     }
 
+    /**
+     * Sets the count of cache hits.
+     * 
+     * @param cacheHits the count
+     */
     public void setCacheHits(int cacheHits) {
         this.cacheHits = cacheHits;
     }
 
+    /**
+     * Returns the count of cache misses.
+     * 
+     * @return the count
+     */
     public int getCacheMisses() {
         return cacheMisses;
     }
 
+    /**
+     * Sets the count of cache misses.
+     * 
+     * @param cacheMisses the count
+     */
     public void setCacheMisses(int cacheMisses) {
         this.cacheMisses = cacheMisses;
     }
@@ -146,11 +166,11 @@ public class ExpansionCache {
         }
         
         if (!dir.getAbsolutePath().equals(cacheDIR.getAbsolutePath()) && dir.listFiles().length <= 2) {
-            log.info("Remove empty directory {}", dir.getAbsolutePath());
             try {
                 Files.delete(dir.toPath());
+                log.info("Removed empty directory {}", dir.getAbsolutePath());
             } catch (DirectoryNotEmptyException e) {
-                log.info("Could not delete {} due to contents: {}", dir, dir.listFiles(), e);
+                log.debug("Could not delete {} due to contents: {}", dir, dir.listFiles(), e);
             }
         }
     }
