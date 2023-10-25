@@ -13,6 +13,8 @@ import java.nio.file.NoSuchFileException;
 import java.util.NoSuchElementException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -1254,4 +1257,109 @@ public class AddonsUtilTest {
         assertEquals(1, oxp.getScripts().size());
     }
     
+    @Test
+    public void testCheckPlist() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        log.info("testCheckPlist");
+        
+        try {
+            AddonsUtil.checkPlist((InputStream)null, null, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("in must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+    
+    @Test
+    public void testCheckPlist2a() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        log.info("testCheckPlist2a");
+        
+        InputStream in = new FileInputStream("src/test/data/manifest-whitespace-xml.plist");
+        
+        try {
+            AddonsUtil.checkPlist((InputStream)in, null, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("oxp must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    
+    @Test
+    public void testCheckPlist2b() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        log.info("testCheckPlist2b");
+        
+        InputStream in = new FileInputStream("src/test/data/manifest-whitespace.plist");
+        
+        try {
+            AddonsUtil.checkPlist((InputStream)in, null, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("oxp must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+    
+    @Test
+    public void testCheckPlist3a() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        log.info("testCheckPlist3a");
+        
+        InputStream in = new FileInputStream("src/test/data/manifest-whitespace-xml.plist");
+        String name = "xml";
+        
+        try {
+            AddonsUtil.checkPlist((InputStream)in, name, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("oxp must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+
+    
+    @Test
+    public void testCheckPlist3b() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        log.info("testCheckPlist3b");
+        
+        InputStream in = new FileInputStream("src/test/data/manifest-whitespace.plist");
+        String name = "plist";
+        
+        try {
+            AddonsUtil.checkPlist((InputStream)in, name, null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("oxp must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+    }
+    
+    @Test
+    public void testCheckPlist4a() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        log.info("testCheckPlist4a");
+        
+        InputStream in = new BufferedInputStream(new FileInputStream("src/test/data/manifest-whitespace-xml.plist"));
+        String name = "xml";
+        Expansion oxp = new Expansion();
+        
+        AddonsUtil.checkPlist((InputStream)in, name, oxp);
+        assertEquals(2, oxp.getWarnings().size());
+        assertEquals("Extreanous whitespace on key ' required_oolite_version'", oxp.getWarnings().get(0));
+        assertEquals("Extreanous whitespace on key 'author '", oxp.getWarnings().get(1));
+    }
+
+    
+    @Test
+    public void testCheckPlist4b() throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        log.info("testCheckPlist4b");
+        
+        InputStream in = new BufferedInputStream(new FileInputStream("src/test/data/manifest-whitespace.plist"));
+        String name = "plist";
+        Expansion oxp = new Expansion();
+        
+        AddonsUtil.checkPlist((InputStream)in, name, oxp);
+        assertEquals(2, oxp.getWarnings().size());
+        assertEquals("Extreanous whitespace on key ' required_oolite_version'", oxp.getWarnings().get(0));
+        assertEquals("Extreanous whitespace on key 'description '", oxp.getWarnings().get(1));
+    }
 }

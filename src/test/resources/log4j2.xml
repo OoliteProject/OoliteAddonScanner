@@ -7,7 +7,10 @@
     </Appenders>
     <Loggers>
         <!-- error, warn, info, debug, trace -->
-    <Logger level="info" name="com.chaudhuri.cataloggenerator.Generator"/>
+    <Logger level="warn" name="com.chaudhuri.cataloggenerator.ExpansionManifestComparatorTest"/>
+    <Logger level="warn" name="com.chaudhuri.cataloggenerator.ExpansionManifestConverter"/>
+    <Logger level="warn" name="com.chaudhuri.cataloggenerator.Generator"/>
+    <Logger level="warn" name="com.chaudhuri.cataloggenerator.GeneratorTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.AddonsUtil"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.AddonsUtilTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCache"/>
@@ -19,6 +22,8 @@
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.model.ShipTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.OxpExceptionTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.PlistParserUtilTest"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.ThrowingErrorListenerTest"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Registry"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.RegistryTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.RegistryExceptionTest"/>
@@ -33,7 +38,6 @@
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.VerifierTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.Wiki"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.WikiTest"/>
-    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.XMLPlistParser"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.XMLPlistParserTest"/>
     <Root level="TRACE">
       <AppenderRef ref="Console"/>

@@ -1,0 +1,11 @@
+{
+	identifier = "oolite.oxp.JohnSmith.LoveCats";
+	" required_oolite_version" = "1.80";
+	title = "Love Cats";
+	version = "2.0";
+	category = "Missions";
+	"description " = "A tale of love and betrayal amongst the vicious furry feline races of galaxy four.";
+	author = "John Smith";
+	information_url = "http://wiki.alioth.net/index.php/Lovecats.oxp";
+	license = "CC-BY-NC-SA 3.0";
+}

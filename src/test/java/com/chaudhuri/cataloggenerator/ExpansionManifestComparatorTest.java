@@ -44,7 +44,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare() {
-        System.out.println("compare");
+        log.info("testCompare");
         ExpansionManifest em1 = null;
         ExpansionManifest em2 = null;
         ExpansionManifestComparator instance = new ExpansionManifestComparator();
@@ -56,7 +56,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare2() {
-        System.out.println("compare2");
+        log.info("testCompare2");
         ExpansionManifest em1 = new ExpansionManifest();
         ExpansionManifest em2 = null;
         ExpansionManifestComparator instance = new ExpansionManifestComparator();
@@ -68,7 +68,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare3() {
-        System.out.println("compare3");
+        log.info("testCompare3");
         ExpansionManifest em1 = null;
         ExpansionManifest em2 = new ExpansionManifest();
         ExpansionManifestComparator instance = new ExpansionManifestComparator();
@@ -80,7 +80,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare4() {
-        System.out.println("compare4");
+        log.info("testCompare4");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         ExpansionManifest em2 = null;
@@ -93,7 +93,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare5() {
-        System.out.println("compare5");
+        log.info("testCompare5");
         ExpansionManifest em1 = new ExpansionManifest();
         ExpansionManifest em2 = new ExpansionManifest();
         em2.setIdentifier("id");
@@ -106,7 +106,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare6() {
-        System.out.println("compare6");
+        log.info("testCompare6");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         ExpansionManifest em2 = new ExpansionManifest();
@@ -120,7 +120,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare7() {
-        System.out.println("compare7");
+        log.info("testCompare7");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         em1.setVersion("1");
@@ -135,7 +135,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare8() {
-        System.out.println("compare8");
+        log.info("testCompare8");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         em1.setVersion("1");
@@ -150,7 +150,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare9() {
-        System.out.println("compare9");
+        log.info("testCompare9");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         em1.setVersion("1");
@@ -166,7 +166,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare10() {
-        System.out.println("compare10");
+        log.info("testCompare10");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         em1.setVersion("1");
@@ -183,7 +183,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare11() {
-        System.out.println("compare11");
+        log.info("testCompare11");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         em1.setVersion("1");
@@ -200,7 +200,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare12() {
-        System.out.println("compare12");
+        log.info("testCompare12");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         em1.setVersion("1");
@@ -218,7 +218,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare13() {
-        System.out.println("compare13");
+        log.info("testCompare13");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         em1.setVersion("1");
@@ -236,7 +236,7 @@ public class ExpansionManifestComparatorTest {
      */
     @Test
     public void testCompare14() {
-        System.out.println("compare14");
+        log.info("testCompare14");
         ExpansionManifest em1 = new ExpansionManifest();
         em1.setIdentifier("id");
         em1.setVersion("1");

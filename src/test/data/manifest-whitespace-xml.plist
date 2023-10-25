@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>identifier</key>
+	<string>oolite.oxp.ArexackHeretic.ThargornThreat</string>
+	<key> required_oolite_version</key>
+	<string>1.75</string>
+	<key>title</key>
+	<string>Thargorn Threat</string>
+	<key>version</key>
+	<string>1.5.2</string>
+	<key>category</key>
+	<string>Ships</string>
+	<key>description</key>
+	<string>Adds 3 powerfull thargoid ships to the game. A Terrorizer Frigate, the Thargorn Battleship and the Thorgorn Cruiser</string>
+	<key>author </key>
+	<string>Arexack Heretic</string>
+	<key>information_url</key>
+	<string>http://wiki.alioth.net/index.php/Thargorn_Threat_oxp</string>
+	<key>licence</key>
+	<string>CC-BY-NC-SA 3.0</string>
+	<key>tags</key>
+	<array>
+		<string>Terrorizer Frigate</string>
+		<string>Thargorn Battleship</string>
+		<string>Thorgorn Cruiser</string>
+	</array>
+</dict>
+</plist>

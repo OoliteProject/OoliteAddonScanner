@@ -252,7 +252,7 @@ public class GeneratorTest {
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             assertEquals("list must not be null", e.getMessage());
-            log.debug("caught expected exception");
+            log.debug("caught expected exception", e);
         }
     }
     

@@ -31,9 +31,19 @@ public class CountingErrorListener implements ANTLRErrorListener {
     
     private String filename = "";
     
+    /**
+     * Creates a new CountingErrorListener.
+     * The source filename is unknown.
+     */
     public CountingErrorListener() {
     }
     
+    /**
+     * Creates a new CountingErrorListener with given source filename.
+     * A filename will make warnings much more readable.
+     * 
+     * @param filename the filename
+     */
     public CountingErrorListener(String filename) {
         this.filename = filename;
     }
@@ -59,19 +69,19 @@ public class CountingErrorListener implements ANTLRErrorListener {
     @Override
     public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean bln, BitSet bitset, ATNConfigSet atncs) {
         log.debug("reportAmbiguity(...)");
-        ambiguityErrors.add("a");
+        ambiguityErrors.add("Ambiguity Report");
     }
 
     @Override
     public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitset, ATNConfigSet atncs) {
         log.debug("reportAttemptingFullContext(...)");
-        attemptFullContextErrors.add("afc");
+        attemptFullContextErrors.add("Attempting Full Context");
     }
 
     @Override
     public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atncs) {
         log.debug("reportContextSensitivity(...)");
-        contextSensitivityErrors.add("cs");
+        contextSensitivityErrors.add("Context Sensitivity");
     }
        
     /**

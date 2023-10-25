@@ -42,16 +42,28 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -524,7 +536,7 @@ public class AddonsUtil {
      * @throws ParserConfigurationException something went wrong
      * @throws OxpException something went wrong
      */
-    public static void readOxpEntry(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion expansion) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException, OxpException {
+    public static void readOxpEntry(ZipInputStream zin, ZipEntry zentry, Registry registry, Expansion expansion) throws IOException, RegistryException, SAXException, TransformerException, ParserConfigurationException, OxpException, XPathExpressionException {
         log.debug("readOxpEntry(...)");
         if (zin == null) {
             throw new IllegalArgumentException(EXCEPTION_ZIN_MUST_NOT_BE_NULL);
@@ -560,7 +572,7 @@ public class AddonsUtil {
         }
     }
 
-    private static void readOxpEntry2(ZipInputStream zin, ZipEntry zentry, Expansion oxp) throws IOException, SAXException, TransformerException, ParserConfigurationException {
+    private static void readOxpEntry2(ZipInputStream zin, ZipEntry zentry, Expansion oxp) throws IOException, SAXException, TransformerException, ParserConfigurationException, XPathExpressionException {
         if ("Config/script.js".equals(zentry.getName()) || (zentry.getName().startsWith(OXP_PATH_SCRIPTS) && zentry.getName().length()>OXP_PATH_SCRIPTS.length())) {
             StringBuilder sb = new StringBuilder();
             try (StringBuilderWriter sbw = new StringBuilderWriter(sb)) {
@@ -767,23 +779,44 @@ public class AddonsUtil {
      * @param zentry
      * @param oxp 
      */
-    private static void checkPlist(ZipInputStream zin, ZipEntry zentry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException {
+    static void checkPlist(ZipInputStream zin, ZipEntry zentry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         log.debug("checkPlist({}, {}, {})", zin, zentry, oxp);
         
-        InputStream in = getZipEntryStream(zin);
+        checkPlist(getZipEntryStream(zin), zentry.getName(), oxp);
+    }
+    
+    static void checkPlist(InputStream in, String entry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
+        log.debug("checkPlist({}, {}, {})", in, entry, oxp);
+        
+        if (in == null) {
+            throw new IllegalArgumentException("in must not be null");
+        }
+        if (oxp == null) {
+            throw new IllegalArgumentException("oxp must not be null");
+        }
+        
         in.mark(10);
 
         Scanner sc = new Scanner(in);
         if (XML_HEADER.equals(sc.next())) {
-            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), zentry.getName());
+            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), entry);
             in.reset();
             
-            XMLPlistParser.parseInputStream(in, new XMLPlistParser.MySaxErrorHandler(oxp));
+            Document doc = XMLPlistParser.parseInputStream(in, new XMLPlistParser.MySaxErrorHandler(oxp));
+            XPath xpath = XPathFactory.newDefaultInstance().newXPath();
+            NodeList nl = (NodeList)xpath.evaluate("//key", doc, XPathConstants.NODESET);
+            for (int i=0; i<nl.getLength();i++) {
+                Node keyNode = nl.item(i);
+                String key = keyNode.getTextContent();
+                if (!key.equals(key.trim())) {
+                    oxp.addWarning(String.format("Extreanous whitespace on key '%s'", key));
+                }
+            }
         } else {
             in.reset();
             
-            CountingErrorListener cel = new CountingErrorListener(zentry.getName());
-            PlistParser.ParseContext lc = PlistParserUtil.parsePlist(in, oxp.getDownloadUrl()+"!"+zentry.getName(), cel);
+            CountingErrorListener cel = new CountingErrorListener(entry);
+            PlistParser.ParseContext lc = PlistParserUtil.parsePlist(in, oxp.getDownloadUrl()+"!"+entry, cel);
             if (cel.hasErrors()) {
                 List<String> errors = new ArrayList<>();
                 errors.addAll(cel.getAmbiguityErrors());
@@ -801,10 +834,50 @@ public class AddonsUtil {
                     String.format(
                         "Found %d issues in %s", 
                         cel.getAmbiguityCount() + cel.getAttemptFullContextCount() + cel.getContextSensitivityCount() + cel.getSyntaxErrorCount(),
-                        zentry.getName()
+                        entry
                     )
                 );
             }
+            
+            // todo: check if keys can be trimmed
+            checkPlistKeys(lc, oxp);
+        }
+    }
+    
+    /**
+     * Check dictionary keys for extraenous whitespace.
+     * Returns findings as warnings in expansion.
+     * 
+     * @param pc the parsecontext to check
+     * @param oxp the oxp to return warnings
+     */
+    private static void checkPlistKeys(ParserRuleContext prc, Expansion oxp) {
+        for (int i=0; i< prc.getChildCount(); i++) {
+            ParseTree pt = prc.getChild(i);
+            checkPlistKeys(pt, oxp);
+        }
+    }
+    
+    /**
+     * Check dictionary keys for extraenous whitespace.
+     * Returns findings as warnings in expansion.
+     * 
+     * @param pc the parsecontext to check
+     * @param oxp the oxp to return warnings
+     */
+    private static void checkPlistKeys(ParseTree pt, Expansion oxp) {
+        if (pt instanceof PlistParser.KeyvaluepairContext) {
+            PlistParser.KeyvaluepairContext kvpc = (PlistParser.KeyvaluepairContext)pt;
+            Token keyToken = kvpc.getStart();
+            String key = keyToken.getText();
+            if (!key.equals(key.trim())) {
+                oxp.addWarning(String.format("Extreanous whitespace on key '%s'", key));
+            }
+        }
+        
+        for (int i=0; i< pt.getChildCount(); i++) {
+            ParseTree pt2 = pt.getChild(i);
+            checkPlistKeys(pt2, oxp);
         }
     }
 }
