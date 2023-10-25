@@ -855,6 +855,7 @@
 	"information_url" = "http://wiki.alioth.net/index.php/Thargorn_Threat_oxp";
 	"license" = "CC-BY-NC-SA 3.0";
 	"upload_date" = "1399123023";
+        "tags" = ("Terrorizer Frigate", "Thargorn Battleship", "Thorgorn Cruiser");
 }
 ,{
 	"identifier" = "oolite.oxp.cim.energy-bomb";

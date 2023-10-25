@@ -139,10 +139,17 @@ public class AddonsUtilTest {
         assertEquals(0, registry.getExpansions().size());
         assertEquals(0, registry.getEquipment().size());
         assertEquals(0, registry.getShips().size());
+        
         AddonsUtil.readExpansionsList(data, registry);
+        
         assertEquals(743, registry.getExpansions().size());
         assertEquals(0, registry.getEquipment().size());
         assertEquals(0, registry.getShips().size());
+
+        Expansion oxpThargornThreat = registry.getExpansion("oolite.oxp.ArexackHeretic.ThargornThreat");
+        assertEquals("Arexack Heretic", oxpThargornThreat.getAuthor());
+        assertEquals("Ships", oxpThargornThreat.getCategory());
+        assertEquals("[Terrorizer Frigate, Thargorn Battleship, Thorgorn Cruiser]", oxpThargornThreat.getTags().toString());
     }
 
     /**
@@ -959,6 +966,7 @@ public class AddonsUtilTest {
         assertEquals(0, registry.getWarnings().size());
         AddonsUtil.readOxpEntry(zin, zentry, registry, expansion);
         assertEquals(1, registry.getExpansions().size());
+        assertEquals("myid", registry.getExpansions().get(0).getIdentifier());
         assertEquals(1, registry.getEquipment().size());
         assertEquals(0, registry.getShips().size());
         assertEquals("[Found XML equipment list]", registry.getWarnings().toString());
@@ -1170,11 +1178,56 @@ public class AddonsUtilTest {
         assertEquals(0, registry.getShips().size());
         assertEquals("[]", registry.getWarnings().toString());
         assertNull(expansion.getManifest().getIdentifier());
+        
+        // expect XML parsing
         AddonsUtil.readManifest(zin, zentry, registry, expansion);
+        
         assertEquals(1, registry.getExpansions().size());
+        assertEquals("myId", registry.getExpansions().get(0).getIdentifier());
+        assertEquals(expansion, registry.getExpansions().get(0));
+        assertEquals(3, expansion.getManifest().getTags().size());
+        assertEquals("Terrorizer Frigate", expansion.getManifest().getTags().get(0));
+        assertEquals("Thargorn Battleship", expansion.getManifest().getTags().get(1));
+        assertEquals("Thorgorn Cruiser", expansion.getManifest().getTags().get(2));
         assertEquals(0, registry.getEquipment().size());
         assertEquals(0, registry.getShips().size());
         assertEquals("[XML Manifest found, Unknown key 'licence' in XML manifest.plist]", registry.getWarnings().toString());
+        assertNotNull(expansion.getManifest().getIdentifier());
+    }
+
+    /**
+     * Test of readManifest method, of class AddonsUtil.
+     */
+    @Test
+    public void testReadManifest6() throws Exception {
+        log.info("readManifest6");
+        
+        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/Cargo_wrecks_teaser_1.7.2.oxz"));
+        ZipEntry zentry = zin.getNextEntry();
+        while (!zentry.getName().contains("manifest.plist")) {
+            zentry = zin.getNextEntry();
+        }
+        
+        Registry registry = new Registry();
+        
+        Expansion expansion = new Expansion("myId");
+        registry.addExpansion(expansion);
+        
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[]", registry.getWarnings().toString());
+        assertNull(expansion.getManifest().getIdentifier());
+        
+        AddonsUtil.readManifest(zin, zentry, registry, expansion);
+        
+        assertEquals(1, registry.getExpansions().size());
+        assertEquals("myId", registry.getExpansions().get(0).getIdentifier());
+        assertEquals(1, registry.getExpansions().get(0).getManifest().getTags().size());
+        assertEquals("Cargopods", registry.getExpansions().get(0).getManifest().getTags().get(0));
+        assertEquals(0, registry.getEquipment().size());
+        assertEquals(0, registry.getShips().size());
+        assertEquals("[Unknown key 'licence' at null!manifest.plist]", registry.getWarnings().toString());
         assertNotNull(expansion.getManifest().getIdentifier());
     }
 

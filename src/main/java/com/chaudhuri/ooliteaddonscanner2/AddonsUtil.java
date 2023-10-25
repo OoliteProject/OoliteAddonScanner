@@ -14,7 +14,6 @@ import com.chaudhuri.ooliteaddonscanner2.model.Model;
 import com.chaudhuri.ooliteaddonscanner2.plist.CountingErrorListener;
 import com.chaudhuri.plist.ModelLexer;
 import com.chaudhuri.plist.ModelParser;
-import com.chaudhuri.plist.PlistLexer;
 import com.chaudhuri.plist.PlistParser;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
@@ -32,6 +31,7 @@ import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,7 +42,6 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-import javax.xml.namespace.QName;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
@@ -56,7 +55,6 @@ import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.TerminalNode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.output.StringBuilderWriter;
 import org.apache.logging.log4j.LogManager;
@@ -102,20 +100,14 @@ public class AddonsUtil {
         if (registry == null) {
             throw new IllegalArgumentException(EXCEPTION_REGISTRY_MUST_NOT_BE_NULL);
         }
+        if (!data.canRead()) {
+            throw new NoSuchFileException(data.getName());
+        }
         
-        ThrowingErrorListener errorListener = new ThrowingErrorListener();
-
-        CharStream charStream = CharStreams.fromPath(data.toPath());
-        PlistLexer lexer = new PlistLexer(charStream);
-        lexer.removeErrorListeners();
-        lexer.addErrorListener(errorListener);
-        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-        PlistParser parser = new PlistParser(tokenStream);
-        parser.removeErrorListeners();
-        parser.addErrorListener(errorListener);
-        PlistParser.ListContext lc = parser.list();
-
-        registry.addExpansions(lc);
+        try (InputStream fin = new FileInputStream(data); InputStream in = new BufferedInputStream(fin)) {
+            PlistParser.ListContext lc = (PlistParser.ListContext)PlistParserUtil.parsePlistList(in, data.getAbsolutePath());
+            registry.addExpansions(lc);
+        }
     }
 
     /**

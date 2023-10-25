@@ -24,6 +24,7 @@
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.PlistParserUtilTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.ThrowingErrorListenerTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParserTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Registry"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.RegistryTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.RegistryExceptionTest"/>
@@ -38,7 +39,6 @@
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.VerifierTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.Wiki"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.WikiTest"/>
-    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.XMLPlistParserTest"/>
     <Root level="TRACE">
       <AppenderRef ref="Console"/>
     </Root>

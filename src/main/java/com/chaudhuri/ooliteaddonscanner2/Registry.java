@@ -199,8 +199,7 @@ public class Registry {
         } else if ("upload_date".equals(key)) {
             oxp.setUploadDate(kc.value().getText());
         } else if (EXPANSION_TAGS.equals(key)) {
-            // TODO: Fix tags to contain something like kc.value().getText()
-            oxp.setTags(new ArrayList<>());
+            oxp.setTags(new ArrayList<>(PlistParserUtil.getStringList(kc.value())));
         } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
             oxp.setRequiresOxps(parseDependencies(kc.value(), oxp));
         } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
@@ -714,8 +713,7 @@ public class Registry {
                     em.setRequiresOxps(parseDependencies((PlistParser.ValueContext)entry.getValue(), em));
                     break;
                 case EXPANSION_TAGS:
-                    // TODO fix tags to include something like String.valueOf(entry.getValue())
-                    em.setTags(new ArrayList<String>());
+                    em.setTags(new ArrayList<String>((List<String>)entry.getValue()));
                     break;
                 case EXPANSION_TITLE:
                     em.setTitle(String.valueOf(entry.getValue()));
