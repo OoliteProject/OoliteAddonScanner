@@ -404,7 +404,7 @@ public class Scanner implements Runnable {
             cache = new ExpansionCache(cacheDir);
             TemplateEngine templateEngine = new TemplateEngine();
 
-            // try to download from http://addons.oolite.org/api/1.0/overview
+            // try to download from http://addons.oolite.space/api/1.0/overview
             File data = File.createTempFile("OoliteAddonScanner2", ".nsdata", outputDir);
             URL u = catalogUrl;
             try (InputStream in = u.openStream(); OutputStream out = new FileOutputStream(data)) {

@@ -4674,7 +4674,7 @@ Both are player-buyable, and will appear as NPCs from time to time.";
 	"title" = "Time Control";
 	"version" = "1.1";
 	"category" = "Miscellaneous";
-	"description" = "Set Time Acceleration in Green alert, Injectors and Torus, clear in Red alert, Dock and near a Wormhole. Need a developer release of Oolite which is available at oolite.org right below the main release and identical in gameplay but contain TAF and other debug functions.";
+	"description" = "Set Time Acceleration in Green alert, Injectors and Torus, clear in Red alert, Dock and near a Wormhole. Need a developer release of Oolite which is available at oolite.space right below the main release and identical in gameplay but contain TAF and other debug functions.";
 	"download_url" = "http://wiki.alioth.net/img_auth.php/b/b9/TimeControl_1.1.oxz";
 	"author" = "Norby";
 	"file_size" = "4258";
@@ -13598,7 +13598,7 @@ WARNING: this OXP makes NPCs much tougher, with severe consequences to game bala
 	"version" = "1.0";
 	"category" = "Ambience";
 	"description" = "Converts Zaonce to Venus by fully retexturing it with an 8k diffuse texture. This is a demonstration of the custom planet texturing capabilities present in Oolite version 1.89 and later.";
-	"download_url" = "http://oolite.org/oxzs/ZaonceIsVenus8k.oxz";
+	"download_url" = "http://oolite.space/oxzs/ZaonceIsVenus8k.oxz";
 	"author" = "another_commander";
 	"file_size" = "33527732";
 	"information_url" = "http://wiki.alioth.net/index.php/Zaonce_is_Venus_8k";

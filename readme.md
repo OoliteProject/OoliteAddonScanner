@@ -1,6 +1,6 @@
 # OoliteAddonScanner
 
-This project downloads the Oolite.org main game including all expansions,
+This project downloads the Oolite.space main game including all expansions,
 scans them for ships and equipment and builds easy to surf HTML files.
 
 These HTML files are generated regularly with the output being downloadable as Release.
