@@ -288,7 +288,7 @@ public class ExpansionCache {
     }
     
     private void doDownloadHttp(URL u, File local) throws IOException {
-        log.info("Downloading to {}", local);
+        log.debug("doDownloadHttp(...)");
         
         try {
 
