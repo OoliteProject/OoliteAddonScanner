@@ -11,7 +11,7 @@
             </tr>
         </table>
 
-        <h1><#if identifier != "oolite.core" >Expansion </#if>${ title }</h1>
+        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> <#if identifier != "oolite.core" >Expansion </#if>${ title }</h1>
 
         <h2>Content</h2>
         <ul>

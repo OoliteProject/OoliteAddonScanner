@@ -11,7 +11,7 @@
             </tr>
         </table>
 
-        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> Expansions by Name</h1>
+        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> Expansions by Upload Date</h1>
 
         ${ expansions?size } items
         <table border="1">
@@ -23,7 +23,7 @@
                 <th>Upload Date</th>
                 <th>Remarks</th>
             </tr>
-            <#list expansionsByName as expansion>
+            <#list expansionsByUploadDate as expansion>
                 <tr>
                     <td><a href="expansions/${ expansion.identifier }.html">${ expansion.title }</a></td>
                     <td><#if expansion.category??>${ expansion.category }</#if></td>

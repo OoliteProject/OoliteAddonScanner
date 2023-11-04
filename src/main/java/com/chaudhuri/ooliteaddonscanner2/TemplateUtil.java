@@ -63,6 +63,7 @@ public class TemplateUtil {
         
         templateEngine.process(registry, "index.ftlh", new File(outputdir, "index.html"));
         templateEngine.process(registry, "indexExpansionsByName.ftlh", new File(outputdir, "indexExpansionsByName.html"));
+        templateEngine.process(registry, "indexExpansionsByUploadDate.ftlh", new File(outputdir, "indexExpansionsByUploadDate.html"));
         templateEngine.process(registry, "indexEquipmentByName.ftlh", new File(outputdir, "indexEquipmentByName.html"));
         templateEngine.process(registry, "indexShipsByName.ftlh", new File(outputdir, "indexShipsByName.html"));
         templateEngine.process(registry, "indexModelsByName.ftlh", new File(outputdir, "indexModelsByName.html"));

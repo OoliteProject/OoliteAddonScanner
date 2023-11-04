@@ -11,7 +11,8 @@
             </tr>
         </table>
 
-        <h1>All by Identifier</h1>
+        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> All by Identifier</h1>
+
         ${ allByIdentifier?size } items
         <table border="1">
             <tr>

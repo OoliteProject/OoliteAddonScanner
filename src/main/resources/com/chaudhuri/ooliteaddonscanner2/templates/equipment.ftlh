@@ -11,7 +11,8 @@
             </tr>
         </table>
 
-        <h1>Equipment ${ name }</h1>
+        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> Equipment ${ name }</h1>
+
         <p>${ description }</p>
         <#if asWikipage??><p>More on <a href='${asWikipage}'>${asWikipage}</a></p></#if>
 

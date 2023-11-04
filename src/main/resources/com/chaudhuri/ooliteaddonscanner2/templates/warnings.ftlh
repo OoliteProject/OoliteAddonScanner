@@ -11,7 +11,8 @@
             </tr>
         </table>
 
-        <h1>Warnings</h1>
+        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> Warnings</h1>
+
         <#if warnings?has_content>
             <h3>Global</h3>
             <ul>

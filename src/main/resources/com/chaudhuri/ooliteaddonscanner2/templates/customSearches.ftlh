@@ -11,7 +11,8 @@
             </tr>
         </table>
 
-        <h1>Search Results</h1>
+        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> Search Results</h1>
+
         <#if searches?has_content>
             <#list searches as s>
                 <h2>${ s.name }</h2>

@@ -10,6 +10,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import com.chaudhuri.ooliteaddonscanner2.model.Warnable;
 import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -607,6 +608,32 @@ public class Registry {
         ArrayList<Expansion> result = new ArrayList<>(expansions.values());
         
         Collections.sort(result, (t, t1) -> t.getName().compareTo(t1.getName()));
+        
+        return result;
+    }
+
+    /**
+     * Returns the list of expansions sorted by upload date.
+     * @return the list
+     */
+    public List<Expansion> getExpansionsByUploadDate() {
+        ArrayList<Expansion> result = new ArrayList<>(expansions.values());
+       
+        Collections.sort(result, (t, t1) -> {
+            if (t==null && t1==null) {
+                return 0;
+            }
+            if (t==null) {
+                return -1;
+            }
+            if (t.getUploadDate()==null) {
+                return -1;
+            }
+
+            Instant i = t.getUploadDateAsInstant();
+            Instant i1 = t1.getUploadDateAsInstant();
+            return i.compareTo(i1);
+        });
         
         return result;
     }

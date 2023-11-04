@@ -11,7 +11,8 @@
             </tr>
         </table>
 
-        <h1>Models</h1>
+        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> Models</h1>
+
         <table border="1">
             <tr>
                 <th>Expansion</th>

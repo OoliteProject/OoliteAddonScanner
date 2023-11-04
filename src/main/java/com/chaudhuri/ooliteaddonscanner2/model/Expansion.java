@@ -2,6 +2,7 @@
  */
 package com.chaudhuri.ooliteaddonscanner2.model;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -351,6 +352,18 @@ public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
      */
     public String getUploadDate() {
         return uploadDate;
+    }
+
+    /**
+     * Returns the upload date of this expansion.
+     * 
+     * @return the date
+     */
+    public Instant getUploadDateAsInstant() {
+        if (uploadDate == null) {
+            return null;
+        }
+        return Instant.ofEpochSecond(Long.parseLong(uploadDate));
     }
 
     /**

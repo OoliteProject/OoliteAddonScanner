@@ -11,7 +11,8 @@
             </tr>
         </table>
 
-        <h1>Ship ${ name }</h1>
+        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> Ship ${ name }</h1>
+
         <table border='1'>
             <tr><td>Identifier</td><td>${ identifier }</td></tr>
             <tr><td>Name</td><td>${ name }</td></tr>
