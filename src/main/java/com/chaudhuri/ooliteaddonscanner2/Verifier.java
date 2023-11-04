@@ -71,7 +71,12 @@ public class Verifier {
         return "no difference found";
     }
 
-    private static void verifyExpansion1(Expansion expansion) {   // check description
+    /**
+     * Verify description.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionDescription(Expansion expansion) {   // check description
         String l1 = String.valueOf(expansion.getDescription());
         String l2 = String.valueOf(expansion.getManifest().getDescription());
 
@@ -93,7 +98,12 @@ public class Verifier {
         }
     }
     
-    private static void verifyExpansion3(Expansion expansion) {   // check title
+    /**
+     * Verify title.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionTitle(Expansion expansion) {   // check title
         String l1 = String.valueOf(expansion.getTitle());
         String l2 = String.valueOf(expansion.getManifest().getTitle());
 
@@ -102,7 +112,12 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion4(Expansion expansion) {   // check category
+    /**
+     * Verify category.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionCategory(Expansion expansion) {   // check category
         String l1 = String.valueOf(expansion.getCategory());
         String l2 = String.valueOf(expansion.getManifest().getCategory());
 
@@ -111,7 +126,12 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion5(Expansion expansion) {   // check author
+    /**
+     * Verify author.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionAuthor(Expansion expansion) {   // check author
         String l1 = String.valueOf(expansion.getAuthor());
         String l2 = String.valueOf(expansion.getManifest().getAuthor());
 
@@ -120,7 +140,12 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion6(Expansion expansion) {   // check version
+    /**
+     * Verify version.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionVersion(Expansion expansion) {   // check version
         String l1 = String.valueOf(expansion.getVersion());
         String l2 = String.valueOf(expansion.getManifest().getVersion());
 
@@ -129,7 +154,12 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion7(Expansion expansion) {   // check tags
+    /**
+     * Verify tags.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionTags(Expansion expansion) {   // check tags
         String l1 = String.valueOf(expansion.getTags());
         String l2 = String.valueOf(expansion.getManifest().getTags());
 
@@ -140,7 +170,12 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion8(Expansion expansion) {   // check required oolite version
+    /**
+     * Verify required oolite version.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionRequiredOoliteVersion(Expansion expansion) {   // check required oolite version
         String l1 = String.valueOf(expansion.getRequiredOoliteVersion());
         String l2 = String.valueOf(expansion.getManifest().getRequiredOoliteVersion());
 
@@ -172,7 +207,12 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion9(Expansion expansion) {   // check maximum oolite version
+    /**
+     * Verifies maximum oolite version.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionMaximumOoliteVersion(Expansion expansion) {   // check maximum oolite version
         String l1 = expansion.getMaximumOoliteVersion();
         String l2 = expansion.getManifest().getMaximumOoliteVersion();
 
@@ -183,7 +223,12 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion10(Expansion expansion) {   // check required expansions
+    /**
+     * Verifies requires_oxp list.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionRequiresOxps(Expansion expansion) {   // check required expansions
         String l1 = String.valueOf(expansion.getRequiresOxps());
         String l2 = String.valueOf(expansion.getManifest().getRequiresOxps());
 
@@ -192,7 +237,12 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion11(Expansion expansion) {   // check optional expansions
+    /**
+     * Verifies optional oxp list.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansion1OptionalOxps(Expansion expansion) {   // check optional expansions
         String l1 = String.valueOf(expansion.getOptionalOxps());
         String l2 = String.valueOf(expansion.getManifest().getOptionalOxps());
 
@@ -201,7 +251,12 @@ public class Verifier {
         }
     }
 
-    private static void verifyExpansion12(Expansion expansion) {   // check conflict expansions
+    /**
+     * Verifies conflict oxp list.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansionConflictOxps(Expansion expansion) {   // check conflict expansions
         String l1 = String.valueOf(expansion.getConflictOxps());
         String l2 = String.valueOf(expansion.getManifest().getConflictOxps());
 
@@ -210,7 +265,12 @@ public class Verifier {
         }
     }
     
-    private static void verifyExpansion13(Expansion expansion) {   // check infortmation url
+    /**
+     * Verify information url.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansion1InformationUrl(Expansion expansion) {   // check infortmation url
         String l1 = String.valueOf(expansion.getInformationUrl());
         String l2 = String.valueOf(expansion.getManifest().getInformationUrl());
 
@@ -219,7 +279,12 @@ public class Verifier {
         }
     }
     
-    private static void verifyExpansion14(Expansion expansion) {
+    /**
+     * Verifies scripts.
+     * 
+     * @param expansion the expansion to verify
+     */
+    private static void verifyExpansion1Scripts(Expansion expansion) {
         Pattern pFetch = Pattern.compile("\\sfetch\\s");
         Pattern purl = Pattern.compile("\\surl\\s");
         Pattern pxmlhttprequest = Pattern.compile("\\sxmlhttprequest\\s");
@@ -329,22 +394,26 @@ public class Verifier {
      * @param registry
      */
     public static void verify(Expansion expansion, Registry registry) {
-        verifyExpansion1(expansion);
+        verifyExpansionDescription(expansion);
         verifyExpansionIdentifier(expansion);
-        verifyExpansion3(expansion);
-        verifyExpansion4(expansion);
-        verifyExpansion5(expansion);
-        verifyExpansion6(expansion);
-        verifyExpansion7(expansion);
-        verifyExpansion8(expansion);
-        verifyExpansion9(expansion);
-        verifyExpansion10(expansion);
-        verifyExpansion11(expansion);
-        verifyExpansion12(expansion);
-        verifyExpansion13(expansion);
-        verifyExpansion14(expansion);
+        verifyExpansionTitle(expansion);
+        verifyExpansionCategory(expansion);
+        verifyExpansionAuthor(expansion);
+        verifyExpansionVersion(expansion);
+        verifyExpansionTags(expansion);
+        verifyExpansionRequiredOoliteVersion(expansion);
+        verifyExpansionMaximumOoliteVersion(expansion);
+        verifyExpansionRequiresOxps(expansion);
+        verifyExpansion1InformationUrl(expansion);
+        verifyExpansion1Scripts(expansion);
         verifyDependencies(expansion.getRequiresOxps(), expansion, registry);
         verifyDependencies(expansion.getOptionalOxps(), expansion, registry);
+        verifyDependencies(expansion.getConflictOxps(), expansion, registry);
+        verifyDependencies(expansion.getManifest().getRequiresOxps(), expansion, registry);
+        verifyDependencies(expansion.getManifest().getOptionalOxps(), expansion, registry);
+        verifyDependencies(expansion.getManifest().getConflictOxps(), expansion, registry);
+        verifyExpansion1OptionalOxps(expansion);
+        verifyExpansionConflictOxps(expansion);
     }
     
     /**

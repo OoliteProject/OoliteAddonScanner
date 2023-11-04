@@ -13,10 +13,11 @@
             </tr>
         </table>
 
-        <h1>Oolite Known Universe</h1>
+        <h1><img style="vertical-align: middle;" src="https://ooliteproject.github.io/oolite/oolite-icon.png"/> Oolite Known Universe</h1>
 
         <ul>
             <li><a href="indexExpansionsByName.html">${ expansions?size } Expansions by Name</a></li>
+            <li><a href="indexExpansionsByUploadDate.html">${ expansions?size } Expansions by Upload Date</a></li>
             <li><a href="indexEquipmentByName.html">${ equipment?size } Equipment by Name</a></li>
             <li><a href="indexShipsByName.html">${ ships?size } Ships by Name</a></li>
             <li><a href="indexAllByIdentifier.html">All by Identifier</a></li>
