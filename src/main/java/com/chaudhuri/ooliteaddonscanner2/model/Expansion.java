@@ -363,7 +363,11 @@ public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
         if (uploadDate == null) {
             return null;
         }
-        return Instant.ofEpochSecond(Long.parseLong(uploadDate));
+        try {
+            return Instant.ofEpochSecond(Long.parseLong(uploadDate));
+        } catch (NumberFormatException e) {
+            return Instant.parse(uploadDate);
+        }
     }
 
     /**

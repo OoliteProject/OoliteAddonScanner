@@ -440,10 +440,10 @@ public class Scanner implements Runnable {
                 new File(outputDir, "expansions").mkdirs();
                 new File(outputDir, "ships").mkdirs();
 
-                TemplateUtil.printIndexes(registry, outputDir, templateEngine);
                 TemplateUtil.printExpansions(registry, outputDir, templateEngine);
                 TemplateUtil.printEquipment(registry, outputDir, templateEngine);
                 TemplateUtil.printShips(registry, outputDir, templateEngine);
+                TemplateUtil.printIndexes(registry, outputDir, templateEngine);
                 templateEngine.process(registry, "wikiIindex.ftlh", new File(outputDir, "wiki.txt"));
 
                 if (zip) {

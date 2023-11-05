@@ -632,6 +632,17 @@ public class Registry {
 
             Instant i = t.getUploadDateAsInstant();
             Instant i1 = t1.getUploadDateAsInstant();
+            
+            if (i==null && i1 == null) {
+                return 0;
+            }
+            if (i==null) {
+                return -1;
+            }
+            if (i1==null) {
+                return 1;
+            }
+            
             return i.compareTo(i1);
         });
         
