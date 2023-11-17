@@ -170,9 +170,9 @@ public class XMLPlistParser {
     }
     
     /**
-     * Parses a dictionary from an XML input stream.
+     * Parses a dictionary from an XML DOM tree.
      * 
-     * @param in the inputstream to parse
+     * @param doc the parsed XML
      * @param eh the errorhandler to use
      * @return the map of maps
      * @throws ParserConfigurationException something went wrong
@@ -180,15 +180,9 @@ public class XMLPlistParser {
      * @throws IOException something went wrong
      * @throws TransformerException something went wrong
      */
-    public static Map<String, Object> parseListOfMaps(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
-        log.debug("parseMap({})", in);
+    public static Map<String, Object> parseListOfMaps(Document doc, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+        log.debug("parseMap({})", doc);
         
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
-        if(eh != null) {
-            db.setErrorHandler(eh);
-        }
-        Document doc = db.parse(in);
         Element plist = doc.getDocumentElement();
         if (!"plist".equals(plist.getNodeName())) {
             throw new IllegalArgumentException("Expected root node plist");
@@ -291,5 +285,24 @@ public class XMLPlistParser {
         }
         
         return result;
+    }
+    
+    /**
+     * Parses an XML document to DOM.
+     * 
+     * @param in the inputstream to parse
+     * @param eh the errorhandler to use
+     * @return the parsed DOM document
+     * @throws ParserConfigurationException something went wrong
+     * @throws SAXException something went wrong
+     * @throws IOException something went wrong
+     */
+    public static Document parseXml(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newDefaultInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        if(eh != null) {
+            db.setErrorHandler(eh);
+        }
+        return db.parse(in);
     }
 }

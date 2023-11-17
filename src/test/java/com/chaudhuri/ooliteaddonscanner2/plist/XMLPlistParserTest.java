@@ -79,7 +79,8 @@ public class XMLPlistParserTest {
             URL url = getClass().getResource("/XMLPlistParserTest/XmlPlist8.xml");
             InputStream in = url.openStream();
             TestErrorHandler teh = new TestErrorHandler();
-            Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(in, teh);
+            Document doc = XMLPlistParser.parseXml(in, teh);
+            Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(doc, teh);
             assertNotNull(listOfMaps);
         }
         {        
@@ -87,7 +88,8 @@ public class XMLPlistParserTest {
             InputStream in = url.openStream();
             TestErrorHandler teh = new TestErrorHandler();
             try {
-                XMLPlistParser.parseListOfMaps(in, null);
+                Document doc = XMLPlistParser.parseXml(in, teh);
+                XMLPlistParser.parseListOfMaps(doc, null);
                 fail("expected exception but caught none");
             } catch (IllegalArgumentException e) {
                 assertEquals("Not exactly one map in document?", e.getMessage());
@@ -99,7 +101,8 @@ public class XMLPlistParserTest {
             InputStream in = url.openStream();
             TestErrorHandler teh = new TestErrorHandler();
             try {
-                Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(in, null);
+                Document doc = XMLPlistParser.parseXml(in, teh);
+                Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(doc, null);
                 fail("expected exception but caught none");
             } catch (IllegalArgumentException e) {
                 assertEquals("Expected root node plist", e.getMessage());
@@ -111,7 +114,8 @@ public class XMLPlistParserTest {
             InputStream in = url.openStream();
             TestErrorHandler teh = new TestErrorHandler();
             try {
-                Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(in, null);
+                Document doc = XMLPlistParser.parseXml(in, teh);
+                Map<String, Object> listOfMaps = XMLPlistParser.parseListOfMaps(doc, null);
                 fail("expected exception but caught none");
             } catch (IllegalArgumentException e) {
                 assertEquals("Expected plist 1.0 format", e.getMessage());

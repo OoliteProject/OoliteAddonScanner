@@ -230,7 +230,8 @@ public class AddonsUtil {
             log.trace("Parsing {}", url);
             in.reset();
 
-            Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(in, null);
+            Document doc = XMLPlistParser.parseXml(in, null);
+            Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(doc, null);
             if (expansion.getName() != null) {
                 log.debug("Parsed {} ({} ships)", expansion.getName(), shipList.size());
             } else {
@@ -240,6 +241,7 @@ public class AddonsUtil {
         } else {
             in.reset();
             PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, url);
+            checkPlistKeys(dc, expansion);
             registry.addShipList(expansion, dc);
         }
     }
@@ -795,15 +797,7 @@ public class AddonsUtil {
             in.reset();
             
             Document doc = XMLPlistParser.parseInputStream(in, new XMLPlistParser.MySaxErrorHandler(oxp));
-            XPath xpath = XPathFactory.newDefaultInstance().newXPath();
-            NodeList nl = (NodeList)xpath.evaluate("//key", doc, XPathConstants.NODESET);
-            for (int i=0; i<nl.getLength();i++) {
-                Node keyNode = nl.item(i);
-                String key = keyNode.getTextContent();
-                if (!key.equals(key.trim())) {
-                    oxp.addWarning(String.format("Extreanous whitespace on key '%s'", key));
-                }
-            }
+            checkPlistKeys(doc, oxp);
         } else {
             in.reset();
             
@@ -870,6 +864,25 @@ public class AddonsUtil {
         for (int i=0; i< pt.getChildCount(); i++) {
             ParseTree pt2 = pt.getChild(i);
             checkPlistKeys(pt2, oxp);
+        }
+    }
+    
+    /**
+     * Check dictionary keys for extraenous whitespace.
+     * Returns findings as warnings in expansion.
+     * 
+     * @param node the DOM node to check
+     * @param oxp the oxp to return warnings
+     */
+    private static void checkPlistKeys(Node node, Expansion oxp) throws XPathExpressionException {
+        XPath xpath = XPathFactory.newDefaultInstance().newXPath();
+        NodeList nl = (NodeList)xpath.evaluate("//key", node, XPathConstants.NODESET);
+        for (int i=0; i<nl.getLength();i++) {
+            Node keyNode = nl.item(i);
+            String key = keyNode.getTextContent();
+            if (!key.equals(key.trim())) {
+                oxp.addWarning(String.format("Extreanous whitespace on key '%s'", key));
+            }
         }
     }
 }
