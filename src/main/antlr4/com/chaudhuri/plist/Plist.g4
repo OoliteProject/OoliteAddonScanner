@@ -38,7 +38,7 @@ MINUS:                    '-';
 
 WS:                       Ws+             -> skip;
 LINECOMMENT:              '//' ~[\r\n]*   -> skip;  // see also https://stackoverflow.com/questions/23976617/parsing-single-line-comments
-BLOCKCOMMENT:              '/*' (BLOCKCOMMENT | ('*' ~'/') | ~'*')* '*/' -> skip;
+BLOCKCOMMENT:             '/*' (BLOCKCOMMENT | ('*' ~'/') | ~'*')* '*/' -> skip;
 
 STRING
    : '"' (~["] | '\\"')* '"' { setText(getText().substring(1, getText().length()-1)); }

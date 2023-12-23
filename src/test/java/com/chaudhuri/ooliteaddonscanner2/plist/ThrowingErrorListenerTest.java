@@ -56,7 +56,7 @@ public class ThrowingErrorListenerTest {
             tel.syntaxError(null, null, 0, 0, null, null);
             fail("expected exception");
         } catch (ParseCancellationException e) {
-            assertEquals("line 0:0 null null", e.getMessage());
+            assertEquals("file:  line 0:0 null null", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
@@ -74,7 +74,7 @@ public class ThrowingErrorListenerTest {
             tel.syntaxError(null, offendingSymbol, 0, 0, null, null);
             fail("expected exception");
         } catch (ParseCancellationException e) {
-            assertEquals("line 0:0 symbol null", e.getMessage());
+            assertEquals("file:  line 0:0 symbol null", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
@@ -165,7 +165,7 @@ public class ThrowingErrorListenerTest {
             tel.syntaxError(recognizer, offendingSymbol, 0, 0, null, null);
             fail("expected exception");
         } catch (ParseCancellationException e) {
-            assertEquals("line 0:0 [@-1,0:0='<no text>',<0>,0:-1] null", e.getMessage());
+            assertEquals("file:  line 0:0 [@-1,0:0='<no text>',<0>,0:-1] null", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }

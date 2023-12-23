@@ -122,7 +122,8 @@ public class AddonsUtilTest {
             AddonsUtil.readExpansionsList(data, registry);
             fail("expected exception");
         } catch (ParseCancellationException e) {
-            assertEquals("line 1:0 [@0,0:-1='<EOF>',<-1>,1:0] mismatched input '<EOF>' expecting '('", e.getMessage());
+            String msg = e.getMessage();
+            assertTrue(msg.contains("src/test/data/empty_file line 1:0 [@0,0:-1='<EOF>',<-1>,1:0] mismatched input '<EOF>' expecting '('"));
             log.debug("caught expected exception", e);
         }
     }
@@ -979,7 +980,8 @@ public class AddonsUtilTest {
     public void testReadOxpEntry6() throws Exception {
         log.info("readOxpEntry6");
         
-        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/oolite.oxp.Frame.FuelCollector.oxz"));
+        File f = new File("src/test/data/oolite.oxp.Frame.FuelCollector.oxz");
+        ZipInputStream zin = new ZipInputStream(new FileInputStream(f));
         ZipEntry zentry = zin.getNextEntry();
         while (!zentry.getName().contains("shipdata.plist")) {
             zentry = zin.getNextEntry();
@@ -988,6 +990,7 @@ public class AddonsUtilTest {
         Registry registry = new Registry();
         
         Expansion expansion = new Expansion("myid");
+        expansion.setDownloadUrl(f.getPath());
         registry.addExpansion(expansion);
 
 

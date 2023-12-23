@@ -4,6 +4,8 @@ package com.chaudhuri.ooliteaddonscanner2.plist;
 
 import com.chaudhuri.ooliteaddonscanner2.plist.PlistParserUtil;
 import com.chaudhuri.plist.PlistParser;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import org.apache.logging.log4j.LogManager;
@@ -82,4 +84,27 @@ public class PlistParserUtilTest {
         }
     }
     
+    /**
+     * Test of comments.
+     */
+    @Test
+    public void testParseComments1() throws Exception {
+        log.info("parseComments1");
+
+        File f = new File("src/test/data/comments/keyconfig.plist");
+        PlistParser.DictionaryContext dict = PlistParserUtil.parsePlistDictionary(new FileInputStream(f), f.getPath());
+        assertNotNull(dict, "Comment problem in keyconfig.plist");
+    }
+    
+    /**
+     * Test of comments.
+     */
+    @Test
+    public void testParseComments2() throws Exception {
+        log.info("parseComments2");
+
+        File f = new File("src/test/data/comments/missiontext.plist");
+        PlistParser.DictionaryContext dict = PlistParserUtil.parsePlistDictionary(new FileInputStream(f), f.getPath());
+        assertNotNull(dict, "Comment problem in missiontext.plist");
+    }
 }

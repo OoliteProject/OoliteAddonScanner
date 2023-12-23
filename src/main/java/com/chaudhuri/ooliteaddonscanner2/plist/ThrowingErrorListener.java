@@ -24,6 +24,8 @@ public class ThrowingErrorListener extends BaseErrorListener {
         log.error("syntaxError({}, {}, {}, {}, {}, {})", recognizer, offendingSymbol, line, charPositionInLine, msg, e);
 
         String symbol = "";
+        String filename = "";
+        
         if (offendingSymbol instanceof CommonToken) {
             CommonToken token = (CommonToken)offendingSymbol;
             //ModelParser.VOCABULARY
@@ -32,9 +34,17 @@ public class ThrowingErrorListener extends BaseErrorListener {
 
         if (offendingSymbol != null) {
             log.error("Offending symbol: {} {} {}", offendingSymbol.getClass().getName(), symbol, offendingSymbol);
+            if (offendingSymbol instanceof CommonToken) {
+                CommonToken ct = (CommonToken) offendingSymbol;
+                if (ct != null) {
+                    if (ct.getTokenSource() != null) {
+                        filename = ct.getTokenSource().getSourceName();
+                    }
+                }
+            }
         }
 
-        throw new ParseCancellationException("line " + line + ":" + charPositionInLine + " " + offendingSymbol + " " + msg, e);
+        throw new ParseCancellationException("file: " + filename + " line " + line + ":" + charPositionInLine + " " + offendingSymbol + " " + msg, e);
     }
     
 }

@@ -24,6 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
@@ -709,7 +710,8 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         URL url = getClass().getResource("/registryTest/equipment1.xml");
-        List<Object> list = (List<Object>)XMLPlistParser.parseList(url.openStream(), null);
+        Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+        List<Object> list = (List<Object>)XMLPlistParser.parseList(doc, null);
 
         try {
             registry.addEquipment(expansion, list);
@@ -727,7 +729,8 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         URL url = getClass().getResource("/registryTest/equipment1.xml");
-        List<List<Object>> list = (List<List<Object>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+        Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+        List<List<Object>> list = (List<List<Object>>)(Object)XMLPlistParser.parseList(doc, null);
 
         try {
             registry.addEquipment(expansion, list.get(0));
@@ -745,7 +748,8 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         URL url = getClass().getResource("/registryTest/equipment1.xml");
-        List<List<List<Object>>> list = (List<List<List<Object>>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+        Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+        List<List<List<Object>>> list = (List<List<List<Object>>>)(Object)XMLPlistParser.parseList(doc, null);
 
         assertEquals(0, registry.getEquipment().size());
         assertEquals(0, registry.getWarnings().size());
@@ -799,7 +803,8 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         URL url = getClass().getResource("/registryTest/equipment1.xml");
-        List<List<List<Object>>> list = (List<List<List<Object>>>)(Object)XMLPlistParser.parseList(url.openStream(), null);
+        Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+        List<List<List<Object>>> list = (List<List<List<Object>>>)(Object)XMLPlistParser.parseList(doc, null);
         assertEquals(1, list.size());
         assertEquals(3, list.get(0).size());
 

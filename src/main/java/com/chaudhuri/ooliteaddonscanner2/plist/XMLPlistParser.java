@@ -251,7 +251,7 @@ public class XMLPlistParser {
     /** Parses an XML file, checks if it is a plist and returns the list of values
      * found.
      * 
-     * @param in
+     * @param doc
      * @param eh
      * @return
      * @throws ParserConfigurationException
@@ -259,10 +259,9 @@ public class XMLPlistParser {
      * @throws IOException
      * @throws TransformerException 
      */
-    public static List<Object> parseList(InputStream in, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
-        log.debug("parseList({})", in);
+    public static List<Object> parseList(Document doc, ErrorHandler eh) throws ParserConfigurationException, SAXException, IOException, TransformerException {
+        log.debug("parseList({})", doc);
         
-        Document doc = parseInputStream(in, eh);
         Element plist = doc.getDocumentElement();
         if (!"plist".equals(plist.getNodeName())) {
             throw new IllegalArgumentException("Expected root node plist");

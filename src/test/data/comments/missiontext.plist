@@ -1,0 +1,32 @@
+{
+    /**** Intros ****/
+	"tca_intro" = "When you disembark, you find that there is a security cordon blocking entrance to the 'business' parts of the Array station. You may, however, still access the ship's outfitters, a cafe, a museum and the rest rooms. The museum has a section on the building of this array and another on the history of the Tionisla Chronicle.";
+
+	/**** For Tionisla Reporter OXP ****/
+	// Mission screen that appears once per save upon docking with Tionisla main station if mission has not been started/declined yet
+	"tca_erehwonReconnaissance_lure" = "When you leave your ship, you bump into an old Lave Academy classmate - [nom] - who greets you - and then offers some local information: \n\n\"Do you know that the Tionisla Chronicle Array is on the darkside of this planet? The Chronicle newsrooms are based there too. Sometimes they have jobs on offer for inexperienced pilots - they are supposed to pay well, but you would need the spare time to do whatever the job involves. You have to visit the Tionisla Chronicle Array on the other side of this planet to find out what they have. Oh! I'd better go - they are calling me\"";
+
+	// Entries with "tca_erehwonReconnaissance_*" alter original "erehwonReconnaissance_*"
+	"tca_erehwonReconnaissance_preamble" = "When you leave your ship, you find a tall blue-feathered avian waiting by the airlock.\n\n\"Greetings Commander [commander_name]... I'm Havel Burquist, a correspondent of the %J124 Chronicle. Would you care to accompany me to my office? Our science editor has an offer which might be of interest to you.\"";
+
+	"tca_erehwonReconnaissance_choice0" = {
+		"OFFER_ACCEPTED" = "Accompany Havel Burquist";
+		"OFFER_DECLINED" = "Decline";
+	};
+
+	// The briefing is split into 3 parts because it too long for one screen
+	"tca_erehwonReconnaissance_briefing_p1" = "You are taken through the security cordon and move into a long gleaming corridor lined with doors, and with various people hurrying from one room to another. At the end you walk through large double doors into a brightly-lit newsroom full of bustling reporters, desks and broadcasting equipment. Is that the famous newscaster Anna Mereso over on the right? She is busy talking with a group of masked lizards. Burquist rushes you through the room to some stairs on the other side and then up to a glass-walled office overlooking the newsroom.";
+
+	"tca_erehwonReconnaissance_briefing_p2" = "In the office you find a fat furry feline sitting at a desk. He rises and shakes your hand.\n\n\"Welcome to the Tionisla Chronicle! I am Kaleb Quequeg, the senior science editor. Please take a seat. May I offer you a drink? There is whisky, lethal brandy, vicious brew, even some Oo-lite - if you drink the stuff!\n\nSo, what do you think of our Array? Built at great expense, you know -  there are dozens of those hexagonal high-intensity transmitter panels - each of them are massive and each cost over 10 million credits to fabricate. And that's before we start talking about how much energy they gobble up! Or the never-ending task of keeping them all clean and functioning.\"";
+
+	"tca_erehwonReconnaissance_briefing_p3" = 	"\"As you will know, we are the biggest, most respected news organisation in the Galaxy.\n\nWe have heard some interesting rumours of a hidden planet, deep in interstellar space, three light years to the west of %J144.\n\nWe are looking for an adventurous pilot to try and find the planet. You would need to take some pictures of the station that apparently orbits it - as well as dock there and interview someone on the station. And then you would need to come back here to deliver the photographs - and the interview information - to me.\n\nWould you be interested in accepting this assignment?\"";
+	
+
+	"tca_erehwonReconnaissance_debriefing" = "After disembarking from your ship you are met by a raucous red rodent who greets you and ushers you through the security cordon, the corridors and the newsroom to Kaleb Quequeg's office. \n\n\"Well done Commander [commander_name]!\" he says, his feline features forming into a grin. \"We've removed the special camera from your ship... you managed to get some very nice pics indeed. Now tell me, did you get to talk to anyone on the station? What were they like? Are the locals human? Were there other ships?\"\n\nYou relate the barkeep's tale about Erehwon, describing the interior of the station, and telling him about the other ships that you saw arriving and leaving. He records your words on his compad, and seems very excited by your tale.\n\n\"Thank you Commander [commander_name], the %J124 Chronicle is very pleased and we have transferred the amount of 500 credits to your account, as promised.\"";
+
+	"tca_erehwonReconnaissance_failure" = "As soon as you disembark you are met by a timid turquoise toad and ushered through the security cordon, the corridors and the newsroom to Kaleb Quequeg's office. You spend a few moments describing what you found at Erehwon, which he records onto his compad.\n\n\"A very interesting voyage you describe, Commander [commander_name]! We've removed the special camera from your ship... we could not find any useful pics.\n\n We are especially interested in pictures of the station orbiting the planet... There were no suitable ones on your film... maybe you would like to have a second chance with a new camera and another 10 shots?\"";
+
+	"tca_erehwonReconnaissance_damaged" = "As soon as you disembark you are met by a bombacious blue beetle and ushered through the security cordon, the corridors and the newsroom to Kaleb Quequeg's office. You spend a few moments describing what you found at Erehwon, which he records onto his compad.\n\n\"A very interesting voyage you describe, Commander [commander_name]! We've removed the special camera from your ship... we could not find any useful pics because the photo camera was damaged... maybe you would like to have a second chance with a new camera and another 10 shots?\"";
+
+	"tca_erehwonReconnaissance_missioninfo2" = "Deliver your article at the %J124 Chronicle Array.";
+}

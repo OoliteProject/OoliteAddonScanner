@@ -197,7 +197,8 @@ public class XMLPlistParserTest {
             InputStream in = url.openStream();
 
             try {
-                List<Object> list = XMLPlistParser.parseList(in, null);
+                Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+                List<Object> list = XMLPlistParser.parseList(doc, null);
                 fail("expected exception");
             } catch(IllegalArgumentException e) {
                 assertEquals("Expected root node plist", e.getMessage());
@@ -209,7 +210,8 @@ public class XMLPlistParserTest {
             InputStream in = url.openStream();
 
             try {
-                List<Object> list = XMLPlistParser.parseList(in, null);
+                Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+                List<Object> list = XMLPlistParser.parseList(doc, null);
                 fail("expected exception");
             } catch(IllegalArgumentException e) {
                 assertEquals("Expected plist 1.0 format", e.getMessage());
@@ -222,7 +224,8 @@ public class XMLPlistParserTest {
 
             TestErrorHandler teh = new TestErrorHandler();
 
-            List<Object> list = XMLPlistParser.parseList(in, teh);
+            Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+            List<Object> list = XMLPlistParser.parseList(doc, teh);
             assertNotNull(list);
             assertEquals(0, list.size());
         }
@@ -232,7 +235,8 @@ public class XMLPlistParserTest {
 
             TestErrorHandler teh = new TestErrorHandler();
             try {
-                List<Object> list = XMLPlistParser.parseList(in, teh);
+                Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+                List<Object> list = XMLPlistParser.parseList(doc, teh);
                 fail("expected exception");
             } catch(IllegalArgumentException e) {
                 assertEquals("Could not parse element blah", e.getMessage());
@@ -246,7 +250,8 @@ public class XMLPlistParserTest {
 
             TestErrorHandler teh = new TestErrorHandler();
             try {
-                List<Object> list = XMLPlistParser.parseList(in, teh);
+                Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+                List<Object> list = XMLPlistParser.parseList(doc, teh);
                 fail("expected exception");
             } catch(IllegalArgumentException e) {
                 assertEquals("Could not parse element dict", e.getMessage());
@@ -260,7 +265,8 @@ public class XMLPlistParserTest {
 
             TestErrorHandler teh = new TestErrorHandler();
 
-            List<Object> list = XMLPlistParser.parseList(in, teh);
+            Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+            List<Object> list = XMLPlistParser.parseList(doc, teh);
             assertNotNull(list);
             assertEquals(8, list.size());
         }
@@ -271,7 +277,8 @@ public class XMLPlistParserTest {
             TestErrorHandler teh = new TestErrorHandler();
 
             try {
-                List<Object> list = XMLPlistParser.parseList(in, teh);
+                Document doc = XMLPlistParser.parseXml(url.openStream(), null);
+                List<Object> list = XMLPlistParser.parseList(doc, teh);
                 fail("expected exception but caught none");
             } catch (IllegalArgumentException e) {
                 assertEquals("Could not parse element dict", e.getMessage());

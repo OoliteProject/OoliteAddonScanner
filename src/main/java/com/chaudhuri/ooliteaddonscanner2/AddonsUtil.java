@@ -35,6 +35,7 @@ import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -208,7 +209,7 @@ public class AddonsUtil {
      * @throws SAXException something went wrong
      * @throws TransformerException something went wrong
      */
-    public static void readShips(String url, InputStream in, Registry registry, Expansion expansion) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+    public static void readShips(String url, InputStream in, Registry registry, Expansion expansion) throws IOException, ParserConfigurationException, SAXException, TransformerException, XPathExpressionException {
         log.debug("readShips(...)");
         if (url == null || url.equals("null")) {
             throw new IllegalArgumentException("url must not be null");
@@ -231,6 +232,7 @@ public class AddonsUtil {
             in.reset();
 
             Document doc = XMLPlistParser.parseXml(in, null);
+            checkPlistKeys(doc, expansion, shipRequiredKeys, shipAllowedKeys);
             Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(doc, null);
             if (expansion.getName() != null) {
                 log.debug("Parsed {} ({} ships)", expansion.getName(), shipList.size());
@@ -241,7 +243,13 @@ public class AddonsUtil {
         } else {
             in.reset();
             PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, url);
-            checkPlistKeys(dc, expansion);
+            // on highest level the checks are not meaningful.
+            for (ParseTree pt: dc.children) {
+                if (pt instanceof PlistParser.DictionaryContext) {
+                    PlistParser.DictionaryContext subDc = (PlistParser.DictionaryContext)pt;
+                    checkPlistKeys(subDc, expansion, shipRequiredKeys, shipAllowedKeys);
+                }
+            }
             registry.addShipList(expansion, dc);
         }
     }
@@ -279,7 +287,8 @@ public class AddonsUtil {
         if (XML_HEADER.equals(sc.next())) {
             log.trace("Parsing {}", url);
             in.reset();
-            List<Object> equipmentList = XMLPlistParser.parseList(in, null);
+            Document doc = XMLPlistParser.parseXml(in, null);
+            List<Object> equipmentList = XMLPlistParser.parseList(doc, null);
             expansion.addWarning("Found XML equipment list");
             if (expansion.getName() != null) {
                 log.debug("Parsed {} ({} items of equipment)", expansion.getName(), equipmentList.size());
@@ -299,7 +308,7 @@ public class AddonsUtil {
      * 
      * @param registry 
      */
-    public static void readOolite(ExpansionCache cache, Registry registry) throws IOException, SAXException, ParserConfigurationException, RegistryException, TransformerException {
+    public static void readOolite(ExpansionCache cache, Registry registry) throws IOException, SAXException, ParserConfigurationException, RegistryException, TransformerException, XPathExpressionException {
         log.debug("readOolite({})", registry); 
         if (cache == null) {
             throw new IllegalArgumentException(EXCEPTION_CACHE_MUST_NOT_BE_NULL);
@@ -635,7 +644,8 @@ public class AddonsUtil {
             log.trace("XML content found in {}!{}", expansion.getDownloadUrl(), zentry.getName());
             in.reset();
 
-            List<Object> manifest = XMLPlistParser.parseList(in, null);
+            Document doc = XMLPlistParser.parseXml(in, null);
+            List<Object> manifest = XMLPlistParser.parseList(doc, null);
             if (manifest.size() != 1) {
                 throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
             }
@@ -678,7 +688,8 @@ public class AddonsUtil {
         if (XML_HEADER.equals(sc.next())) {
             log.trace("XML content found in {}!{}", expansion.getDownloadUrl(), zentry.getName());
             in.reset();
-            List<Object> worldscripts = XMLPlistParser.parseList(in, null);
+            Document doc = XMLPlistParser.parseXml(in, null);
+            List<Object> worldscripts = XMLPlistParser.parseList(doc, null);
             List<Object> scriptlist = (List)worldscripts.get(0);
             for (Object worldscript: scriptlist) {
                 expansion.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
@@ -779,6 +790,13 @@ public class AddonsUtil {
         checkPlist(getZipEntryStream(zin), zentry.getName(), oxp);
     }
     
+    /**
+     * Parses an expansion's plist and adds warnings to the expansion.
+     * 
+     * @param in
+     * @param entry
+     * @param oxp 
+     */
     static void checkPlist(InputStream in, String entry, Expansion oxp) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
         log.debug("checkPlist({}, {}, {})", in, entry, oxp);
         
@@ -797,7 +815,7 @@ public class AddonsUtil {
             in.reset();
             
             Document doc = XMLPlistParser.parseInputStream(in, new XMLPlistParser.MySaxErrorHandler(oxp));
-            checkPlistKeys(doc, oxp);
+            checkPlistKeys(doc, oxp, null, null);
         } else {
             in.reset();
             
@@ -826,10 +844,80 @@ public class AddonsUtil {
             }
             
             // todo: check if keys can be trimmed
-            checkPlistKeys(lc, oxp);
+            checkPlistKeys(lc, oxp, null, null);
         }
     }
     
+//    /**
+//     * Check dictionary keys for extraenous whitespace.
+//     * Returns findings as warnings in expansion.
+//     * 
+//     * @param pc the parsecontext to check
+//     * @param oxp the oxp to return warnings
+//     */
+//    private static void checkPlistKeys(ParserRuleContext prc, Expansion oxp) {
+//        for (int i=0; i< prc.getChildCount(); i++) {
+//            ParseTree pt = prc.getChild(i);
+//            checkPlistKeys(pt, oxp);
+//        }
+//    }
+    
+//    /**
+//     * Check dictionary keys for extraenous whitespace.
+//     * Returns findings as warnings in expansion.
+//     * 
+//     * @param pc the parsecontext to check
+//     * @param oxp the oxp to return warnings
+//     */
+//    private static void checkPlistKeys(ParseTree pt, Expansion oxp) {
+//        if (pt instanceof PlistParser.KeyvaluepairContext) {
+//            PlistParser.KeyvaluepairContext kvpc = (PlistParser.KeyvaluepairContext)pt;
+//            Token keyToken = kvpc.getStart();
+//            String key = keyToken.getText();
+//            if (!key.equals(key.trim())) {
+//                oxp.addWarning(String.format("Extreanous whitespace on key '%s'", key));
+//            }
+//        }
+//        
+//        for (int i=0; i< pt.getChildCount(); i++) {
+//            ParseTree pt2 = pt.getChild(i);
+//            checkPlistKeys(pt2, oxp);
+//        }
+//    }
+    
+//    /**
+//     * Check dictionary keys for extraenous whitespace.
+//     * Returns findings as warnings in expansion.
+//     * 
+//     * @param node the DOM node to check
+//     * @param oxp the oxp to return warnings
+//     */
+//    private static void checkPlistKeys(Node node, Expansion oxp) throws XPathExpressionException {
+//        XPath xpath = XPathFactory.newDefaultInstance().newXPath();
+//        NodeList nl = (NodeList)xpath.evaluate("//key", node, XPathConstants.NODESET);
+//        for (int i=0; i<nl.getLength();i++) {
+//            Node keyNode = nl.item(i);
+//            String key = keyNode.getTextContent();
+//            if (!key.equals(key.trim())) {
+//                oxp.addWarning(String.format("Extreanous whitespace on key '%s'", key));
+//            }
+//        }
+//    }
+    
+    private static List<String> manifestRequiredKeys = Arrays.asList("manifest1", "manifest2", "manifest3");
+    private static List<String> manifestAllowedKeys = Arrays.asList("manifest1", "manifest2", "manifest3");
+    
+    private static List<String> shipRequiredKeys = Arrays.asList("roles");
+    private static List<String> shipAllowedKeys = Arrays.asList("aft_eject_position", 
+            "ai_type", "auto_ai", "cargo_type", "energy_recharge_rate", 
+            "exhaust", "forward_weapon_type", "fuel", "has_ecm", "has_escape_pod",
+            "has_scoop", "likely_cargo", "max_cargo", "max_energy", "max_flight_pitch",
+            "max_flight_roll", "max_flight_speed", "missile_launch_position",
+            "missiles", "model", "name", "roles", "thrust", "weapon_energy",
+            "weapon_position_aft", "weapon_position_forward", "weapon_position_port",
+            "weapon_position_starboard"
+    );
+
     /**
      * Check dictionary keys for extraenous whitespace.
      * Returns findings as warnings in expansion.
@@ -837,13 +925,22 @@ public class AddonsUtil {
      * @param pc the parsecontext to check
      * @param oxp the oxp to return warnings
      */
-    private static void checkPlistKeys(ParserRuleContext prc, Expansion oxp) {
+    private static void checkPlistKeys(ParserRuleContext prc, Expansion oxp, List<String> requiredKeys, List<String> allowedKeys) {
+        List<String> myRequiredKeys = new ArrayList<>();
+        if (requiredKeys != null) {
+            myRequiredKeys.addAll(requiredKeys);
+        }
+
         for (int i=0; i< prc.getChildCount(); i++) {
             ParseTree pt = prc.getChild(i);
-            checkPlistKeys(pt, oxp);
+            checkPlistKeys(pt, oxp, myRequiredKeys, allowedKeys);
+        }
+        
+        if (!myRequiredKeys.isEmpty()) {
+            oxp.addWarning("Missing keys " + String.valueOf(myRequiredKeys));
         }
     }
-    
+
     /**
      * Check dictionary keys for extraenous whitespace.
      * Returns findings as warnings in expansion.
@@ -851,7 +948,7 @@ public class AddonsUtil {
      * @param pc the parsecontext to check
      * @param oxp the oxp to return warnings
      */
-    private static void checkPlistKeys(ParseTree pt, Expansion oxp) {
+    private static void checkPlistKeys(ParseTree pt, Expansion oxp, List<String> requiredKeys, List<String> allowedKeys) {
         if (pt instanceof PlistParser.KeyvaluepairContext) {
             PlistParser.KeyvaluepairContext kvpc = (PlistParser.KeyvaluepairContext)pt;
             Token keyToken = kvpc.getStart();
@@ -859,11 +956,18 @@ public class AddonsUtil {
             if (!key.equals(key.trim())) {
                 oxp.addWarning(String.format("Extreanous whitespace on key '%s'", key));
             }
+            if (allowedKeys != null && !allowedKeys.contains(key)) {
+                oxp.addWarning(String.format("Unknown key '%s'", key));
+            }
+            
+            if (requiredKeys != null) {
+                requiredKeys.remove(key);
+            }
         }
         
         for (int i=0; i< pt.getChildCount(); i++) {
             ParseTree pt2 = pt.getChild(i);
-            checkPlistKeys(pt2, oxp);
+            checkPlistKeys(pt2, oxp, requiredKeys, allowedKeys);
         }
     }
     
@@ -874,7 +978,12 @@ public class AddonsUtil {
      * @param node the DOM node to check
      * @param oxp the oxp to return warnings
      */
-    private static void checkPlistKeys(Node node, Expansion oxp) throws XPathExpressionException {
+    private static void checkPlistKeys(Node node, Expansion oxp, List<String> requiredKeys, List<String> allowedKeys) throws XPathExpressionException {
+        List<String> myRequiredKeys = new ArrayList<>();
+        if (requiredKeys != null) {
+            myRequiredKeys.addAll(requiredKeys);
+        }
+        
         XPath xpath = XPathFactory.newDefaultInstance().newXPath();
         NodeList nl = (NodeList)xpath.evaluate("//key", node, XPathConstants.NODESET);
         for (int i=0; i<nl.getLength();i++) {
@@ -883,6 +992,15 @@ public class AddonsUtil {
             if (!key.equals(key.trim())) {
                 oxp.addWarning(String.format("Extreanous whitespace on key '%s'", key));
             }
+            if (allowedKeys != null && !allowedKeys.contains(key)) {
+                oxp.addWarning(String.format("Unknown key '%s'", key));
+            }
+            
+            myRequiredKeys.remove(key);
+        }
+        
+        if (!myRequiredKeys.isEmpty()) {
+            oxp.addWarning("Missing keys " + String.valueOf(myRequiredKeys));
         }
     }
 }
