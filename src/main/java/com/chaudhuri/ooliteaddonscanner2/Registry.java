@@ -2,19 +2,21 @@
  */
 package com.chaudhuri.ooliteaddonscanner2;
 
-import com.chaudhuri.ooliteaddonscanner2.plist.PlistParserUtil;
-import com.chaudhuri.plist.PlistParser;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
 import com.chaudhuri.ooliteaddonscanner2.model.Warnable;
 import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
+import com.dd.plist.NSArray;
+import com.dd.plist.NSDictionary;
+import com.dd.plist.NSObject;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.TreeMap;
 import org.apache.logging.log4j.LogManager;
@@ -65,7 +67,7 @@ public class Registry {
      * 
      * @param lc the list of expansions
      */
-    public void addExpansions(PlistParser.ListContext lc) {
+    public void addExpansions(NSArray lc) {
         log.debug("addExpansions({})", lc);
         
         if (lc == null) {
@@ -74,12 +76,12 @@ public class Registry {
         
         // we expect a list of dictionaries, nothing else
         
-        for (PlistParser.ValueContext vc: lc.value()) {
-            PlistParser.DictionaryContext dc = vc.dictionary();
+        for (NSObject vc: lc.getArray()) {
+            NSDictionary expansion = (NSDictionary)vc;
             if (log.isTraceEnabled()) {
-                log.trace("{} {}", dc.getClass(), dc.toStringTree());
+                log.trace("{} {}", expansion.getClass(), expansion);
             }
-            addExpansion(dc);
+            addExpansion(expansion);
         }
     }
 
@@ -88,14 +90,13 @@ public class Registry {
      * 
      * @param dc 
      */
-    public void addExpansion(PlistParser.DictionaryContext dc) {
+    public void addExpansion(NSDictionary dc) {
         log.debug("addExpansion({})", dc);
         
         Expansion oxp = new Expansion();
         
-        for (PlistParser.KeyvaluepairContext kc: dc.keyvaluepair()) {
+        for (Entry<String, NSObject> kc: dc.entrySet()) {
             log.trace("{}", kc);
-
             evaluateOxpKeys(kc, oxp);
         }
         
@@ -125,141 +126,160 @@ public class Registry {
         }
     }
     
-    private static void evaluateOxpKeys(PlistParser.KeyvaluepairContext kc, Expansion oxp) {
+    private static void evaluateOxpKeys(Map.Entry<String, NSObject> kc, Expansion oxp) {
 
-        String key = kc.STRING().getText();
+        String key = kc.getKey();
             
         if (EXPANSION_IDENTIFIER.equals(key)) {
-            oxp.setIdentifier(kc.value().getText());
+            oxp.setIdentifier(kc.getValue().toString());
         } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
-            oxp.setRequiredOoliteVersion(kc.value().getText());
+            oxp.setRequiredOoliteVersion(kc.getValue().toString());
         } else if (EXPANSION_TITLE.equals(key)) {
-            oxp.setTitle(kc.value().getText());
+            oxp.setTitle(kc.getValue().toString());
         } else if (EXPANSION_VERSION.equals(key)) {
-            oxp.setVersion(kc.value().getText());
+            oxp.setVersion(kc.getValue().toString());
         } else if (EXPANSION_CATEGORY.equals(key)) {
-            oxp.setCategory(kc.value().getText());
+            oxp.setCategory(kc.getValue().toString());
         } else if (EXPANSION_DESCRIPTION.equals(key)) {
-            oxp.setDescription(kc.value().getText());
+            oxp.setDescription(kc.getValue().toString());
         } else if ("download_url".equals(key)) {
-            oxp.setDownloadUrl(kc.value().getText());
+            oxp.setDownloadUrl(kc.getValue().toString());
         } else if (EXPANSION_AUTHOR.equals(key)) {
-            oxp.setAuthor(kc.value().getText());
+            oxp.setAuthor(kc.getValue().toString());
         } else if ("file_size".equals(key)) {
-            oxp.setFileSize(kc.value().getText());
+            oxp.setFileSize(kc.getValue().toString());
         } else if (EXPANSION_INFORMATION_URL.equals(key)) {
-            oxp.setInformationUrl(kc.value().getText());
+            oxp.setInformationUrl(kc.getValue().toString());
         } else {
             evaluateOxpKeys2(kc, oxp);
         }
     }
     
-    private static List<Expansion.Dependency> parseDependencies(PlistParser.ValueContext vc, Warnable warnable) {
+    /**
+     * 
+     * @param vc
+     * @param warnable
+     * @return 
+     * @see https://wiki.alioth.net/index.php/Manifest.plist#Dependency_management_keys
+     */
+    private static List<Expansion.Dependency> parseDependencies(NSArray vc, Warnable warnable) {
         List<Expansion.Dependency> result = new ArrayList<>();
         
-        if (vc.list() != null) {
-            for (PlistParser.ValueContext vc2: vc.list().value()) {
-                PlistParser.DictionaryContext dict = vc2.dictionary();
-                
-                Expansion.Dependency dependency = new Expansion.Dependency();
+        for (NSObject vc2: vc.getArray()) {
+            NSDictionary dict = (NSDictionary)vc2;
 
-                for (PlistParser.KeyvaluepairContext kvc: dict.keyvaluepair()) {
-                    String key = kvc.STRING().getText();
-                    String value = kvc.value().getText();
-                    switch(key) {
-                        case EXPANSION_IDENTIFIER:
-                            dependency.setIdentifier(value);
-                            break;
-                        case EXPANSION_VERSION:
-                            dependency.setVersion(value);
-                            break;
-                        case EXPANSION_DESCRIPTION:
-                            dependency.setDescription(value);
-                            break;
-                        case "maximum_version":
-                            dependency.setMaxVersion(value);
-                            break;
-                        default:
-                            log.warn("unknown dependency key {}", key);
-                            warnable.addWarning("Dependency with illegal key '" + key + "'");
-                            break;
-                    }
-                    
+            Expansion.Dependency dependency = new Expansion.Dependency();
+
+            for (Map.Entry<String, NSObject> kvc: dict.entrySet()) {
+                String key = kvc.getKey();
+                String value = kvc.getValue().toString();
+                switch(key) {
+                    case EXPANSION_IDENTIFIER:
+                        dependency.setIdentifier(value);
+                        break;
+                    case EXPANSION_VERSION:
+                        dependency.setVersion(value);
+                        break;
+                    case EXPANSION_DESCRIPTION:
+                        dependency.setDescription(value);
+                        break;
+                    case "maximum_version":
+                        dependency.setMaxVersion(value);
+                        break;
+                    default:
+                        log.warn("unknown dependency key {}", key);
+                        warnable.addWarning("Dependency with illegal key '" + key + "'");
+                        break;
                 }
-                result.add(dependency);
+
             }
+            result.add(dependency);
         }
         
         return result;
     }
+    
+    /**
+     * Reads an NSArray of NSString and returns a List of Strings.
+     * 
+     * @param list
+     * @return 
+     */
+    private static List<String> parseStringList(NSArray list) {
+        ArrayList<String> result = new ArrayList<>();
+        for (NSObject o: list.getArray()) {
+            result.add(o.toString());
+        }
+        return result;
+    }
 
-    private static void evaluateOxpKeys2(PlistParser.KeyvaluepairContext kc, Expansion oxp) {
-        String key = kc.STRING().getText();
+    private static void evaluateOxpKeys2(Map.Entry<String, NSObject> kc, Expansion oxp) {
+        String key = kc.getKey();
         if (EXPANSION_LICENSE.equals(key)) {
-            oxp.setLicense(kc.value().getText());
+            oxp.setLicense(kc.getValue().toString());
         } else if ("upload_date".equals(key)) {
-            oxp.setUploadDate(kc.value().getText());
+            oxp.setUploadDate(kc.getValue().toString());
         } else if (EXPANSION_TAGS.equals(key)) {
-            oxp.setTags(new ArrayList<>(PlistParserUtil.getStringList(kc.value())));
+            oxp.setTags(parseStringList((NSArray)kc.getValue())); //TODO
         } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
-            oxp.setRequiresOxps(parseDependencies(kc.value(), oxp));
+            oxp.setRequiresOxps(parseDependencies((NSArray)kc.getValue(), oxp));
         } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
-            oxp.setOptionalOxps(parseDependencies(kc.value(), oxp));
+            oxp.setOptionalOxps(parseDependencies((NSArray)kc.getValue(), oxp));
         } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
-            oxp.setConflictOxps(parseDependencies(kc.value(), oxp));
+            oxp.setConflictOxps(parseDependencies((NSArray)kc.getValue(), oxp));
         } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
-            oxp.setMaximumOoliteVersion(kc.value().getText());
+            oxp.setMaximumOoliteVersion(kc.getValue().toString());
         } else {
             log.warn("Could not process key '{}'", key);
         }
     }
     
-    private static void evaluateOxpKeys(PlistParser.KeyvaluepairContext kc, ExpansionManifest em) {
-        String key = kc.STRING().getText();
+    private static void evaluateOxpKeys(Map.Entry<String, NSObject> kc, ExpansionManifest em) {
+        String key = kc.getKey();
         
         if (EXPANSION_IDENTIFIER.equals(key)) {
-            em.setIdentifier(kc.value().getText());
+            em.setIdentifier(kc.getValue().toString());
         } else if (EXPANSION_AUTHOR.equals(key)) {
-            em.setAuthor(kc.value().getText());
+            em.setAuthor(kc.getValue().toString());
         } else if (EXPANSION_CONFLICT_OXPS.equals(key)) {
-            em.setConflictOxps(parseDependencies(kc.value(), em));
+            em.setConflictOxps(parseDependencies((NSArray)kc.getValue(), em));
         } else if (EXPANSION_DESCRIPTION.equals(key)) {
-            em.setDescription(kc.value().getText());
+            em.setDescription(kc.getValue().toString());
         } else if ("download_url".equals(key)) {
-            em.setDownloadUrl(kc.value().getText());
+            em.setDownloadUrl(kc.getValue().toString());
         } else if (EXPANSION_CATEGORY.equals(key)) {
-            em.setCategory(kc.value().getText());
+            em.setCategory(kc.getValue().toString());
         } else if ("file_size".equals(key)) {
-            em.setFileSize(kc.value().getText());
+            em.setFileSize(kc.getValue().toString());
         } else {
             evaluateOxpKeys2(kc, em);
         }
     }
     
-    private static void evaluateOxpKeys2(PlistParser.KeyvaluepairContext kc, ExpansionManifest em) {
-        String key = kc.STRING().getText();
+    private static void evaluateOxpKeys2(Map.Entry<String, NSObject> kc, ExpansionManifest em) {
+        String key = kc.getKey();
         
         if (EXPANSION_INFORMATION_URL.equals(key)) {
-            em.setInformationUrl(kc.value().getText());
+            em.setInformationUrl(kc.getValue().toString());
         } else if (EXPANSION_LICENSE.equals(key)) {
-            em.setLicense(kc.value().getText());
+            em.setLicense(kc.getValue().toString());
         } else if (EXPANSION_MAXIMUM_OOLITE_VERSION.equals(key)) {
-            em.setMaximumOoliteVersion(kc.value().getText());
+            em.setMaximumOoliteVersion(kc.getValue().toString());
         } else if (EXPANSION_OPTIONAL_OXPS.equals(key)) {
-            em.setOptionalOxps(parseDependencies(kc.value(), em));
+            em.setOptionalOxps(parseDependencies((NSArray)kc.getValue(), em));
         } else if (EXPANSION_REQUIRED_OOLITE_VERSION.equals(key)) {
-            em.setRequiredOoliteVersion(kc.value().getText());
+            em.setRequiredOoliteVersion(kc.getValue().toString());
         } else if (EXPANSION_REQUIRES_OXPS.equals(key)) {
-            em.setRequiresOxps(parseDependencies(kc.value(), em));
+            em.setRequiresOxps(parseDependencies((NSArray)kc.getValue(), em));
         } else if (EXPANSION_TAGS.equals(key)) {
-            em.setTags(PlistParserUtil.getStringList(kc.value()));
+            em.setTags(parseStringList((NSArray)kc.getValue()));
         } else if (EXPANSION_TITLE.equals(key)) {
-            em.setTitle(kc.value().getText());
+            em.setTitle(kc.getValue().toString());
         } else if (EXPANSION_VERSION.equals(key)) {
-            em.setVersion(kc.value().getText());
+            em.setVersion(kc.getValue().toString());
         } else {
-            log.trace("Unknown key {}->{} at {}", key, kc.value().getText(), kc.getStart().getTokenSource().getSourceName());
-            em.addWarning(String.format("Unknown key '%s' at %s", key, kc.getStart().getTokenSource().getSourceName()));
+            log.trace("Unknown key {}->{}", key, kc.getValue().toString());
+            em.addWarning(String.format("Unknown key '%s'", key));
         }
     }
     
@@ -337,7 +357,7 @@ public class Registry {
      * @param expansion
      * @param lc 
      */
-    public void addEquipmentList(Expansion expansion, PlistParser.ListContext lc) throws RegistryException {
+    public void addEquipmentList(Expansion expansion, NSArray lc) throws RegistryException {
         log.debug("addEquipmentList({}, {})", expansion, lc);
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
@@ -347,12 +367,12 @@ public class Registry {
         }
         
         // for each equipment
-        for (PlistParser.ValueContext vc: lc.value()) {
+        for (NSObject vc: lc.getArray()) {
             
             // the equipment is a list by itself
-            log.trace("ValueContext: {}", vc.getText());
-            if (vc.list() != null) {
-                addEquipment(expansion, vc.list());
+            log.trace("ValueContext: {}", vc.toString());
+            if (vc instanceof NSArray) {
+                addEquipment(expansion, (NSArray)vc);
             }
         }
     }
@@ -448,8 +468,9 @@ public class Registry {
      * 
      * @param expansion the expansion the equipment is part of
      * @param lc the parser context from which to read the equipment
+     * @see https://wiki.alioth.net/index.php/Equipment.plist#Equipment_Structure
      */
-    public void addEquipment(Expansion expansion, PlistParser.ListContext lc) throws RegistryException {
+    public void addEquipment(Expansion expansion, NSArray lc) throws RegistryException {
         log.debug("addEquipment({}, {})", expansion, lc);
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
@@ -461,23 +482,18 @@ public class Registry {
         Equipment eq = new Equipment();
         eq.setExpansion(expansion);
 
-        eq.setTechlevel(lc.value(0).getText());
-        eq.setCost(lc.value(1).getText());
-        eq.setName(lc.value(2).getText());
-        eq.setIdentifier(lc.value(3).getText());
-        eq.setDescription(lc.value(4).getText());
+        eq.setTechlevel  (lc.getArray()[0].toString());
+        eq.setCost       (lc.getArray()[1].toString());
+        eq.setName       (lc.getArray()[2].toString());
+        eq.setIdentifier (lc.getArray()[3].toString());
+        eq.setDescription(lc.getArray()[4].toString());
         
         try {
-            PlistParser.ValueContext v = lc.value(5);
+            NSObject v = lc.getArray()[5];
             if (v != null) {
-                PlistParser.DictionaryContext d = v.dictionary();
-                if (d != null) {
-                    List<PlistParser.KeyvaluepairContext> kl = d.keyvaluepair();
-                    if (kl != null) {
-                        for (PlistParser.KeyvaluepairContext kc: kl) {
-                            eq.putFeature(kc.STRING().getText(), kc.value().getText());
-                        }
-                    }
+                NSDictionary d = (NSDictionary)v;
+                for (Map.Entry<String, NSObject> kc: d.entrySet()) {
+                    eq.putFeature(kc.getKey(), kc.getValue().toString());
                 }
             }
         } catch (Exception e) {
@@ -514,7 +530,7 @@ public class Registry {
      * @param expansion the expansion the ahip will belong to
      * @param dc the dictionary context to read the ships from
      */
-    public void addShipList(Expansion expansion, PlistParser.DictionaryContext dc) {
+    public void addShipList(Expansion expansion, NSDictionary dc) {
         log.debug("addShipList({}, {})", expansion, dc);
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
@@ -523,9 +539,9 @@ public class Registry {
             throw new IllegalArgumentException("dc must not be null");
         }
         
-        for (PlistParser.KeyvaluepairContext kc: dc.keyvaluepair()) {
-            String key = kc.STRING().getText(); // ship identifier
-            PlistParser.DictionaryContext ship = kc.value().dictionary();
+        for (Map.Entry<String, NSObject> kc: dc.entrySet()) {
+            String key = kc.getKey(); // ship identifier
+            NSDictionary ship = (NSDictionary)kc.getValue();
             
             addShip(expansion, key, ship);
         }
@@ -567,7 +583,7 @@ public class Registry {
      * @param expansion the expansion the ships will belong to
      * @param dc the dictionary context to read the ships from
      */
-    public void addShip(Expansion expansion, String identifier, PlistParser.DictionaryContext dc) {
+    public void addShip(Expansion expansion, String identifier, NSDictionary dc) {
         log.debug("addShip({}, {}, {})", expansion, identifier, dc);
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
@@ -583,8 +599,8 @@ public class Registry {
         ship.setExpansion(expansion);
         ship.setIdentifier(identifier);
         
-        for (PlistParser.KeyvaluepairContext kc: dc.keyvaluepair()) {
-            ship.addFeature(kc.STRING().getText(), kc.value().getText());
+        for (Map.Entry<String, NSObject> kc: dc.entrySet()) {
+            ship.addFeature(kc.getKey(), kc.getValue().toString());
         }
         
         expansion.addShip(ship);
@@ -705,78 +721,16 @@ public class Registry {
         return result;
     }
 
-    /**
-     * Parses manifest data.
-     * 
-     * @param data the data to read
-     * @return the ExpansionManifest
-     */
-    public ExpansionManifest toManifest(Map<String, Object> data) {
-        log.debug("toManifest({})", data);
-        ExpansionManifest em = new ExpansionManifest();
-        
-        for (Map.Entry<String, Object> entry: data.entrySet()) {
-            switch (entry.getKey()) {
-                case EXPANSION_AUTHOR:
-                    em.setAuthor(String.valueOf(entry.getValue()));
-                    break;
-                case EXPANSION_CATEGORY:
-                    em.setCategory(String.valueOf(entry.getValue()));
-                    break;
-                case EXPANSION_CONFLICT_OXPS:
-                    em.setConflictOxps(parseDependencies((PlistParser.ValueContext)entry.getValue(), em));
-                    break;
-                case EXPANSION_DESCRIPTION:
-                    em.setDescription(String.valueOf(entry.getValue()));
-                    break;
-                case EXPANSION_IDENTIFIER:
-                    em.setIdentifier(String.valueOf(entry.getValue()));
-                    break;
-                case EXPANSION_INFORMATION_URL:
-                    em.setInformationUrl(String.valueOf(entry.getValue()));
-                    break;
-                case EXPANSION_LICENSE:
-                    em.setLicense(String.valueOf(entry.getValue()));
-                    break;
-                case EXPANSION_MAXIMUM_OOLITE_VERSION:
-                    em.setMaximumOoliteVersion(String.valueOf(entry.getValue()));
-                    break;
-                case EXPANSION_OPTIONAL_OXPS:
-                    em.setOptionalOxps(parseDependencies((PlistParser.ValueContext)entry.getValue(), em));
-                    break;
-                case EXPANSION_REQUIRED_OOLITE_VERSION:
-                    em.setRequiredOoliteVersion(String.valueOf(entry.getValue()));
-                    break;
-                case EXPANSION_REQUIRES_OXPS:
-                    em.setRequiresOxps(parseDependencies((PlistParser.ValueContext)entry.getValue(), em));
-                    break;
-                case EXPANSION_TAGS:
-                    em.setTags(new ArrayList<String>((List<String>)entry.getValue()));
-                    break;
-                case EXPANSION_TITLE:
-                    em.setTitle(String.valueOf(entry.getValue()));
-                    break;
-                case EXPANSION_VERSION:
-                    em.setVersion(String.valueOf(entry.getValue()));
-                    break;
-                default:
-                    em.addWarning(String.format("Unknown key '%s' in XML manifest.plist", entry.getKey()));
-            }
-        }
-        
-        return em;
-    }
-    
     /** 
      * Parses manifest data.
      * 
      * @return the ExpansionManifest
      */
-    public ExpansionManifest toManifest(PlistParser.DictionaryContext dc) {
+    public ExpansionManifest toManifest(NSDictionary dc) {
         log.debug("toManifest({})", dc);
         ExpansionManifest em = new ExpansionManifest();
         
-        for (PlistParser.KeyvaluepairContext kc: dc.keyvaluepair()) {
+        for (Map.Entry<String, NSObject> kc: dc.entrySet()) {
             evaluateOxpKeys(kc, em);
         }
         return em;

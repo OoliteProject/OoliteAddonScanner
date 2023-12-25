@@ -234,6 +234,7 @@ public class GeneratorTest {
         Generator instance = new Generator();
         File f = new File("src/test/data/ThargornThreat_1.5.2.oxz");
         ZipInputStream zin = new ZipInputStream(new FileInputStream(f));
+        
         ExpansionManifest em = instance.getManifestFromOXZ(zin, f.toString());
         
         assertNotNull(em);

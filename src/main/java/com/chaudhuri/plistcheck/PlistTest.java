@@ -2,8 +2,8 @@
  */
 package com.chaudhuri.plistcheck;
 
-import com.chaudhuri.plist.PlistLexer;
-import com.chaudhuri.plist.PlistParser;
+import com.dd.plist.NSObject;
+import com.dd.plist.PropertyListParser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -20,15 +20,6 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.antlr.v4.runtime.ANTLRErrorListener;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CharStreams;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.Parser;
-import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Recognizer;
-import org.antlr.v4.runtime.atn.ATNConfigSet;
-import org.antlr.v4.runtime.dfa.DFA;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -213,70 +204,14 @@ public class PlistTest extends javax.swing.JFrame {
         }
     }
 
-    class MyANTLRErrorListener implements ANTLRErrorListener {
-        
-        private int errorCount;
-
-        public int getErrorCount() {
-            return errorCount;
-        }
-        
-        @Override
-        public void syntaxError(Recognizer<?, ?> rcgnzr, Object o, int line, int column, String message, RecognitionException re) {
-            errorCount++;
-            txtLog.append(String.format("%nline %d:%d %s", line, column, message));
-        }
-
-        @Override
-        public void reportAmbiguity(Parser parser, DFA dfa, int i, int i1, boolean bln, BitSet bitset, ATNConfigSet atncs) {
-            errorCount++;
-            txtLog.append("\n");
-            txtLog.append(parser.toString() + dfa + i + i1 + bln + bitset + atncs);
-        }
-
-        @Override
-        public void reportAttemptingFullContext(Parser parser, DFA dfa, int i, int i1, BitSet bitset, ATNConfigSet atncs) {
-            errorCount++;
-            txtLog.append("\n");
-            txtLog.append(parser.toString() + dfa + i + i1 + bitset + atncs);
-        }
-
-        @Override
-        public void reportContextSensitivity(Parser parser, DFA dfa, int i, int i1, int i2, ATNConfigSet atncs) {
-            errorCount++;
-            txtLog.append("\n");
-            txtLog.append(parser.toString() + dfa + i + i1 + i2 + atncs);
-        }
-
-    }
-    
     private void validateFile() {
         File f = new File(txtFile.getText());
         txtLog.setText(new Date().toString());
         txtLog.append("\nValidating "+f.getAbsolutePath());
         
-        MyANTLRErrorListener el = new MyANTLRErrorListener();
-
         try {
-            InputStream in = new FileInputStream(f);
-            try (ReadableByteChannel channel = Channels.newChannel(in)) {
-                CharStream charStream = CharStreams.fromChannel(channel, StandardCharsets.UTF_8, 4096, CodingErrorAction.REPLACE, f.getAbsolutePath(), -1);
-                PlistLexer lexer = new PlistLexer(charStream);
-                lexer.addErrorListener(el);
-
-                CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-                PlistParser parser = new PlistParser(tokenStream);
-                parser.addErrorListener(el);
-                parser.parse();
-            
-                if (0 == el.getErrorCount()) {
-                    txtLog.append("\nSuccessfully parsed.");
-                } else {
-                    txtLog.append(String.format("%nFound %d errors.", el.getErrorCount()));
-                    setVisible(true);
-                    toFront();
-                }
-            }
+            PropertyListParser.parse(f);
+            txtLog.append("\nSuccessfully parsed.");
         } catch (Exception e) {
             log.error("Problem", e);
             txtLog.append("\n");

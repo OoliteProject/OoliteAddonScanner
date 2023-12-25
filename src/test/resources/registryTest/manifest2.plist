@@ -9,10 +9,31 @@
 	"information_url" = "https://wiki.alioth.net/index.php?title=Route_Planner_OXP";
 	"license" = "CC BY-NC-SA 4";
         "upload_date" = "anno domini";
-        "tags" = "whatever";
-        "requires_oxps" = "all";
-        "optional_oxps" = "some";
-        "conflict_oxps" = "none";
+        "tags" = ("whatever");
+        "requires_oxps" = (
+            {
+                "identifier" = "all";
+            },
+            {
+                "identifier" = "all2";
+            }
+        );
+        "optional_oxps" = (
+            {
+                "identifier" = "some";
+            },
+            {
+                "identifier" = "some2";
+            }
+        );
+        "conflict_oxps" = (
+            {
+                "identifier" = "none";
+            },
+            {
+                "identifier" = "none2";
+            }
+        );
         "maximum_oolite_version" = "any";
         "unknownKey" = "fart";
 }

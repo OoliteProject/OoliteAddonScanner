@@ -3,17 +3,19 @@
 package com.chaudhuri.ooliteaddonscanner2;
 
 import com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser;
-import com.chaudhuri.ooliteaddonscanner2.plist.PlistParserUtil;
-import com.chaudhuri.plist.PlistParser;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
+import com.dd.plist.NSArray;
+import com.dd.plist.NSDictionary;
+import com.dd.plist.PropertyListFormatException;
+import com.dd.plist.PropertyListParser;
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.apache.logging.log4j.LogManager;
@@ -351,7 +353,7 @@ public class RegistryTest {
      * Test adding a list of expansions.
      */
     @Test
-    public void testAddExpansion_ListContext() throws IOException {
+    public void testAddExpansion_ListContext() throws IOException, PropertyListFormatException, ParseException, ParserConfigurationException, SAXException {
         log.info("testAddExpansion_ListContext");
         
         Registry registry = new Registry();
@@ -367,7 +369,7 @@ public class RegistryTest {
             URL url = getClass().getResource("/registryTest/manifest4.plist");
 
             // parse plist test data
-            PlistParser.ListContext lc = PlistParserUtil.parsePlistList(url.openStream(), url.toString());
+            NSArray lc = (NSArray)PropertyListParser.parse(url.openStream());
 
             registry.addExpansions(lc);
             log.info("{}", registry.getWarnings());
@@ -377,12 +379,12 @@ public class RegistryTest {
     }
 
     @Test
-    public void testAddEquipmentList_Expansion_ListContext() throws IOException, RegistryException {
-        log.info("testAddEquipmentList_Expansion_ListContext");
+    public void testAddEquipmentList_Expansion_NSArray() throws IOException, RegistryException, PropertyListFormatException, ParseException, ParserConfigurationException, SAXException {
+        log.info("testAddEquipmentList_Expansion_NSArray");
         
         Registry registry = new Registry();
         try {
-            registry.addEquipmentList(null, (PlistParser.ListContext)null);
+            registry.addEquipmentList(null, (NSArray)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             log.debug("caught expected exception", e);
@@ -391,9 +393,9 @@ public class RegistryTest {
         URL url = getClass().getResource("/registryTest/equipment1.plist");
 
         // parse plist test data
-        PlistParser.ListContext lc = PlistParserUtil.parsePlistList(url.openStream(), url.toString());
+        NSArray lc = (NSArray)PropertyListParser.parse(url.openStream());
         try {
-            registry.addEquipmentList(null, (PlistParser.ListContext)lc);
+            registry.addEquipmentList(null, lc);
         } catch (IllegalArgumentException e) {
             log.debug("caught expected exception", e);
         }
@@ -401,12 +403,12 @@ public class RegistryTest {
         Expansion expansion = new Expansion();
 
         try {
-            registry.addEquipmentList(expansion, (PlistParser.ListContext)null);
+            registry.addEquipmentList(expansion, (NSArray)null);
         } catch (IllegalArgumentException e) {
             log.debug("caught expected exception", e);
         }
         
-        registry.addEquipmentList(expansion, (PlistParser.ListContext)lc);
+        registry.addEquipmentList(expansion, lc);
         assertEquals(3, registry.getEquipment().size());
     }
     
@@ -523,7 +525,7 @@ public class RegistryTest {
      * Test of addExpansion method, of class Registry.
      */
     @Test
-    public void testAddExpansion_PlistParserDictionaryContext() throws IOException {
+    public void testAddExpansion_PlistParserDictionaryContext() throws IOException, PropertyListFormatException, ParseException, ParserConfigurationException, SAXException {
         log.info("addExpansion");
 
         Registry registry = new Registry();
@@ -532,7 +534,7 @@ public class RegistryTest {
             URL url = getClass().getResource("/registryTest/manifest1.plist");
 
             // parse plist test data
-            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+            NSDictionary dc = (NSDictionary)PropertyListParser.parse(url.openStream());
 
             registry.addExpansion(dc);
             assertEquals(1, registry.getExpansions().size());
@@ -542,7 +544,7 @@ public class RegistryTest {
             URL url = getClass().getResource("/registryTest/manifest2.plist");
 
             // parse plist test data
-            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+            NSDictionary dc = (NSDictionary)PropertyListParser.parse(url.openStream());
 
             registry.addExpansion(dc);
             assertEquals(1, registry.getExpansions().size());
@@ -552,7 +554,7 @@ public class RegistryTest {
             URL url = getClass().getResource("/registryTest/manifest3.plist");
 
             // parse plist test data
-            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+            NSDictionary dc = (NSDictionary)PropertyListParser.parse(url.openStream());
 
             registry.addExpansion(dc);
             assertEquals(1, registry.getExpansions().size());
@@ -565,11 +567,11 @@ public class RegistryTest {
      * Test of toManifest method, of class Registry.
      */
     @Test
-    public void testToManifest_PlistParserDictionaryContext() throws IOException {
+    public void testToManifest_PlistParserDictionaryContext() throws IOException, PropertyListFormatException, ParseException, ParserConfigurationException, SAXException {
         log.info("toManifest");
         
         URL url = getClass().getResource("/registryTest/expansionManifest1.plist");
-        PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+        NSDictionary dc = (NSDictionary)PropertyListParser.parse(url.openStream());
         
         Registry registry = new Registry();
         ExpansionManifest em = registry.toManifest(dc);
@@ -612,13 +614,13 @@ public class RegistryTest {
      * Test of addShipList method, of class Registry.
      */
     @Test
-    public void testAddShipList_Expansion_PlistParserDictionaryContext() throws IOException {
+    public void testAddShipList_Expansion_PlistParserDictionaryContext() throws IOException, PropertyListFormatException, ParseException, ParserConfigurationException, SAXException {
         log.info("addShipList");
         
         Registry registry = new Registry();
 
         try {
-            registry.addShipList(null, (PlistParser.DictionaryContext)null);
+            registry.addShipList(null, (NSDictionary)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             assertEquals("expansion must not be null", e.getMessage());
@@ -628,7 +630,7 @@ public class RegistryTest {
         Expansion expansion = new Expansion("testAddShipListExpansion");
 
         try {
-            registry.addShipList(expansion, (PlistParser.DictionaryContext)null);
+            registry.addShipList(expansion, (NSDictionary)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             assertEquals("dc must not be null", e.getMessage());
@@ -636,7 +638,7 @@ public class RegistryTest {
         }
 
         URL url = getClass().getResource("/registryTest/ship1.plist");
-        PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(url.openStream(), url.toString());
+        NSDictionary dc = (NSDictionary)PropertyListParser.parse(url.openStream());
         registry.addShipList(expansion, dc);
         
         assertEquals(3, registry.getShips().size());
@@ -651,7 +653,7 @@ public class RegistryTest {
         
         Registry registry = new Registry();
         try {
-            registry.addEquipment(null, (PlistParser.ListContext)null);
+            registry.addEquipment(null, (NSArray)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             log.debug("caught expected exception", e);
@@ -660,7 +662,7 @@ public class RegistryTest {
         Expansion expansion = new Expansion();
 
         try {
-            registry.addEquipment(expansion, (PlistParser.ListContext)null);
+            registry.addEquipment(expansion, (NSArray)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             log.debug("caught expected exception", e);
@@ -669,8 +671,8 @@ public class RegistryTest {
         URL url = getClass().getResource("/registryTest/equipment2.plist");
 
         // parse plist test data
-        PlistParser.ListContext lc = PlistParserUtil.parsePlistList(url.openStream(), url.toString());
-        registry.addEquipment(expansion, (PlistParser.ListContext)lc);
+        NSArray lc = (NSArray)PropertyListParser.parse(url.openStream());
+        registry.addEquipment(expansion, lc);
         assertEquals(1, registry.getEquipment().size());
     }
 
@@ -861,7 +863,7 @@ public class RegistryTest {
         
         Registry registry = new Registry();
         try {
-            registry.addShip((Expansion)null, (String)null, (PlistParser.DictionaryContext)null);
+            registry.addShip((Expansion)null, (String)null, (NSDictionary)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             assertEquals("expansion must not be null", e.getMessage());
@@ -876,7 +878,7 @@ public class RegistryTest {
         Registry registry = new Registry();
         Expansion expansion = new Expansion();
         try {
-            registry.addShip(expansion, (String)null, (PlistParser.DictionaryContext)null);
+            registry.addShip(expansion, (String)null, (NSDictionary)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             assertEquals("identifier must not be null", e.getMessage());
@@ -892,7 +894,7 @@ public class RegistryTest {
         Expansion expansion = new Expansion();
         String identifier = "identifier";
         try {
-            registry.addShip(expansion, identifier, (PlistParser.DictionaryContext)null);
+            registry.addShip(expansion, identifier, (NSDictionary)null);
             fail("expected exception");
         } catch (IllegalArgumentException e) {
             assertEquals("dc must not be null", e.getMessage());

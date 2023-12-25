@@ -121,9 +121,8 @@ public class AddonsUtilTest {
         try {
             AddonsUtil.readExpansionsList(data, registry);
             fail("expected exception");
-        } catch (ParseCancellationException e) {
-            String msg = e.getMessage();
-            assertTrue(msg.contains("src/test/data/empty_file line 1:0 [@0,0:-1='<EOF>',<-1>,1:0] mismatched input '<EOF>' expecting '('"));
+        } catch (IOException e) {
+            assertEquals("cannot parse src/test/data/empty_file", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
@@ -301,15 +300,16 @@ public class AddonsUtilTest {
     @Test
     public void testReadShips4() throws Exception {
         log.info("readShips4");
-        String url = "";
-        InputStream in = new FileInputStream("src/test/data/empty_file");
+        File f = new File("src/test/data/empty_file");
+        String url = f.toString();
+        InputStream in = new FileInputStream(f);
         Registry registry = new Registry();
         Expansion oxp = new Expansion();
         try {
             AddonsUtil.readShips(url, in, registry, oxp);
             fail("expected exception");
-        } catch (NoSuchElementException e) {
-            assertEquals(null, e.getMessage());
+        } catch (IOException e) {
+            assertEquals("Shiplist is empty", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
@@ -409,15 +409,16 @@ public class AddonsUtilTest {
     @Test
     public void testReadEquipment4() throws Exception {
         log.info("readEquipment4");
-        String url = "";
-        InputStream in = new FileInputStream("src/test/data/empty_file");
+        File f = new File("src/test/data/empty_file");
+        String url = f.toString();
+        InputStream in = new FileInputStream(f);
         Registry registry = new Registry();
         Expansion oxp = new Expansion();
         try {
             AddonsUtil.readEquipment(url, in, registry, oxp);
             fail("expected exception");
-        } catch (NoSuchElementException e) {
-            assertEquals(null, e.getMessage());
+        } catch (IOException e) {
+            assertEquals("cannot digest src/test/data/empty_file", e.getMessage());
             log.debug("caught expected exception", e);
         }
     }
@@ -970,7 +971,7 @@ public class AddonsUtilTest {
         assertEquals("myid", registry.getExpansions().get(0).getIdentifier());
         assertEquals(1, registry.getEquipment().size());
         assertEquals(0, registry.getShips().size());
-        assertEquals("[Found XML equipment list]", registry.getWarnings().toString());
+        assertEquals("[]", registry.getWarnings().toString());
     }
 
     /**
@@ -1165,7 +1166,8 @@ public class AddonsUtilTest {
     public void testReadManifest5() throws Exception {
         log.info("readManifest5");
         
-        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/ThargornThreat_1.5.2.oxz"));
+        File f = new File("src/test/data/ThargornThreat_1.5.2.oxz");
+        ZipInputStream zin = new ZipInputStream(new FileInputStream(f));
         ZipEntry zentry = zin.getNextEntry();
         while (!zentry.getName().contains("manifest.plist")) {
             zentry = zin.getNextEntry();
@@ -1174,6 +1176,7 @@ public class AddonsUtilTest {
         Registry registry = new Registry();
         
         Expansion expansion = new Expansion("myId");
+        expansion.setDownloadUrl(f.toURI().toString());
         registry.addExpansion(expansion);
         
         assertEquals(1, registry.getExpansions().size());
@@ -1194,7 +1197,7 @@ public class AddonsUtilTest {
         assertEquals("Thorgorn Cruiser", expansion.getManifest().getTags().get(2));
         assertEquals(0, registry.getEquipment().size());
         assertEquals(0, registry.getShips().size());
-        assertEquals("[XML Manifest found, Unknown key 'licence' in XML manifest.plist]", registry.getWarnings().toString());
+        assertEquals("[Unknown key 'licence']", registry.getWarnings().toString());
         assertNotNull(expansion.getManifest().getIdentifier());
     }
 
@@ -1205,7 +1208,8 @@ public class AddonsUtilTest {
     public void testReadManifest6() throws Exception {
         log.info("readManifest6");
         
-        ZipInputStream zin = new ZipInputStream(new FileInputStream("src/test/data/Cargo_wrecks_teaser_1.7.2.oxz"));
+        File f = new File("src/test/data/Cargo_wrecks_teaser_1.7.2.oxz");
+        ZipInputStream zin = new ZipInputStream(new FileInputStream(f));
         ZipEntry zentry = zin.getNextEntry();
         while (!zentry.getName().contains("manifest.plist")) {
             zentry = zin.getNextEntry();
@@ -1214,6 +1218,7 @@ public class AddonsUtilTest {
         Registry registry = new Registry();
         
         Expansion expansion = new Expansion("myId");
+        expansion.setDownloadUrl(f.toURI().toString());
         registry.addExpansion(expansion);
         
         assertEquals(1, registry.getExpansions().size());
@@ -1230,7 +1235,7 @@ public class AddonsUtilTest {
         assertEquals("Cargopods", registry.getExpansions().get(0).getManifest().getTags().get(0));
         assertEquals(0, registry.getEquipment().size());
         assertEquals(0, registry.getShips().size());
-        assertEquals("[Unknown key 'licence' at null!manifest.plist]", registry.getWarnings().toString());
+        assertEquals("[Unknown key 'licence']", registry.getWarnings().toString());
         assertNotNull(expansion.getManifest().getIdentifier());
     }
 

@@ -4,7 +4,6 @@ package com.chaudhuri.ooliteaddonscanner2;
 
 import com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser;
 import com.chaudhuri.ooliteaddonscanner2.plist.ThrowingErrorListener;
-import com.chaudhuri.ooliteaddonscanner2.plist.PlistParserUtil;
 import static com.chaudhuri.ooliteaddonscanner2.Scanner.OOLITE_CORE;
 import static com.chaudhuri.ooliteaddonscanner2.Scanner.OXP_PATH_SCRIPTS;
 import static com.chaudhuri.ooliteaddonscanner2.Scanner.XML_HEADER;
@@ -14,7 +13,10 @@ import com.chaudhuri.ooliteaddonscanner2.model.Model;
 import com.chaudhuri.ooliteaddonscanner2.plist.CountingErrorListener;
 import com.chaudhuri.plist.ModelLexer;
 import com.chaudhuri.plist.ModelParser;
-import com.chaudhuri.plist.PlistParser;
+import com.dd.plist.NSArray;
+import com.dd.plist.NSDictionary;
+import com.dd.plist.NSObject;
+import com.dd.plist.PropertyListParser;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -105,9 +107,11 @@ public class AddonsUtil {
             throw new NoSuchFileException(data.getName());
         }
         
-        try (InputStream fin = new FileInputStream(data); InputStream in = new BufferedInputStream(fin)) {
-            PlistParser.ListContext lc = (PlistParser.ListContext)PlistParserUtil.parsePlistList(in, data.getAbsolutePath());
-            registry.addExpansions(lc);
+        try {
+            NSObject lc = PropertyListParser.parse(data);
+            registry.addExpansions((NSArray)lc);
+        } catch (Exception e) {
+            throw new IOException("cannot parse " + data.toString(), e);
         }
     }
 
@@ -223,34 +227,33 @@ public class AddonsUtil {
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
-        
-        in.mark(10);
 
-        Scanner sc = new Scanner(in);
-        if (XML_HEADER.equals(sc.next())) {
-            log.trace("Parsing {}", url);
-            in.reset();
+        NSDictionary dc = null;
+        try {
+            dc = (NSDictionary)PropertyListParser.parse(in);
+        } catch (Exception e) {
+            throw new IOException("could not parse " + url, e);
+        }
+        if (dc == null) {
+            throw new IOException("Shiplist is empty");
+        }
 
-            Document doc = XMLPlistParser.parseXml(in, null);
-            checkPlistKeys(doc, expansion, shipRequiredKeys, shipAllowedKeys);
-            Map<String, Object> shipList = XMLPlistParser.parseListOfMaps(doc, null);
-            if (expansion.getName() != null) {
-                log.debug("Parsed {} ({} ships)", expansion.getName(), shipList.size());
-            } else {
-                log.debug("Parsed {} ({} ships)", url, shipList.size());
-            }
-            registry.addShipList(expansion, shipList);
-        } else {
-            in.reset();
-            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, url);
+        try {
             // on highest level the checks are not meaningful.
-            for (ParseTree pt: dc.children) {
-                if (pt instanceof PlistParser.DictionaryContext) {
-                    PlistParser.DictionaryContext subDc = (PlistParser.DictionaryContext)pt;
+            for (Map.Entry<String, NSObject> pt: dc.entrySet()) {
+                if (pt instanceof NSDictionary) {
+                    NSDictionary subDc = (NSDictionary)pt;
                     checkPlistKeys(subDc, expansion, shipRequiredKeys, shipAllowedKeys);
                 }
             }
+        } catch (Exception e) {
+            throw new IOException("could not validate " + url, e);
+        }
+
+        try {
             registry.addShipList(expansion, dc);
+        } catch (Exception e) {
+            throw new IOException("could not digest " + url, e);
         }
     }
     
@@ -280,26 +283,12 @@ public class AddonsUtil {
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
-        
-        in.mark(10);
 
-        Scanner sc = new Scanner(in);
-        if (XML_HEADER.equals(sc.next())) {
-            log.trace("Parsing {}", url);
-            in.reset();
-            Document doc = XMLPlistParser.parseXml(in, null);
-            List<Object> equipmentList = XMLPlistParser.parseList(doc, null);
-            expansion.addWarning("Found XML equipment list");
-            if (expansion.getName() != null) {
-                log.debug("Parsed {} ({} items of equipment)", expansion.getName(), equipmentList.size());
-            } else {
-                log.debug("Parsed {} ({} items of equipment)", url, equipmentList.size());
-            }
-            registry.addEquipmentList(expansion, (List)equipmentList.get(0));
-        } else {
-            in.reset();
-            PlistParser.ListContext lc = PlistParserUtil.parsePlistList(in, url);
+        try {
+            NSArray lc = (NSArray)PropertyListParser.parse(in);
             registry.addEquipmentList(expansion, lc);
+        } catch (Exception e) {
+            throw new IOException("cannot digest " + url, e);
         }
     }
     
@@ -637,24 +626,12 @@ public class AddonsUtil {
         log.trace("parsing manifest from {}", expansion.getDownloadUrl());
         
         InputStream in = AddonsUtil.getZipEntryStream(zin);
-        in.mark(10);
 
-        Scanner sc = new Scanner(in);
-        if (XML_HEADER.equals(sc.next())) {
-            log.trace("XML content found in {}!{}", expansion.getDownloadUrl(), zentry.getName());
-            in.reset();
-
-            Document doc = XMLPlistParser.parseXml(in, null);
-            List<Object> manifest = XMLPlistParser.parseList(doc, null);
-            if (manifest.size() != 1) {
-                throw new OxpException(String.format("Expected exactly one manifest, found %d", manifest.size()));
-            }
-            expansion.setManifest(registry.toManifest((Map<String, Object>)manifest.get(0)));
-            expansion.addWarning("XML Manifest found");
-        } else {
-            in.reset();
-            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, expansion.getDownloadUrl()+"!"+zentry.getName());
+        try {
+            NSDictionary dc = (NSDictionary)PropertyListParser.parse(in);
             expansion.setManifest(registry.toManifest(dc));
+        } catch (Exception e) {
+            throw new IOException("cannot digest " + expansion.getDownloadUrl()+"!"+zentry.getName(), e);
         }
     }
 
@@ -682,25 +659,14 @@ public class AddonsUtil {
         }
         
         InputStream in = AddonsUtil.getZipEntryStream(zin);
-        in.mark(10);
 
-        Scanner sc = new Scanner(in);
-        if (XML_HEADER.equals(sc.next())) {
-            log.trace("XML content found in {}!{}", expansion.getDownloadUrl(), zentry.getName());
-            in.reset();
-            Document doc = XMLPlistParser.parseXml(in, null);
-            List<Object> worldscripts = XMLPlistParser.parseList(doc, null);
-            List<Object> scriptlist = (List)worldscripts.get(0);
-            for (Object worldscript: scriptlist) {
-                expansion.addScript(String.valueOf(OXP_PATH_SCRIPTS + worldscript), "notYetParsed");
+        try {
+            NSArray lc = (NSArray)PropertyListParser.parse(in);
+            for (NSObject vc: lc.getArray()) {
+                expansion.addScript(OXP_PATH_SCRIPTS + vc.toString(), "notYetParsed");
             }
-            expansion.addWarning("XML script list found");
-        } else {
-            in.reset();
-            PlistParser.ListContext lc = PlistParserUtil.parsePlistList(in, expansion.getDownloadUrl()+"!"+zentry.getName());
-            for (PlistParser.ValueContext vc: lc.value()) {
-                expansion.addScript(OXP_PATH_SCRIPTS + vc.getText(), "notYetParsed");
-            }
+        } catch (Exception e) {
+            throw new IOException("Cannot digest " + expansion.getDownloadUrl()+"!"+zentry.getName(), e);
         }
     }
     
@@ -807,44 +773,17 @@ public class AddonsUtil {
             throw new IllegalArgumentException("oxp must not be null");
         }
         
-        in.mark(10);
-
-        Scanner sc = new Scanner(in);
-        if (XML_HEADER.equals(sc.next())) {
-            log.trace("XML content found in {}!{}", oxp.getDownloadUrl(), entry);
-            in.reset();
-            
-            Document doc = XMLPlistParser.parseInputStream(in, new XMLPlistParser.MySaxErrorHandler(oxp));
-            checkPlistKeys(doc, oxp, null, null);
-        } else {
-            in.reset();
-            
+        try {
             CountingErrorListener cel = new CountingErrorListener(entry);
-            PlistParser.ParseContext lc = PlistParserUtil.parsePlist(in, oxp.getDownloadUrl()+"!"+entry, cel);
-            if (cel.hasErrors()) {
-                List<String> errors = new ArrayList<>();
-                errors.addAll(cel.getAmbiguityErrors());
-                errors.addAll(cel.getAttemptFullContextErrors());
-                errors.addAll(cel.getContextSensitivityErrors());
-                errors.addAll(cel.getSyntaxErrors());
-                
-                errors.stream()
-                    .filter((t) -> t != null && !t.isBlank())
-                    .forEach((t) -> {
-                        
-                   oxp.addWarning(t);
-                });
-                oxp.addWarning(
-                    String.format(
-                        "Found %d issues in %s", 
-                        cel.getAmbiguityCount() + cel.getAttemptFullContextCount() + cel.getContextSensitivityCount() + cel.getSyntaxErrorCount(),
-                        entry
-                    )
-                );
-            }
-            
+            NSObject lc = PropertyListParser.parse(in);
+            // todo: parse errors should end up as warnings in the oxp?
+
             // todo: check if keys can be trimmed
-            checkPlistKeys(lc, oxp, null, null);
+            if (lc instanceof NSDictionary) {
+                checkPlistKeys((NSDictionary)lc, oxp, null, null);
+            }
+        } catch (Exception e) {
+            throw new IOException("cannot digest " + oxp.getDownloadUrl()+"!"+entry, e);
         }
     }
     
@@ -925,34 +864,9 @@ public class AddonsUtil {
      * @param pc the parsecontext to check
      * @param oxp the oxp to return warnings
      */
-    private static void checkPlistKeys(ParserRuleContext prc, Expansion oxp, List<String> requiredKeys, List<String> allowedKeys) {
-        List<String> myRequiredKeys = new ArrayList<>();
-        if (requiredKeys != null) {
-            myRequiredKeys.addAll(requiredKeys);
-        }
-
-        for (int i=0; i< prc.getChildCount(); i++) {
-            ParseTree pt = prc.getChild(i);
-            checkPlistKeys(pt, oxp, myRequiredKeys, allowedKeys);
-        }
-        
-        if (!myRequiredKeys.isEmpty()) {
-            oxp.addWarning("Missing keys " + String.valueOf(myRequiredKeys));
-        }
-    }
-
-    /**
-     * Check dictionary keys for extraenous whitespace.
-     * Returns findings as warnings in expansion.
-     * 
-     * @param pc the parsecontext to check
-     * @param oxp the oxp to return warnings
-     */
-    private static void checkPlistKeys(ParseTree pt, Expansion oxp, List<String> requiredKeys, List<String> allowedKeys) {
-        if (pt instanceof PlistParser.KeyvaluepairContext) {
-            PlistParser.KeyvaluepairContext kvpc = (PlistParser.KeyvaluepairContext)pt;
-            Token keyToken = kvpc.getStart();
-            String key = keyToken.getText();
+    private static void checkPlistKeys(NSDictionary dict, Expansion oxp, List<String> requiredKeys, List<String> allowedKeys) {
+        for (Map.Entry<String, NSObject> pt: dict.entrySet()) {
+            String key = pt.getKey();
             if (!key.equals(key.trim())) {
                 oxp.addWarning(String.format("Extreanous whitespace on key '%s'", key));
             }
@@ -964,11 +878,14 @@ public class AddonsUtil {
                 requiredKeys.remove(key);
             }
         }
+
+        /* todo: Is this meant to be recursive?
         
         for (int i=0; i< pt.getChildCount(); i++) {
             ParseTree pt2 = pt.getChild(i);
             checkPlistKeys(pt2, oxp, requiredKeys, allowedKeys);
         }
+        */
     }
     
     /**
