@@ -392,7 +392,7 @@ public class Generator implements Callable<Object> {
     }
 
     @Override
-    public Object call() throws IOException {
+    public Object call() throws IOException, Exception {
         if (inputPath == null) {
             throw new IllegalStateException("inputPath must not be null.");
         }
@@ -441,7 +441,11 @@ public class Generator implements Callable<Object> {
         log.info("Found {} manifests", catalog.size());
         
         // sort the catalog
-        catalog.sort(new ExpansionManifestComparator());
+        try {
+            catalog.sort(new ExpansionManifestComparator());
+        } catch (Exception e) {
+            throw new Exception("Could not sort the catalog", e);
+        }
 
         // serialize the catalog into each output format
         final List<ExpansionManifest> fCatalog = catalog;

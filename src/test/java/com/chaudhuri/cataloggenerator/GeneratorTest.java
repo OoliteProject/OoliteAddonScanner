@@ -130,7 +130,7 @@ public class GeneratorTest {
      * Test of run method, of class Generator.
      */
     @Test
-    public void testCall() throws IOException {
+    public void testCall() throws Exception {
         log.info("testCall");
         Generator instance = new Generator();
         try {
@@ -146,7 +146,7 @@ public class GeneratorTest {
      * Test of run method, of class Generator.
      */
     @Test
-    public void testCall2() throws IOException {
+    public void testCall2() throws Exception {
         log.info("testCall2()");
         
         Generator instance = new Generator();
@@ -165,7 +165,7 @@ public class GeneratorTest {
      * Test of run method, of class Generator.
      */
     @Test
-    public void testCall3() throws IOException {
+    public void testCall3() throws Exception {
         log.info("testCall3()");
         
         Generator instance = new Generator();
@@ -185,7 +185,7 @@ public class GeneratorTest {
      * Test of run method, of class Generator.
      */
     @Test
-    public void testCall4() throws IOException {
+    public void testCall4() throws Exception {
         log.info("testCall4()");
         
         Generator instance = new Generator();

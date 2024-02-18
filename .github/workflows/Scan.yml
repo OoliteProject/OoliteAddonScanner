@@ -42,6 +42,8 @@ jobs:
         run: |
           B=$(basename "OoliteAddonScanner*")
           java -jar $B/$B.jar --out target/OoliteExpansionIndex --cache expansion-cache
+          echo "running compgen..."
+          man compgen
           compgen -f target/OoliteExpansionIndex-*.zip
 
       - name: Remove old OoliteExpansionIndex releases

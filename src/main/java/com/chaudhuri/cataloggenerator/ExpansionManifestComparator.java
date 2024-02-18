@@ -33,8 +33,15 @@ public class ExpansionManifestComparator implements Comparator<ExpansionManifest
         
         // both em1 and em2 are not null
         if (em1.getIdentifier() == null) {
+            // em1 has no identifier
             return -1;
         } else {
+            if (em2.getIdentifier() == null) {
+                // em1 has, but em2 has no identifier
+                return 1;
+            }
+            
+            // both identifiers exist
             result = em1.getIdentifier().compareTo(em2.getIdentifier());
             if (result != 0) {
                 return result;
