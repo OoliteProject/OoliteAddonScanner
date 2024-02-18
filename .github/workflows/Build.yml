@@ -40,7 +40,7 @@ jobs:
         
     - name: Build with Maven
       run: |
-        mvn versions:set "-DnewVersion=${{ env.GITVERSION_SEMVER }}"
+        mvn versions:set "-DnewVersion=${{ env.GitVersion_SemVer }}"
         mvn -B package -e --file pom.xml
         
     - name: Check status
@@ -53,7 +53,7 @@ jobs:
     - uses: actions/upload-artifact@v4
       with:
         name: OoliteAddonScanner
-        path: target/OoliteAddonScanner-${{ env.GITVERSION_SEMVER }}-executable.zip
+        path: target/OoliteAddonScanner-${{ env.GitVersion_SemVer }}-executable.zip
 
     - name: Remove old prereleases
       if: github.ref != 'refs/heads/main'
@@ -73,9 +73,9 @@ jobs:
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "v${{ env.GITVERSION_SEMVER }}"
+        automatic_release_tag: "v${{ env.GitVersion_SemVer }}"
         prerelease: true
-        title: "OoliteAddonScanner v${{ env.GITVERSION_SEMVER }}"
+        title: "OoliteAddonScanner v${{ env.GitVersion_SemVer }}"
         files: |
           target/*.zip
           target/*.tar.gz
@@ -98,9 +98,9 @@ jobs:
       uses: "marvinpinto/action-automatic-releases@latest"
       with:
         repo_token: "${{ secrets.GITHUB_TOKEN }}"
-        automatic_release_tag: "v${{ env.GITVERSION_SEMVER }}"
+        automatic_release_tag: "v${{ env.GitVersion_SemVer }}"
         prerelease: false
-        title: "OoliteAddonScanner v${{ env.GITVERSION_SEMVER }}"
+        title: "OoliteAddonScanner v${{ env.GitVersion_SemVer }}"
         files: |
           target/*.zip
           target/*.tar.gz
