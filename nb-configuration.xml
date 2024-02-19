@@ -21,6 +21,7 @@ Any value defined here will override the pom.xml file value but is only applicab
             <configuration id="CustomSearch" profiles=""/>
             <configuration id="Generator" profiles=""/>
             <configuration id="Indexer" profiles=""/>
+            <configuration id="PlistTester" profiles=""/>
         </configurations>
     </config-data>
 </project-shared-configuration>

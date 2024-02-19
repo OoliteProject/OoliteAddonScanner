@@ -48,6 +48,7 @@ import org.xml.sax.SAXException;
 
 /**
  * Reads a list of URLs and writes a catalog file.
+ * The catalog can be chosen as JSON, XML or plist.
  * 
  * @author hiran
  */
@@ -391,6 +392,13 @@ public class Generator implements Callable<Object> {
         return result;
     }
 
+    /**
+     * Entry point for this bean.
+     * 
+     * @return "success" if complete, or an exception     * 
+     * @throws IOException something went wrong
+     * @throws Exception something went wrong
+     */
     @Override
     public Object call() throws IOException, Exception {
         if (inputPath == null) {
@@ -423,7 +431,7 @@ public class Generator implements Callable<Object> {
                 throw new IOException("Input data not good.");
             }
         }
-
+        
         // create the catalog
         List<ExpansionManifest> catalog = null;
         catalog = urls.stream()
@@ -432,7 +440,7 @@ public class Generator implements Callable<Object> {
                 .filter(e -> !e.isBlank())
                 .map(e -> {
                     ExpansionManifest em = getManifestFromUrl(e);
-                    log.info("Parsed {}", e);
+                    log.info("Parsed {}, found {}", e, em.getIdentifier());
                     return em;
                 })
                 .filter(m -> m != null)

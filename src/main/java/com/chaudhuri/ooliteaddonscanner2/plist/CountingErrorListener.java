@@ -63,7 +63,9 @@ public class CountingErrorListener implements ANTLRErrorListener {
             log.error("Offending symbol: {} {} {}", offendingSymbol.getClass().getName(), symbol, offendingSymbol);
         }
 
-        syntaxErrors.add("Syntax Error " + filename + "[" + line + ":" + charPositionInLine + "] " + msg);
+        String logmessage = "Syntax Error " + filename + "[" + line + ":" + charPositionInLine + "] " + msg;
+        log.info(logmessage);
+        syntaxErrors.add(logmessage);
     }
 
     @Override

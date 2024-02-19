@@ -1,3 +1,6 @@
+<!--
+  Shows one expansion in all it's beauty.
+-->
 <html>
     <head>
         <title><#if identifier != "oolite.core" >Expansion </#if>${ title }</title>
@@ -190,7 +193,7 @@
                 <tr><td>Download URL</td><td><a href="${ downloadUrl!"" }">${ downloadUrl!"n/a"}</a></td></tr>
                 <tr><td>License</td><td>${ license!"n/a"}</td></tr>
                 <tr><td>File Size</td><td>${ fileSize!"n/a" }</td></tr>
-                <tr><td>Upload date</td><td>${ uploadDate!"n/a" }</td></tr>
+                <tr><td>Upload date</td><td>${ uploadDate!"n/a" } or { uploadDateAsInstant!"n/a" }</td></tr>
             </table>
         </#if>
         </a>

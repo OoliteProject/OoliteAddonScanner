@@ -4,6 +4,7 @@
 package com.chaudhuri.cataloggenerator;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -32,6 +33,9 @@ public class Main {
      * @param args 
      */
     public static void main(String[] args) throws ParseException {
+        log.info(Main.class.getPackage().getImplementationTitle() + " version " + Main.class.getPackage().getImplementationVersion());
+        log.info("command line: {}", Arrays.asList(args));
+
         Options options = new Options();
         options.addRequiredOption("i", "in", true, "Input file (one URL per line)");
         options.addRequiredOption("o", "out", true, "Output file");
@@ -58,7 +62,6 @@ public class Main {
             }
             generator.setPedantic(commandline.hasOption("pedantic"));
 
-            log.info(Main.class.getPackage().getImplementationTitle() + " version " + Main.class.getPackage().getImplementationVersion());
             generator.call();
         } catch (MissingOptionException e) {
             log.error("Wrong invocation. Options missing: {}", e.getMissingOptions());
