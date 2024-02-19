@@ -219,6 +219,13 @@ public class Generator implements Callable<Object> {
         cache = new ExpansionCache(cacheDIR.toFile());
     }
     
+    /**
+     * Access the URL pointing to an OXZ and parse the manifest.
+     * If possible the cached entry is used.
+     * 
+     * @param urlString the url to the OXZ
+     * @return the parsed manifest
+     */
     ExpansionManifest getManifestFromUrl(String urlString) {
         log.debug("getManifestFromUrl({})", urlString);
         if (cache == null) {
@@ -299,6 +306,9 @@ public class Generator implements Callable<Object> {
             expansion.setManifest(null);
         }
         
+        if (expansion.getManifest() == null) {
+            throw new IllegalArgumentException(String.format("URL %s has no manifest?", urlString));
+        }
         return expansion.getManifest();
     }
     
