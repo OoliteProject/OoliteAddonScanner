@@ -13,7 +13,7 @@
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCache"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Main"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.model.CustomSearch"/>
-    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.CountingErrorListenerTest"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.CountingErrorListener"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.plist.PlistParserUtil"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Registry"/>
