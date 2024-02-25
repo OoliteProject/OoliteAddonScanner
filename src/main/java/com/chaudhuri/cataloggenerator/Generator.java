@@ -231,6 +231,9 @@ public class Generator implements Callable<Object> {
         if (cache == null) {
             throw new IllegalStateException("cache must not be null.");
         }
+        if (urlString == null) {
+            throw new IllegalArgumentException("urlString must not be null");
+        }
         
         try {
             ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(urlString)));
@@ -401,6 +404,45 @@ public class Generator implements Callable<Object> {
         
         return result;
     }
+    
+    List<ExpansionManifest> parseUrls(List<String> urls) throws Exception {
+        // create the catalog
+        List<ExpansionManifest> catalog = null;
+        catalog = urls.stream()
+                .parallel()
+                .filter(url -> !url.startsWith("#"))
+                .filter(url -> !url.isBlank())
+                .map(e -> {
+                    ExpansionManifest em = getManifestFromUrl(e);
+                    log.info("Parsed {}, found {}", e, em.getIdentifier());
+                    
+                    if (em.getIdentifier() == null || em.getIdentifier().isBlank()) {
+                        log.error("Invalid identifier in expansion {}", e);
+                    }
+                    
+                    return em;
+                })
+                .filter(m -> m != null)
+                .collect(Collectors.toList());
+
+        log.info("Found {} manifests", catalog.size());
+        
+        long unparseables = catalog.stream()
+                .filter(em -> em.getIdentifier()==null)
+                .count();
+        if (unparseables > 0) {
+            throw new Exception(String.format("Found %d expansions with invalid indentifer.", unparseables));
+        }
+        
+        // sort the catalog
+        try {
+            catalog.sort(new ExpansionManifestComparator());
+        } catch (Exception e) {
+            throw new Exception("Could not sort the catalog", e);
+        }
+        
+        return catalog;
+    }
 
     /**
      * Entry point for this bean.
@@ -441,29 +483,8 @@ public class Generator implements Callable<Object> {
                 throw new IOException("Input data not good.");
             }
         }
-        
-        // create the catalog
-        List<ExpansionManifest> catalog = null;
-        catalog = urls.stream()
-                .parallel()
-                .filter(e -> !e.startsWith("#"))
-                .filter(e -> !e.isBlank())
-                .map(e -> {
-                    ExpansionManifest em = getManifestFromUrl(e);
-                    log.info("Parsed {}, found {}", e, em.getIdentifier());
-                    return em;
-                })
-                .filter(m -> m != null)
-                .collect(Collectors.toList());
 
-        log.info("Found {} manifests", catalog.size());
-        
-        // sort the catalog
-        try {
-            catalog.sort(new ExpansionManifestComparator());
-        } catch (Exception e) {
-            throw new Exception("Could not sort the catalog", e);
-        }
+        List<ExpansionManifest> catalog = parseUrls(urls);
 
         // serialize the catalog into each output format
         final List<ExpansionManifest> fCatalog = catalog;

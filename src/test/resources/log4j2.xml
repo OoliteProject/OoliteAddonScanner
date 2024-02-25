@@ -21,7 +21,7 @@
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifestTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.model.ShipTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.OxpExceptionTest"/>
-    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.PlistParserUtilTest"/>
+    <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.PlistParserUtil"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.ThrowingErrorListenerTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParserTest"/>

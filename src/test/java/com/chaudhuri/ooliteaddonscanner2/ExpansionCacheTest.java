@@ -151,7 +151,30 @@ public class ExpansionCacheTest {
      */
     @Test
     public void testUpdate_String() throws Exception {
-        log.info("testUpdate_String");
+        log.info("testUpdate_String2");
+        
+        File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
+        testCache.delete();
+        testCache.mkdirs();
+
+        File downloaded = new File(testCache, testDownloadPath);
+        
+        ExpansionCache cache = new ExpansionCache(testCache);
+
+        try {
+            cache.update((String)null);
+        } catch (IllegalArgumentException e) {
+            assertEquals("url must not be null", e.getMessage());
+            log.debug("Caught expected exception", e);
+        }
+    }
+    
+    /**
+     * Test of update method, of class ExpansionCache.
+     */
+    @Test
+    public void testUpdate_String2() throws Exception {
+        log.info("testUpdate_String2");
 
         File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
         testCache.delete();

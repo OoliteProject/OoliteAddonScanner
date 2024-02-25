@@ -7,12 +7,10 @@ import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.zip.ZipInputStream;
@@ -212,8 +210,13 @@ public class GeneratorTest {
         
         Generator instance = new Generator();
         instance.init();
-        ExpansionManifest em = instance.getManifestFromUrl(null);
-        assertNull(em);
+        try {
+            ExpansionManifest em = instance.getManifestFromUrl(null);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("urlString must not be null", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
     }
     
     @Test
@@ -284,5 +287,24 @@ public class GeneratorTest {
         
         Generator instance = new Generator();
         assertFalse(instance.isDistinct(urls));
+    }
+    
+    @Test
+    public void testFailOnInvalidStructure() throws Exception {
+        log.info("testFailOnInvalidStructure");
+
+        File invalidExpansion = new File("src/test/data/oolite.oxp.Wildeblood.GlareClarifier-invalid.oxz");
+        List<String> urls = Arrays.asList(new String[]{invalidExpansion.toURI().toURL().toString()});
+        
+        Generator instance = new Generator();
+        instance.init();
+        try {
+            instance.parseUrls(urls);
+            fail("expected exception");
+        } catch (Exception e) {
+            assertEquals("Found 1 expansions with invalid indentifer.", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
+        
     }
 }

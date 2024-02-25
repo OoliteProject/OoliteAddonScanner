@@ -385,6 +385,9 @@ public class ExpansionCache {
      */
     public void update(String url) throws IOException {
         log.debug("update({})", url);
+        if (url == null) {
+            throw new IllegalArgumentException("url must not be null");
+        }
         
         URL u = new URL(url);
         File localFile = getCachedFile(url);
@@ -416,6 +419,9 @@ public class ExpansionCache {
      */
     public InputStream getPluginInputStream(String url) throws IOException {
         log.debug("getPluginInputStream({})", url);
+        if (url == null) {
+            throw new IllegalArgumentException("url must not be null");
+        }
         
         update(url);
 
