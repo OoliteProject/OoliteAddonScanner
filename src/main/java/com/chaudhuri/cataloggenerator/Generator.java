@@ -412,13 +412,16 @@ public class Generator implements Callable<Object> {
                 .parallel()
                 .filter(url -> !url.startsWith("#"))
                 .filter(url -> !url.isBlank())
-                .map(e -> {
-                    ExpansionManifest em = getManifestFromUrl(e);
-                    log.info("Parsed {}, found {}", e, em.getIdentifier());
-                    
-                    if (em.getIdentifier() == null || em.getIdentifier().isBlank()) {
-                        log.error("Invalid identifier in expansion {}", e);
+                .map(url -> {
+                    ExpansionManifest em = getManifestFromUrl(url);
+                    if (em == null) {
+                        log.error("Could not parse expansion at {}", url);
+                    } else if (em.getIdentifier() == null || em.getIdentifier().isBlank()) {
+                        log.error("Invalid identifier in expansion {}", url);
+                    } else {
+                        log.debug("Parsed {}, found {}", url, em.getIdentifier());
                     }
+                    
                     
                     return em;
                 })
