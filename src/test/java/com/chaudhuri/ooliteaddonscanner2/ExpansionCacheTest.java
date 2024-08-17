@@ -32,8 +32,8 @@ public class ExpansionCacheTest {
     
     private static File tempCacheDir;
     
-    private static final String testDownload = "https://dlcdn.apache.org//commons/cli/binaries/commons-cli-1.7.0-bin.tar.gz";
-    private static final String testDownloadPath = "dlcdn.apache.org//commons/cli/binaries/commons-cli-1.7.0-bin.tar.gz";
+    private static final String testDownload = "https://wiki.alioth.net/img_auth.php/5/52/Military_Fuel_Injectors_1.03.oxz";
+    private static final String testDownloadPath = "wiki.alioth.net/img_auth.php/5/52/Military_Fuel_Injectors_1.03.oxz";
     
     public ExpansionCacheTest() {
     }
