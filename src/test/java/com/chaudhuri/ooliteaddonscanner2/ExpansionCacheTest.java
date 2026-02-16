@@ -5,6 +5,7 @@ package com.chaudhuri.ooliteaddonscanner2;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.time.Instant;
@@ -289,7 +290,7 @@ public class ExpansionCacheTest {
     }
     
     @Test
-    public void testGetLastModified() throws IOException {
+    public void testGetLastModified() throws IOException, URISyntaxException {
         log.info("testGetLastModified");
         
         File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
@@ -308,7 +309,7 @@ public class ExpansionCacheTest {
     }
     
     @Test
-    public void testGetLastModified2() throws IOException {
+    public void testGetLastModified2() throws IOException, URISyntaxException {
         log.info("testGetLastModified2");
         
         File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);
@@ -320,14 +321,14 @@ public class ExpansionCacheTest {
         try {
             cache.getLastModified("hallo");
             fail("expected exception");
-        } catch (MalformedURLException e) {
-            assertEquals("no protocol: hallo", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            assertEquals("URI is not absolute", e.getMessage());
             log.debug("caught expected exception");
         }
     }
     
     @Test
-    public void testGetLastModified3() throws IOException {
+    public void testGetLastModified3() throws IOException, URISyntaxException {
         log.info("testGetLastModified3");
         
         File testCache = File.createTempFile("testCache", ".dir", tempCacheDir);

@@ -13,6 +13,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.DirectoryNotEmptyException;
@@ -183,13 +185,13 @@ public class ExpansionCache {
      * @return the manifest found, as it is returned by Genson
      * @throws IOException something went wrong
      */
-    public Map<String, Object> getOoliteManifest(String tag) throws IOException {
+    public Map<String, Object> getOoliteManifest(String tag) throws IOException, URISyntaxException {
         log.debug("getOoliteManifest({})", tag);
         String repository = "OoliteProject/oolite";
         String urlStr = baseUrl + "/" + repository + "/releases/" + tag;
 
         log.debug("Reading {}", urlStr);
-        URL url = new URL(urlStr);
+        URL url = new URI(urlStr).toURL();
         try ( InputStream in = url.openStream()) {
             return (Map<String, Object>) new Genson().deserialize(url.openStream(), Object.class);
         }
@@ -227,8 +229,8 @@ public class ExpansionCache {
      * @return the file
      * @throws MalformedURLException something went wrong
      */
-    public File getCachedFile(String url) throws MalformedURLException {
-        URL u = new URL(url);
+    public File getCachedFile(String url) throws MalformedURLException, URISyntaxException {
+        URL u = new URI(url).toURL();
         return new File(cacheDIR, u.getHost() + File.separator + u.getFile());
     }
     
@@ -238,7 +240,7 @@ public class ExpansionCache {
      * @param urls the urls to download
      * @throws IOException something went wrong
      */
-    public void update(List<String> urls) throws IOException {
+    public void update(List<String> urls) throws IOException, MalformedURLException, URISyntaxException {
         int count = 0;
         for (String u: urls) {
             update(u);
@@ -305,7 +307,7 @@ public class ExpansionCache {
 
             while (status != HttpURLConnection.HTTP_OK) {
                 String newUrl = conn.getHeaderField("Location");
-                conn = (HttpURLConnection)new URL(newUrl).openConnection();
+                conn = (HttpURLConnection)new URI(newUrl).toURL().openConnection();
                 conn.setReadTimeout(5000);
                 status = conn.getResponseCode();
                 log.info("HTTP status for {}: {}", newUrl, status);
@@ -348,7 +350,7 @@ public class ExpansionCache {
      * @return the last modified date
      * @throws IOException something went wrong
      */
-    private Date doCheckLastModified(URL u, int followRedirectsCount) throws IOException {
+    private Date doCheckLastModified(URL u, int followRedirectsCount) throws IOException, URISyntaxException {
         URLConnection urlconnection = u.openConnection();
         
         if (urlconnection instanceof HttpURLConnection) {
@@ -365,7 +367,7 @@ public class ExpansionCache {
                 log.debug("Redirect {} with {}", u, headers);
                 if (followRedirectsCount == 0)
                     throw new IllegalStateException("Received redirect but cannot follow");
-                return doCheckLastModified(new URL(headers.get("Location").get(0)), followRedirectsCount - 1);
+                return doCheckLastModified(new URI(headers.get("Location").get(0)).toURL(), followRedirectsCount - 1);
             } else {
                 throw new IOException("HEAD " + u + " resulted in "+con.getResponseCode() + " " + con.getResponseMessage());
             }
@@ -383,13 +385,13 @@ public class ExpansionCache {
      * @throws MalformedURLException
      * @throws IOException 
      */
-    public void update(String url) throws IOException {
+    public void update(String url) throws IOException, MalformedURLException, URISyntaxException {
         log.debug("update({})", url);
         if (url == null) {
             throw new IllegalArgumentException("url must not be null");
         }
         
-        URL u = new URL(url);
+        URL u = new URI(url).toURL();
         File localFile = getCachedFile(url);
         
         Duration age = Duration.between(Instant.ofEpochMilli(localFile.lastModified()), Instant.now());
@@ -417,7 +419,7 @@ public class ExpansionCache {
      * @return the inputstream (to the cached file on disk)
      * @throws IOException something went wrong
      */
-    public InputStream getPluginInputStream(String url) throws IOException {
+    public InputStream getPluginInputStream(String url) throws IOException, MalformedURLException, URISyntaxException {
         log.debug("getPluginInputStream({})", url);
         if (url == null) {
             throw new IllegalArgumentException("url must not be null");
@@ -437,14 +439,14 @@ public class ExpansionCache {
      * @return the last-modified data, or null if not present
      * @throws IOException something went wrong
      */
-    public static Instant getLastModified(String url) throws IOException {
+    public static Instant getLastModified(String url) throws IOException, URISyntaxException {
         log.debug("getLastModified({})", url);
         if (url == null) {
             throw new IllegalArgumentException("url must not be null");
         }
         
         // run a custom HTTP request - see https://www.baeldung.com/java-http-request
-        URL u = new URL(url);
+        URL u = new URI(url).toURL();
         URLConnection uc = u.openConnection();
         if (uc instanceof HttpURLConnection) {
             HttpURLConnection con = (HttpURLConnection)uc;
@@ -492,7 +494,7 @@ public class ExpansionCache {
      * @param url
      * @throws MalformedURLException 
      */
-    public void invalidate(String url) throws IOException {
+    public void invalidate(String url) throws IOException, MalformedURLException, URISyntaxException {
         log.debug("invalidate({})", url);
         File cached = getCachedFile(url);
         Files.delete(cached.toPath());

@@ -4,6 +4,7 @@ package com.chaudhuri.ooliteaddonscanner2;
 
 import com.chaudhuri.ooliteaddonscanner2.model.CustomSearch;
 import java.io.File;
+import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 import org.apache.commons.cli.CommandLine;
@@ -51,7 +52,7 @@ public class Main {
             }
             if (commandline.hasOption("url")) {
                 String urlStr = commandline.getOptionValue("url");
-                scanner.setCatalogUrl(new URL(urlStr));
+                scanner.setCatalogUrl(new URI(urlStr).toURL());
             }
             if (commandline.hasOption("out")) {
                 String outputDirStr = commandline.getOptionValue("out");

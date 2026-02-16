@@ -26,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.ConnectException;
+import java.net.URISyntaxException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.Charset;
@@ -299,7 +300,7 @@ public class AddonsUtil {
      * 
      * @param registry 
      */
-    public static void readOolite(ExpansionCache cache, Registry registry) throws IOException, SAXException, ParserConfigurationException, RegistryException, TransformerException {
+    public static void readOolite(ExpansionCache cache, Registry registry) throws IOException, SAXException, ParserConfigurationException, RegistryException, TransformerException, URISyntaxException {
         log.debug("readOolite({})", registry); 
         if (cache == null) {
             throw new IllegalArgumentException(EXCEPTION_CACHE_MUST_NOT_BE_NULL);

@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -226,7 +228,7 @@ public class Generator implements Callable<Object> {
      * @param urlString the url to the OXZ
      * @return the parsed manifest
      */
-    ExpansionManifest getManifestFromUrl(String urlString) {
+    ExpansionManifest getManifestFromUrl(String urlString) throws MalformedURLException, URISyntaxException {
         log.debug("getManifestFromUrl({})", urlString);
         if (cache == null) {
             throw new IllegalStateException("cache must not be null.");
@@ -315,7 +317,7 @@ public class Generator implements Callable<Object> {
         return expansion.getManifest();
     }
     
-    private boolean isOrdered(List<String> urls) throws MalformedURLException {
+    private boolean isOrdered(List<String> urls) throws MalformedURLException, URISyntaxException {
         boolean result = true;
         
         URL lastUrl = null;
@@ -328,7 +330,7 @@ public class Generator implements Callable<Object> {
                 continue;
             }
             
-            URL thisUrl = new URL(url);
+            URL thisUrl = new URI(url).toURL();
             if (lastUrl == null) {
                 lastUrl = thisUrl;
                 lastString = thisUrl.getHost() + thisUrl.getPort() + thisUrl.getPath() + thisUrl.getFile() + thisUrl.getProtocol();
@@ -355,7 +357,7 @@ public class Generator implements Callable<Object> {
         return result;
     }
     
-    private boolean checkAllHaveLastModified(List<String> urls) throws IOException {
+    private boolean checkAllHaveLastModified(List<String> urls) throws IOException, URISyntaxException {
         boolean result = true;
         
         int lineCount = 0;
@@ -413,17 +415,20 @@ public class Generator implements Callable<Object> {
                 .filter(url -> !url.startsWith("#"))
                 .filter(url -> !url.isBlank())
                 .map(url -> {
-                    ExpansionManifest em = getManifestFromUrl(url);
-                    if (em == null) {
-                        log.error("Could not parse expansion at {}", url);
-                    } else if (em.getIdentifier() == null || em.getIdentifier().isBlank()) {
-                        log.error("Invalid identifier in expansion {}", url);
-                    } else {
-                        log.debug("Parsed {}, found {}", url, em.getIdentifier());
+                    try {
+                        ExpansionManifest em = getManifestFromUrl(url);
+                        if (em == null) {
+                            log.error("Could not parse expansion at {}", url);
+                        } else if (em.getIdentifier() == null || em.getIdentifier().isBlank()) {
+                            log.error("Invalid identifier in expansion {}", url);
+                        } else {
+                            log.debug("Parsed {}, found {}", url, em.getIdentifier());
+                        }
+                        return em;
+                    } catch (Exception e) {
+                        log.error("Could not read url {}", url, e);
+                        return null;
                     }
-                    
-                    
-                    return em;
                 })
                 .filter(m -> m != null)
                 .collect(Collectors.toList());

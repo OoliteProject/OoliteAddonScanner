@@ -17,6 +17,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
@@ -65,8 +67,8 @@ public class Scanner implements Runnable {
      * 
      * @throws MalformedURLException something went wrong
      */
-    public Scanner() throws MalformedURLException {
-        this.catalogUrl = new URL("http://addons.oolite.space/api/1.0/overview");
+    public Scanner() throws MalformedURLException, URISyntaxException {
+        this.catalogUrl = new URI("http://addons.oolite.space/api/1.0/overview").toURL();
     }
 
     /**

@@ -6,6 +6,7 @@ import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.Wikiworthy;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -166,7 +167,7 @@ public class Wiki {
         urlStr = getPageUrl(name);
         
         try {
-            URL url = new URL(urlStr);
+            URL url = new URI(urlStr).toURL();
             try (InputStreamReader rin = new InputStreamReader(url.openStream())) {
                 StringBuilder sb = new StringBuilder();
                 char[] buffer = new char[1024];

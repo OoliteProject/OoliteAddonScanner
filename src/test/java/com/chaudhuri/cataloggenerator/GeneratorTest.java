@@ -7,6 +7,8 @@ import com.chaudhuri.ooliteaddonscanner2.model.ExpansionManifest;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
@@ -205,7 +207,7 @@ public class GeneratorTest {
     }
     
     @Test
-    public void testGetManifestFromUrl() {
+    public void testGetManifestFromUrl() throws MalformedURLException, URISyntaxException {
         log.info("testGetManifestFromUrl");
         
         Generator instance = new Generator();
@@ -220,7 +222,7 @@ public class GeneratorTest {
     }
     
     @Test
-    public void testGetManifestFromUrl2() {
+    public void testGetManifestFromUrl2() throws MalformedURLException, URISyntaxException {
         log.info("testGetManifestFromUrl2");
         
         Generator instance = new Generator();
