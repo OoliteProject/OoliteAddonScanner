@@ -106,7 +106,7 @@ public class ExpansionCacheTest {
 
         // this includes testGetOoliteDownloadUrl()
         String url = cache.getOoliteDownloadUrl(m);
-        assertEquals("https://github.com/OoliteProject/oolite/releases/download/1.90/oolite-1.90.zip", url);
+        assertEquals("https://github.com/OoliteProject/oolite/releases/download/1.92/oolite-source-1.92.zip", url);
 
         log.debug("map has keys {}", m.keySet());
         /*

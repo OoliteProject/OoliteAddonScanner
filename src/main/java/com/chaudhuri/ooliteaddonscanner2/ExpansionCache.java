@@ -205,7 +205,7 @@ public class ExpansionCache {
     public String getOoliteDownloadUrl(Map<String, Object> manifest) {
         log.debug("getOoliteDownloadUrl({})", manifest);
 
-        Pattern pattern = Pattern.compile("oolite-\\d+\\.\\d+\\.zip");
+        Pattern pattern = Pattern.compile("oolite-source-\\d+\\.\\d+\\.zip");
         
         List<Object> assets = (List<Object>)manifest.get("assets");
         for (Object oasset: assets) {

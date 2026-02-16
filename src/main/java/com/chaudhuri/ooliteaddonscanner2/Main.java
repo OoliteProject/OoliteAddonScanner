@@ -5,7 +5,6 @@ package com.chaudhuri.ooliteaddonscanner2;
 import com.chaudhuri.ooliteaddonscanner2.model.CustomSearch;
 import java.io.File;
 import java.net.URI;
-import java.net.URL;
 import java.util.Arrays;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;

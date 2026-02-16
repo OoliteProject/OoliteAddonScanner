@@ -298,7 +298,7 @@ public class AddonsUtil {
     /** 
      * Download oolite, unpack and scan for ships and equipment.
      * 
-     * @param registry 
+     * @param registry the registry that will receive the found resources
      */
     public static void readOolite(ExpansionCache cache, Registry registry) throws IOException, SAXException, ParserConfigurationException, RegistryException, TransformerException, URISyntaxException {
         log.debug("readOolite({})", registry); 
@@ -340,11 +340,11 @@ public class AddonsUtil {
             
             ZipEntry entry;
             while ((entry= zin.getNextEntry()) != null) {
-                if ("Oolite.app/Contents/Resources/Config/shipdata.plist".equals(entry.getName())) {
+                if ("Resources/Config/shipdata.plist".equals(entry.getName())) {
                     log.debug("found {}", entry.getName());
                     readShips(url+"!"+entry.getName(), AddonsUtil.getZipEntryStream(zin), registry, oxp);
                 }
-                if ("Oolite.app/Contents/Resources/Config/equipment.plist".equals(entry.getName())) {
+                if ("Resources/Config/equipment.plist".equals(entry.getName())) {
                     log.debug("found {}", entry.getName());
                     readEquipment(url+"!"+entry.getName(), AddonsUtil.getZipEntryStream(zin), registry, oxp);
                 }
