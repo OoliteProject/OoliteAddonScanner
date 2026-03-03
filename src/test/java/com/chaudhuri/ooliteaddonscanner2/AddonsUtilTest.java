@@ -564,8 +564,13 @@ public class AddonsUtilTest {
         Expansion expansion = new Expansion();
 
         assertEquals(0, expansion.getWarnings().size());
-        AddonsUtil.readShipModels(cache, expansion);
-        assertEquals(1, expansion.getWarnings().size());
+        try {
+            AddonsUtil.readShipModels(cache, expansion);
+            fail("expected exception");
+        } catch (IllegalArgumentException e) {
+            assertEquals("expansion must have download url", e.getMessage());
+            log.debug("caught expected exception", e);
+        }
     }
 
     /**

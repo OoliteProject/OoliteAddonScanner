@@ -369,6 +369,9 @@ public class AddonsUtil {
         if (expansion == null) {
             throw new IllegalArgumentException(EXCEPTION_EXPANSION_MUST_NOT_BE_NULL);
         }
+        if (expansion.getDownloadUrl() == null) {
+            throw new IllegalArgumentException("expansion must have download url");
+        }
         
         try {
             ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownloadUrl())));

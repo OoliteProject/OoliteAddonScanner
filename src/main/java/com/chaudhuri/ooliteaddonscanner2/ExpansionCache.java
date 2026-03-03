@@ -408,7 +408,11 @@ public class ExpansionCache {
         }
 
         cacheMisses++;
-        doDownload(u, localFile);
+        try {
+            doDownload(u, localFile);
+        } catch (IOException e) {
+            log.info("Could not download {} -> {}", u, localFile, e);
+        }
     }
     
     /**
@@ -416,7 +420,7 @@ public class ExpansionCache {
      * If the file is not cached or too old it will be automatically downloaded.
      * 
      * @param url the download url of the file
-     * @return the inputstream (to the cached file on disk)
+     * @return the inputstream (to the cached file on disk), or null if we just do not have it
      * @throws IOException something went wrong
      */
     public InputStream getPluginInputStream(String url) throws IOException, MalformedURLException, URISyntaxException {
@@ -428,7 +432,11 @@ public class ExpansionCache {
         update(url);
 
         File cached = getCachedFile(url);
-        return new FileInputStream(cached);
+        if (cached.canRead()) {
+            return new FileInputStream(cached);
+        } else {
+            return null;
+        }
     }
     
     /**
