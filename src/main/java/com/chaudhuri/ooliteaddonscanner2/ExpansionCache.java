@@ -205,7 +205,7 @@ public class ExpansionCache {
     public String getOoliteDownloadUrl(Map<String, Object> manifest) {
         log.debug("getOoliteDownloadUrl({})", manifest);
 
-        Pattern pattern = Pattern.compile("oolite-source-\\d+\\.\\d+\\.zip");
+        Pattern pattern = Pattern.compile("oolite-source-\\d+(\\.\\d+)*\\.zip");
         
         List<Object> assets = (List<Object>)manifest.get("assets");
         for (Object oasset: assets) {
@@ -219,7 +219,8 @@ public class ExpansionCache {
                 return assetUrlStr;
             }
         }
-        throw new IllegalStateException("Could not find file matching "+pattern.pattern());
+        log.error("Manifest: {}", manifest);
+        throw new IllegalStateException("Could not find file matching "+pattern.pattern() +" in manifest's assets");
     }
     
     /**

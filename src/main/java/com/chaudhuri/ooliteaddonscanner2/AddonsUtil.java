@@ -310,9 +310,19 @@ public class AddonsUtil {
         }
         
         String tag = "latest";
+        String url = null;
+        Map<String, Object> manifest = null;
 
-        Map<String, Object> manifest = cache.getOoliteManifest(tag);
-        String url = cache.getOoliteDownloadUrl(manifest);
+        try {
+            manifest = cache.getOoliteManifest(tag);
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not get manifest for Oolite '" + tag+ "'", e);
+        }
+        try {
+            url = cache.getOoliteDownloadUrl(manifest);
+        } catch (Exception e) {
+            throw new IllegalStateException("Could not get download url for Oolite from manifest", e);
+        }
         try (InputStream olitezip = cache.getPluginInputStream(url); ZipInputStream zin = new ZipInputStream(olitezip)) {
             Expansion oxp = new Expansion();
             oxp.setDownloadUrl(url);
