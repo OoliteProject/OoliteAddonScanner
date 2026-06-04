@@ -433,6 +433,7 @@ public class Scanner implements Runnable {
                 log.info("Parsed {} ships", registry.getShips().size());
 
                 // scan for wiki pages
+                log.info("Check wiki pages...");
                 scanWikipages(registry);
 
                 // scanning finished. Now process...
