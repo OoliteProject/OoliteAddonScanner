@@ -48,7 +48,7 @@ public class ExpansionCache {
     
     /** Time before which we do not update the cache entry. 
      */
-    private static final Duration MIN_AGE = Duration.parse("PT4H"); // 2 hours
+    private static final Duration MIN_AGE = Duration.parse("PT4H"); // 4 hours
     
     /** Time after which we remove files from the cache. */
     private static final Instant THRESHOLD = Instant.now().minus(180, ChronoUnit.DAYS);
