@@ -128,6 +128,7 @@ public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
     private String asWikipage;
     
     private List<String> warnings;
+    private List<Dependency> dependentOxps = new ArrayList<>();
     
     /**
      * Creates a new Expansion.
@@ -686,6 +687,14 @@ public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
         }
         
         return identifier.compareTo(other.getIdentifier());
+    }
+    
+    public void addDependentOxp(Dependency dependent) {
+        dependentOxps.add(dependent);
+    }
+    
+    public List<Dependency> getDependentOxps() {
+        return dependentOxps;
     }
     
 }

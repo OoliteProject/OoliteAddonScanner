@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -846,6 +847,50 @@ public class Registry {
      */
     public Properties getProperties() {
         return properties;
+    }
+
+    
+    /**
+     * Marks dependent OXPs on their dependencies and issues warnings if
+     * dependency cannot be found.
+     */
+    protected void processDependencies() {
+        expansions.values().stream().forEach((expansion) -> {
+            log.info("processing dependencies of {}", expansion);
+            expansion.getRequiresOxps().forEach((dependency) -> {
+                log.trace("processint dependency {} -> {}", expansion, dependency);
+
+                List<Expansion> matches = getExpansionsByDependency(dependency);
+                
+                if (matches == null || matches.isEmpty()) {
+                    log.warn("unresolved dependency {} -> {}", expansion, dependency);
+                    expansion.addWarning("Unresolved dependency " + dependency.getIdentifier() + ":" + dependency.getVersion());
+                } else {
+                    matches.forEach((t) -> {
+                        log.warn("resolved dependency {} -> {}", expansion, t);
+
+                        Expansion.Dependency dep = new Expansion.Dependency();
+                        dep.setIdentifier(expansion.getIdentifier());
+                        dep.setVersion(expansion.getVersion());
+                        dep.setDescription(expansion.getName());
+
+                        t.addDependentOxp(dep);
+                    });
+                }
+            });
+        });
+    }
+    
+    public List<Expansion> getExpansionsByDependency(Expansion.Dependency dependency) {
+        return expansions.values().stream()
+            .filter((man) -> isMatch(man, dependency))
+            .collect(Collectors.toList());
+    }
+    
+    protected boolean isMatch (Expansion expansion, Expansion.Dependency dependency) {
+        boolean result = expansion.getIdentifier().equals(dependency.getIdentifier());
+        log.warn("check {} <=> {}, match {}", expansion.getIdentifier(), dependency.getIdentifier(), result);
+        return result;
     }
     
 }

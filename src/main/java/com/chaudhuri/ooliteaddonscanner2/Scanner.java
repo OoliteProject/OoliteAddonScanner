@@ -435,7 +435,8 @@ public class Scanner implements Runnable {
                 // scan for wiki pages
                 scanWikipages(registry);
 
-                // scanning finished. Now verify...
+                // scanning finished. Now process...
+                registry.processDependencies();
                 Verifier.verify(registry);
 
                 new File(outputDir, "equipment").mkdirs();

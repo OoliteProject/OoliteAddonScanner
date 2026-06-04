@@ -28,8 +28,11 @@ public class ExpansionManifest implements Warnable {
     private String title;
     private String version;
     private Long uploadDate;
-    
+
+    /** Holds warnings detected on this manifest. */
     private List<String> warnings;
+    /** Holds Expansions that depend on this. */
+    private List<Expansion.Dependency> dependentOxps = new ArrayList<>();
     
     /**
      * Creates a new ExpansionManifest.
@@ -369,5 +372,26 @@ public class ExpansionManifest implements Warnable {
      */
     public boolean hasWarnings() {
         return !warnings.isEmpty();
+    }
+
+    /**
+     * Adds a dependent OXP to the list.
+     */
+    public void addDependentOxp(Expansion.Dependency dependent) {
+        this.dependentOxps.add(dependent);
+    }
+
+    /**
+     * Replaces the list of dependent OXPs.
+     */
+    public void setDependentOxps(List<Expansion.Dependency> dependentOxps) {
+        this.dependentOxps = dependentOxps;
+    }
+
+    /**
+     * Returns the list of dependent OXPs.
+     */
+    public List<Expansion.Dependency> getDependentOxps() {
+        return this.dependentOxps;
     }
 }
