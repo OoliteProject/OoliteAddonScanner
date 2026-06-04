@@ -407,6 +407,14 @@ public class Generator implements Callable<Object> {
         return result;
     }
     
+    /**
+     * Parses catalog manifests from a list of urls and returns a merged, 
+     * sorted list.
+     * 
+     * @param urls the urls to read
+     * @return the list of manifests
+     * @throws Exception something went wrong
+     */
     List<ExpansionManifest> parseUrls(List<String> urls) throws Exception {
         // create the catalog
         List<ExpansionManifest> catalog = null;
@@ -492,6 +500,7 @@ public class Generator implements Callable<Object> {
             }
         }
 
+        // read all the OXP manifests
         List<ExpansionManifest> catalog = parseUrls(urls);
 
         // serialize the catalog into each output format
