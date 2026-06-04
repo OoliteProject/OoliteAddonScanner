@@ -46,9 +46,9 @@ public class ExpansionCache {
     
     protected File cacheDIR;
     
-    /** Time after which we try to update the cache entry. 
+    /** Time before which we do not update the cache entry. 
      */
-    private static final Duration MAX_AGE = Duration.parse("P7d"); // 7 days ago
+    private static final Duration MIN_AGE = Duration.parse("PT2H"); // 2 hours
     
     /** Time after which we remove files from the cache. */
     private static final Instant THRESHOLD = Instant.now().minus(180, ChronoUnit.DAYS);
@@ -380,7 +380,8 @@ public class ExpansionCache {
     
     /** 
      * Ensure we have the resource  in the cache and it is recent enough.
-     * Recent enough means the age is less than MAX_AGE.
+     * Recent enough means the age is less than the URL. If younger
+     * than MIN_AGE no check is performed.
      * 
      * @param url
      * @throws MalformedURLException
@@ -394,18 +395,31 @@ public class ExpansionCache {
         
         URL u = new URI(url).toURL();
         File localFile = getCachedFile(url);
+        Instant ww = null;
+        Duration age = null;
         
-        Duration age = Duration.between(Instant.ofEpochMilli(localFile.lastModified()), Instant.now());
+        if (localFile.exists()) {
+            ww = Instant.ofEpochMilli(localFile.lastModified());
+            age = Duration.between(ww, Instant.now());
         
-        if (localFile.exists() && (MAX_AGE.compareTo(age) < 0 ) ) {
+            // if less than MIN_AGE do not even check the online version
+            if (MIN_AGE.toSeconds() > age.toSeconds()) {
+                log.debug("Very new in cache: {}", localFile);
+                cacheHits++;
+                return;
+            }
+
             // perform check if there is a newer version online
             Date online = doCheckLastModified(u, 5);
             Date local = new Date(localFile.lastModified());
             if (local.after(online)) {            
-                log.debug("Already in cache: {}", localFile);
+                log.debug("Latest already in cache: {}", localFile);
                 cacheHits++;
                 return;
             }
+        }
+        if (localFile.exists()) {
+            log.info("File exists but is too old (min {} vs {}, derived from {} interpreted as {})", MIN_AGE, age, localFile.lastModified(), ww);
         }
 
         cacheMisses++;

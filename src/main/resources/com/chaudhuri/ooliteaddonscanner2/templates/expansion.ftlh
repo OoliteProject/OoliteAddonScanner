@@ -131,6 +131,19 @@
                         </#list>
                     </td>
                 </tr>
+                <#if dependentOxps?has_content>
+                <tr>
+                    <td>Dependent Expansions</td>
+                    <td>
+                        <#list dependentOxps as dep>
+                            <li>${ dep.identifier!"" }:${ dep.version!"" }</li>
+                        </#list>
+                    </td>
+                    <td>
+                        <!-- not contained in manifest -->
+                    </td>
+                </tr>
+                </#if>
                 <tr>
                     <td>Information URL</td>
                     <td><a target="_blank" href="${ informationUrl!"" }">${ informationUrl!"n/a"}</a></td>
