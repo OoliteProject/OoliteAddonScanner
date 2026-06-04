@@ -408,10 +408,14 @@ public class Verifier {
         verifyExpansion1Scripts(expansion);
         verifyDependencies(expansion.getRequiresOxps(), expansion, registry);
         verifyDependencies(expansion.getOptionalOxps(), expansion, registry);
-        verifyDependencies(expansion.getConflictOxps(), expansion, registry);
+        
+        // do not demand that all conflicting OXPs are on the expansion catalog
+        //verifyDependencies(expansion.getConflictOxps(), expansion, registry);
         verifyDependencies(expansion.getManifest().getRequiresOxps(), expansion, registry);
         verifyDependencies(expansion.getManifest().getOptionalOxps(), expansion, registry);
-        verifyDependencies(expansion.getManifest().getConflictOxps(), expansion, registry);
+        
+        // do not demand that all conflicting OXPs are on the expansion catalog
+        // verifyDependencies(expansion.getManifest().getConflictOxps(), expansion, registry);
         verifyExpansion1OptionalOxps(expansion);
         verifyExpansionConflictOxps(expansion);
     }

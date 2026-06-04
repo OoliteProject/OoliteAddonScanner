@@ -48,7 +48,7 @@ public class ExpansionCache {
     
     /** Time before which we do not update the cache entry. 
      */
-    private static final Duration MIN_AGE = Duration.parse("PT2H"); // 2 hours
+    private static final Duration MIN_AGE = Duration.parse("PT4H"); // 2 hours
     
     /** Time after which we remove files from the cache. */
     private static final Instant THRESHOLD = Instant.now().minus(180, ChronoUnit.DAYS);
@@ -137,7 +137,7 @@ public class ExpansionCache {
         Instant lastAccessed = time.toInstant();
 
         if (lastModified.isBefore(THRESHOLD) && lastAccessed.isBefore(THRESHOLD)) {
-            log.trace("deleting file {}", f);
+            log.info("cleaning old file {}", f);
             Files.delete(f.toPath());
         }
     }

@@ -867,7 +867,7 @@ public class Registry {
                     expansion.addWarning("Unresolved dependency " + dependency.getIdentifier() + ":" + dependency.getVersion());
                 } else {
                     matches.forEach((t) -> {
-                        log.warn("resolved dependency {} -> {}", expansion, t);
+                        log.debug("resolved dependency {} -> {}", expansion, t);
 
                         Expansion.Dependency dep = new Expansion.Dependency();
                         dep.setIdentifier(expansion.getIdentifier());
@@ -889,7 +889,7 @@ public class Registry {
     
     protected boolean isMatch (Expansion expansion, Expansion.Dependency dependency) {
         boolean result = expansion.getIdentifier().equals(dependency.getIdentifier());
-        log.warn("check {} <=> {}, match {}", expansion.getIdentifier(), dependency.getIdentifier(), result);
+        log.trace("check {} <=> {}, match {}", expansion.getIdentifier(), dependency.getIdentifier(), result);
         return result;
     }
     
