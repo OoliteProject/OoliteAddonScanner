@@ -20,6 +20,7 @@
         <ul>
           <#if warnings?has_content><li><a href="#warnings">Warnings</a></li></#if>
           <li><a href="#manifest">Manifest</a></li>
+          <li><a href="#relationships">Relationships Diagram</a></li>
           <li><a href="#documentation">Documentation</a></li>
           <li><a href="#equipment">${ equipment?size } Equipment</a></li>
           <li><a href="#ships">${ ships?size } Ships</a></li>
@@ -209,6 +210,11 @@
                 <tr><td>Upload date</td><td>${ uploadDate!"n/a" } or { uploadDateAsInstant!"n/a" }</td></tr>
             </table>
         </#if>
+        </a>
+
+        <a name="relationships">
+        <h2>Relationships Diagram</h2>
+        <img src="${ identifier }.png"/>
         </a>
 
         <a name="documentation">

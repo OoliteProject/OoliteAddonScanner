@@ -44,6 +44,8 @@ public class Scanner implements Runnable {
     public static final String OOLITE_CORE = "oolite.core";
     public static final String XML_HEADER = "<?xml";
     public static final String HTML_EXTENSION = ".html";
+    public static final String PLANTUML_EXTENSION = ".plantuml";
+    public static final String SVG_EXTENSION = ".svg";
     public static final String OXP_PATH_SCRIPTS = "Scripts/";
     public static final String MAX_EXPANSION = "maxExpansion";
     
