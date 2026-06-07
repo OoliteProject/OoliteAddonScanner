@@ -93,7 +93,14 @@
             <artifactId>Saxon-HE</artifactId>
             <version>12.9</version>
         </dependency>
-                                
+
+        <!-- Source: https://mvnrepository.com/artifact/net.sourceforge.plantuml/plantuml -->
+        <dependency>
+            <groupId>net.sourceforge.plantuml</groupId>
+            <artifactId>plantuml</artifactId>
+            <version>1.2024.3</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     
     <build>

@@ -3,6 +3,8 @@
 package com.chaudhuri.ooliteaddonscanner2;
 
 import static com.chaudhuri.ooliteaddonscanner2.Scanner.HTML_EXTENSION;
+import static com.chaudhuri.ooliteaddonscanner2.Scanner.PLANTUML_EXTENSION;
+import static com.chaudhuri.ooliteaddonscanner2.Scanner.SVG_EXTENSION;
 import com.chaudhuri.ooliteaddonscanner2.model.Equipment;
 import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.ooliteaddonscanner2.model.Ship;
@@ -96,6 +98,9 @@ public class TemplateUtil {
         expansionsDir.mkdirs();
         
         for (Expansion expansion: registry.getExpansions()) {
+            File plantumlfile = new File(expansionsDir, expansion.getIdentifier()+PLANTUML_EXTENSION);
+            templateEngine.process(expansion, "expansionPlantUML.ftlh", plantumlfile);
+            PlantUMLUtil.generateDiagram(plantumlfile, expansionsDir);
             templateEngine.process(expansion, "expansion.ftlh", new File(expansionsDir, expansion.getIdentifier()+HTML_EXTENSION));
         }
     }
