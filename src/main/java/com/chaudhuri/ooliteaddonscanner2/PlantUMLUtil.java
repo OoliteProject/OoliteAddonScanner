@@ -30,7 +30,7 @@ public class PlantUMLUtil {
     public static void generateDiagram(File input, File outputDir) throws IOException {
         log.debug("generateDiagram({}, {})", input, outputDir);
         
-        SourceFileReader reader = new SourceFileReader(input, outputDir.getAbsoluteFile(), new FileFormatOption(FileFormat.PNG));
+        SourceFileReader reader = new SourceFileReader(false, input, outputDir.getAbsoluteFile(), new FileFormatOption(FileFormat.PNG));
         List<GeneratedImage> list = reader.getGeneratedImages();
         
         for (GeneratedImage i: list) {
