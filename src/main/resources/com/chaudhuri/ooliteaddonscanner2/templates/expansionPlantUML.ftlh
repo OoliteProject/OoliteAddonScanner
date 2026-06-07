@@ -2,11 +2,10 @@
     [${ title }] as this #ffff99
 
     <#if conflictOxps?has_content>
-    package "Conflict" as conflict {
+    together {
         <#list conflictOxps as dep>
-            [${ dep.identifier!"" }:${ dep.version!"" }] #red
-            [${ dep.identifier!"" }:${ dep.version!"" }] <-[#red]- this: conflicts
-            
+            [${ dep.identifier!"" }:${ dep.version!"" }]
+            this -left[#red]-> [${ dep.identifier!"" }:${ dep.version!"" }]: conflicts
             <#if dep_has_next>
                 <#assign nextDep = conflictOxps[dep_index + 1]>
                 [${ dep.identifier!"" }:${ dep.version!"" }] -down[hidden]- [${ nextDep.identifier!"" }:${ nextDep.version!"" }]
@@ -16,23 +15,19 @@
     </#if>
 
     <#if requiresOxps?has_content>
-    this -down[hidden]- requirements
-    package "Requirements" as requirements {
+    together {
         <#list requiresOxps as dep>
             [${ dep.identifier!"" }:${ dep.version!"" }]
-            this --> [${ dep.identifier!"" }:${ dep.version!"" }]: requires
+            this -down[#black,thickness=3]-> [${ dep.identifier!"" }:${ dep.version!"" }]: requires
         </#list>
     }
     </#if>
 
     <#if optionalOxps?has_content>
-    this -right[hidden]- optional
-    package "Optional" as optional {
-
+    together {
         <#list optionalOxps as dep>
             [${ dep.identifier!"" }:${ dep.version!"" }]
-            this -> [${ dep.identifier!"" }:${ dep.version!"" }] #blue: supports
-            
+            this -right[#blue]-> [${ dep.identifier!"" }:${ dep.version!"" }]: supports
             <#if dep_has_next>
                 <#assign nextDep = optionalOxps[dep_index + 1]>
                 [${ dep.identifier!"" }:${ dep.version!"" }] -down[hidden]- [${ nextDep.identifier!"" }:${ nextDep.version!"" }]
@@ -42,10 +37,11 @@
     </#if>
 
     <#if dependentOxps?has_content>
-    <#list dependentOxps as dep>
-        [${ dep.identifier!"" }:${ dep.version!"" }]
-         [${ dep.identifier!"" }:${ dep.version!"" }] <-- this: enables
-    </#list>
+    together {
+        <#list dependentOxps as dep>
+            [${ dep.identifier!"" }:${ dep.version!"" }]
+            this -up.> [${ dep.identifier!"" }:${ dep.version!"" }]: used by
+        </#list>
+    }
     </#if>
-
 @enduml
