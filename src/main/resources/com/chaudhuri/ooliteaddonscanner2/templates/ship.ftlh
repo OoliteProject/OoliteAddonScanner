@@ -16,7 +16,7 @@
         <table border='1'>
             <tr><td>Identifier</td><td>${ identifier }</td></tr>
             <tr><td>Name</td><td>${ name }</td></tr>
-            <tr><td>Expansion</td><td><a href='../expansions/${ expansion }.html'>${ expansion.title }</a></td></tr>
+            <tr><td>Expansion</td><td><a href='${ expansion }.html'>${ expansion.title }</a></td></tr>
         </table>
         <#if asWikipage??><p>More on <a href='${asWikipage}'>${asWikipage}</a></p></#if>
             
