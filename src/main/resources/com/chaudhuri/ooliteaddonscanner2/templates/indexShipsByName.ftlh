@@ -23,7 +23,7 @@
             </tr>
             <#list shipsByName as ship>
                 <tr>
-                    <td><a href="ships/${ ship.expansion.identifier }/${ ship.identifier }.html">${ ship.name }</a></td>
+                    <td><a href="expansions/${ ship.expansion.identifier }/${ ship.identifier }.html">${ ship.name }</a></td>
                     <td><a href="expansions/${ ship.expansion.identifier }/${ ship.expansion.identifier }.html">${ ship.expansion.name }</a></td>
                     <td>${ ship.features.roles!"" }</td>
                     <td>
