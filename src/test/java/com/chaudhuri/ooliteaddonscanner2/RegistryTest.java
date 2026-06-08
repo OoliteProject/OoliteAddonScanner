@@ -124,13 +124,14 @@ public class RegistryTest {
         log.debug("ships in registry: {}", registry.getShips());
         assertEquals(2, registry.getShips().size());
         assertEquals(0, registry.getWarnings().size());
-        
+
+        // see whether we overwrite or add ships with same identifier
         Ship ship3 = new Ship("s2");
         ship3.setExpansion(oxp);
         registry.addShip(ship3);
         log.debug("ships in registry: {}", registry.getShips());
-        assertEquals(2, registry.getShips().size());
-        assertEquals(1, registry.getWarnings().size());
+        assertEquals(3, registry.getShips().size());
+        assertEquals(0, registry.getWarnings().size());
     }
 
     /**
@@ -438,25 +439,29 @@ public class RegistryTest {
         }
         
         equipment.setExpansion(expansion);
-        registry.addEquipment(equipment);
+        registry.addEquipment(equipment); // add blah
         assertEquals(1, registry.getEquipment().size());
         assertEquals(equipment, registry.getEquipment().get(0));
 
         Equipment equipment2 = new Equipment();
         equipment2.setIdentifier("blah2");
         equipment2.setExpansion(expansion);
-        registry.addEquipment(equipment2);
+        registry.addEquipment(equipment2); // add blah2
         assertEquals(2, registry.getEquipment().size());
         assertEquals(equipment, registry.getEquipment().get(0));
         assertEquals(equipment2, registry.getEquipment().get(1));
 
+        // we used to overwrite equipment with same IDs. This is no longer the case,
+        // so we expect equipment to pile up.
         Equipment equipment3 = new Equipment();
         equipment3.setIdentifier("blah");
         equipment3.setExpansion(expansion);
-        registry.addEquipment(equipment3);
-        assertEquals(2, registry.getEquipment().size());
-        assertEquals(equipment3, registry.getEquipment().get(0));
-        assertEquals(equipment2, registry.getEquipment().get(1));
+        registry.addEquipment(equipment3); // add another blah
+        log.info("expansions: {}", registry.getEquipment());
+        assertEquals(3, registry.getEquipment().size());
+        assertEquals(equipment, registry.getEquipment().get(0));
+        assertEquals(equipment3, registry.getEquipment().get(1));
+        assertEquals(equipment2, registry.getEquipment().get(2));
     }
 
     /**
