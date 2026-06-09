@@ -121,7 +121,7 @@ jobs:
           key: ${{ runner.os }}-expansion_cache
 
   release:
-    needs: [build, test]
+    needs: [versioning, build, test]
     runs-on: ubuntu-latest
     steps:
       - name: Download artifacts
