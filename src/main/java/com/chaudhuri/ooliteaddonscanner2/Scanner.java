@@ -442,10 +442,6 @@ public class Scanner implements Runnable {
                 registry.processDependencies();
                 Verifier.verify(registry);
 
-                new File(outputDir, "equipment").mkdirs();
-                new File(outputDir, "expansions").mkdirs();
-                new File(outputDir, "ships").mkdirs();
-
                 TemplateUtil.printExpansions(registry, outputDir, templateEngine);
                 TemplateUtil.printEquipment(registry, outputDir, templateEngine);
                 TemplateUtil.printShips(registry, outputDir, templateEngine);

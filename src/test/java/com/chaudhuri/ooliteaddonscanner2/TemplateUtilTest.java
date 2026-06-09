@@ -285,7 +285,7 @@ public class TemplateUtilTest {
         
         assertTrue(outputdir.isDirectory());
         TemplateUtil.printExpansions(registry, outputdir, templateEngine);
-        assertTrue(new File(outputdir, "expansions/myId.html").isFile());
+        assertTrue(new File(outputdir, "expansions/myId/myId.html").isFile());
     }
 
     /**
@@ -312,7 +312,7 @@ public class TemplateUtilTest {
         
         assertTrue(outputdir.isDirectory());
         TemplateUtil.printExpansions(registry, outputdir, templateEngine);
-        assertTrue(new File(outputdir, "expansions/myId.html").isFile());
+        assertTrue(new File(outputdir, "expansions/myId/myId.html").isFile());
     }
 
     /**
@@ -395,7 +395,7 @@ public class TemplateUtilTest {
 
         assertTrue(outputdir.isDirectory());
         TemplateUtil.printEquipment(registry, outputdir, templateEngine);
-        assertTrue(new File(outputdir, "equipment/myEquipment.html").isFile());
+        assertTrue(new File(outputdir, "expansions/myExpansion/myEquipment.html").isFile());
     }
 
     /**
@@ -476,7 +476,7 @@ public class TemplateUtilTest {
 
         assertTrue(outputdir.isDirectory());
         TemplateUtil.printShips(registry, outputdir, templateEngine);
-        assertTrue(new File(outputdir, "ships/myShip.html").isFile());
+        assertTrue(new File(outputdir, "expansions/myExpansion/myShip.html").isFile());
     }
 
 }
