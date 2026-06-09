@@ -25,7 +25,7 @@
             </tr>
             <#list expansionsByName as expansion>
                 <tr>
-                    <td><a href="expansions/${ expansion.identifier }.html">${ expansion.title }</a></td>
+                    <td><a href="expansions/${ expansion.identifier }/${ expansion.identifier }.html">${ expansion.title }</a></td>
                     <td><#if expansion.category??>${ expansion.category }</#if></td>
                     <td><#if expansion.author??>${ expansion.author }</#if></td>
                     <td><#if expansion.version??>${ expansion.version }</#if></td>

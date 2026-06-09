@@ -95,13 +95,15 @@ public class TemplateUtil {
             throw new IllegalArgumentException(EXCEPTION_TEMPLATEENGINE_MUST_NOT_BE_NULL);
         }
         File expansionsDir = new File(outputdir, "expansions");
-        expansionsDir.mkdirs();
         
         for (Expansion expansion: registry.getExpansions()) {
-            File plantumlfile = new File(expansionsDir, expansion.getIdentifier()+PLANTUML_EXTENSION);
+            File expansionDir = new File(expansionsDir, expansion.getIdentifier());
+            expansionDir.mkdirs();
+            
+            File plantumlfile = new File(expansionDir, expansion.getIdentifier()+PLANTUML_EXTENSION);
             templateEngine.process(expansion, "expansionPlantUML.ftlh", plantumlfile);
-            PlantUMLUtil.generateDiagram(plantumlfile, expansionsDir);
-            templateEngine.process(expansion, "expansion.ftlh", new File(expansionsDir, expansion.getIdentifier()+HTML_EXTENSION));
+            PlantUMLUtil.generateDiagram(plantumlfile, expansionDir);
+            templateEngine.process(expansion, "expansion.ftlh", new File(expansionDir, expansion.getIdentifier()+HTML_EXTENSION));
         }
     }
     
@@ -125,11 +127,12 @@ public class TemplateUtil {
         if (templateEngine == null) {
             throw new IllegalArgumentException(EXCEPTION_TEMPLATEENGINE_MUST_NOT_BE_NULL);
         }
-        File equipmentDir = new File(outputdir, "equipment");
-        equipmentDir.mkdirs();
+        File expansionsDir = new File(outputdir, "expansions");
 
         for (Equipment equipment: registry.getEquipment()) {
-            templateEngine.process(equipment, "equipment.ftlh", new File(equipmentDir, equipment.getIdentifier()+HTML_EXTENSION));
+            File expansionDir = new File(expansionsDir, equipment.getExpansion().getIdentifier());
+            expansionDir.mkdirs();
+            templateEngine.process(equipment, "equipment.ftlh", new File(expansionDir, equipment.getIdentifier()+HTML_EXTENSION));
         }
     }
     
@@ -153,11 +156,12 @@ public class TemplateUtil {
         if (templateEngine == null) {
             throw new IllegalArgumentException(EXCEPTION_TEMPLATEENGINE_MUST_NOT_BE_NULL);
         }
-        File shipsDir = new File(outputdir, "ships");
-        shipsDir.mkdirs();
+        File expansionsDir = new File(outputdir, "expansions");
 
         for (Ship ship: registry.getShips()) {
-            templateEngine.process(ship, "ship.ftlh", new File(shipsDir, ship.getIdentifier()+HTML_EXTENSION));
+            File expansionDir = new File(expansionsDir, ship.getExpansion().getIdentifier());
+            expansionDir.mkdirs();
+            templateEngine.process(ship, "ship.ftlh", new File(expansionDir, ship.getIdentifier()+HTML_EXTENSION));
         }
     }
     

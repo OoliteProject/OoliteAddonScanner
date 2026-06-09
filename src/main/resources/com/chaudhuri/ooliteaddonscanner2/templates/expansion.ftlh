@@ -238,7 +238,7 @@
                 </tr>
             <#list equipment as e>
                 <tr>
-                    <td><a href="../equipment/${ e.identifier }.html">${ e.name }</a></td>
+                    <td><a href="${ e.identifier }.html">${ e.name }</a></td>
                     <td>${ e.visible?string('yes', 'no') }</td>
                     <td align="right">${ e.cost }</td>
                     <td align="center">${ e.techlevel?number + 1 }+</td>
@@ -259,7 +259,7 @@
                 </tr>
             <#list ships as ship>
                 <tr>
-                    <td><a href="../ships/${ ship.identifier }.html">${ ship.name }</a></td>
+                    <td><a href="${ ship.identifier }.html">${ ship.name }</a></td>
                 </tr>
             </#list>
             </table>

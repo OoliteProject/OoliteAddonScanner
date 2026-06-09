@@ -313,6 +313,7 @@ public class AddonsUtil {
         String url = null;
         Map<String, Object> manifest = null;
 
+        // find out the latest Download URL from Github
         try {
             manifest = cache.getOoliteManifest(tag);
         } catch (Exception e) {
@@ -323,6 +324,8 @@ public class AddonsUtil {
         } catch (Exception e) {
             throw new IllegalStateException("Could not get download url for Oolite from manifest", e);
         }
+        
+        // now download Oolite from that URL
         try (InputStream olitezip = cache.getPluginInputStream(url); ZipInputStream zin = new ZipInputStream(olitezip)) {
             Expansion oxp = new Expansion();
             oxp.setDownloadUrl(url);
