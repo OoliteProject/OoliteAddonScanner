@@ -93,12 +93,12 @@ jobs:
       - name: Run example scan
         run: |
           B=$(basename "OoliteAddonScanner*")
-          java -jar $B/$B.jar --out target/OoliteExpansionIndex --cache expansion-cache --maxExpansion 30
+          java -jar $B/$B.jar --out target/OoliteExpansionIndex --cache expansion-cache --maxExpansion 20
 
       - uses: actions/upload-artifact@v7
         with:
           name: ExampleCatalog
-          path: target/output
+          path: target/OoliteExpansionIndex
 
       - name: Save Expansions Cache
         id: cache-save
