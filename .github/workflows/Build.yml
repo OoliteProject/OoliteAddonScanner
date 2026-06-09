@@ -74,6 +74,10 @@ jobs:
           name: OoliteAddonScanner
           path: artifacts
           
+      - name: extract distribution
+        run: |
+          unzip artifacts/OoliteAddonScanner*.zip
+
       - name: check filesystem
         run: |
           find
