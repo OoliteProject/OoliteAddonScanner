@@ -64,7 +64,7 @@ jobs:
       - uses: actions/upload-artifact@v7
         with:
           name: OoliteAddonScanner
-          path: target/OoliteAddonScanner-${{ needs.versioning.outputs.semVer }}-executable.zip
+          path: target/OoliteAddonScanner-${{ needs.versioning.outputs.semVer }}-executable.*
 
   test:
     needs: [build]
@@ -130,6 +130,10 @@ jobs:
           name: OoliteAddonScanner
           path: artifacts
 
+      - name: check filesystem
+        run: |
+          find
+
       - name: Remove old prereleases
         if: github.ref != 'refs/heads/main'
         uses: s00d/delete-older-releases@0.2.1
@@ -152,8 +156,8 @@ jobs:
           prerelease: true
           title: "OoliteAddonScanner v${{ needs.versioning.outputs.semVer }}"
           files: |
-            target/*.zip
-            target/*.tar.gz
+            artifacts/target/*.zip
+            artifacts/target/*.tar.gz
 
       - name: Remove old releases
         if: github.ref == 'refs/heads/main'
