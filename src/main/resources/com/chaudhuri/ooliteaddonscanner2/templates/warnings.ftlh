@@ -23,7 +23,7 @@
         </#if>
         <#list expansions as expansion>
             <#if expansion.warnings?has_content>
-                <h3><a href="expansions/${ expansion.identifier }.html">${ expansion.title }</a></h3>
+                <h3><a href="expansions/${ expansion.identifier }/${ expansion.identifier }.html">${ expansion.title }</a></h3>
                 <ul>
                     <#list expansion.warnings as w>
                         <li> ${ w } </li>

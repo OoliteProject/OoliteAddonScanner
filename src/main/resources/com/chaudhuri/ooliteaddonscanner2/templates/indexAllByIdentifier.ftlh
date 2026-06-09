@@ -24,7 +24,13 @@
             </tr>
             <#list allByIdentifier as ww>
                 <#assign type><#if ww.type == "Ship">ships</#if><#if ww.type == "Expansion">expansions</#if><#if ww.type == "Equipment">equipment</#if></#assign>
-                <tr><td>${ww.type}</td><td><a href="${ type }/${ ww.identifier }.html">${ ww.identifier }</a></td><td><a href="${ type }/${ ww.identifier }.html">${ ww.name }</a></td><td><#if ww.expansion??><a href="expansions/${ ww.expansion.identifier }.html">${ ww.expansion.name }</a></#if></td><td><#if ww.asWikipage??><a target="_blank" href="${ ww.asWikipage }">Wiki Page</a><#else><font color="red">No Wiki</font></#if></td></tr>
+                <tr>
+                    <td>${ww.type}</td>
+                    <td><#if ww.expansion??><a href="expansions/${ ww.expansion.identifier }/${ ww.identifier }.html"><#else><a href="expansions/${ ww.identifier }/${ ww.identifier }.html"></#if>${ ww.identifier }</a></td>
+                    <td><#if ww.expansion??><a href="expansions/${ ww.expansion.identifier }/${ ww.identifier }.html"><#else><a href="expansions/${ ww.identifier }/${ ww.identifier }.html"></#if>${ ww.name }</a></td>
+                    <td><#if ww.expansion??><a href="expansions/${ ww.expansion.identifier }/${ ww.expansion.identifier }.html">${ ww.expansion.name }</a></#if></td>
+                    <td><#if ww.asWikipage??><a target="_blank" href="${ ww.asWikipage }">Wiki Page</a><#else><font color="red">No Wiki</font></#if></td>
+                </tr>
             </#list>
         </table>
     </body>
