@@ -156,8 +156,8 @@ jobs:
           prerelease: true
           title: "OoliteAddonScanner v${{ needs.versioning.outputs.semVer }}"
           files: |
-            artifacts/target/*.zip
-            artifacts/target/*.tar.gz
+            artifacts/*.zip
+            artifacts/*.tar.gz
 
       - name: Remove old releases
         if: github.ref == 'refs/heads/main'
