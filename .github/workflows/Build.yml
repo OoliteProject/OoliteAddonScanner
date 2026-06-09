@@ -73,6 +73,10 @@ jobs:
         with:
           name: OoliteAddonScanner
           path: artifacts
+          
+      - name: check filesystem
+        run: |
+          find
 
       - name: Restore expansions cache
         id: cache-restore
