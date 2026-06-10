@@ -24,8 +24,8 @@
             </tr>
             <#list equipmentByName as equipment>
                 <tr>
-                    <td><a href="equipment/${ equipment.identifier }.html">${ equipment.name }</a></td>
-                    <td><a href="expansions/${ equipment.expansion.identifier }.html">${ equipment.expansion.name }</a></td>
+                    <td><a href="expansions/${ equipment.expansion.identifier }/${ equipment.identifier }.html">${ equipment.name }</a></td>
+                    <td><a href="expansions/${ equipment.expansion.identifier }/${ equipment.expansion.identifier }.html">${ equipment.expansion.name }</a></td>
                     <td align="right">${ equipment.cost }</td>
                     <td align="center">${ equipment.techlevel?number + 1 }+</td>
                     <td>

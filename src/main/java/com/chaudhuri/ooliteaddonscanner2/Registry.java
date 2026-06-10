@@ -45,8 +45,8 @@ public class Registry {
     public static final String EXPANSION_REQUIRED_OOLITE_VERSION = "required_oolite_version";
     
     private final Map<String, Expansion> expansions;
-    private final Map<String, Equipment> equipment;
-    private final Map<String, Ship> ships;
+    private final Map<String, List<Equipment>> equipment;
+    private final Map<String, List<Ship>> ships;
     private final List<String> warnings;
     private final Properties properties;
     
@@ -411,19 +411,17 @@ public class Registry {
             throw new IllegalArgumentException("Ship must have expansion reference");
         }
         
-        if (ships.containsKey(ship.getIdentifier())) {
-            addWarning(String.format("Replacing %s/%s with %s/%s", 
-                    ships.get(ship.getIdentifier()).getExpansion().getName(), 
-                    ships.get(ship.getIdentifier()).getName(), 
-                    ship.getExpansion().getName(), 
-                    ship.getName()));
+        List<Ship> list = ships.get(ship.getIdentifier());
+        if (list == null) {
+            list = new ArrayList<>();
+            ships.put(ship.getIdentifier(), list);
         }
-        
-        ships.put(ship.getIdentifier(), ship);
+        list.add(ship);
     }
     
     /**
-     * Adds equipment.
+     * Adds equipment to the registry. If existing equipment gets replaced
+     * a warning is logged.
      * 
      * @param equipment the equipment
      */
@@ -434,14 +432,13 @@ public class Registry {
         if (equipment.getExpansion() == null) {
             throw new IllegalArgumentException("equipment must have expansion");
         }
-        if (this.equipment.containsKey(equipment.getIdentifier())) {
-            addWarning(String.format("Replacing %s/%s with %s/%s", 
-                    this.equipment.get(equipment.getIdentifier()).getExpansion().getName(), 
-                    this.equipment.get(equipment.getIdentifier()).getName(), 
-                    equipment.getExpansion().getName(), 
-                    equipment.getName()));
+
+        List<Equipment> list = this.equipment.get(equipment.getIdentifier());
+        if (list == null) {
+            list = new ArrayList<>();
+            this.equipment.put(equipment.getIdentifier(), list);
         }
-        this.equipment.put(equipment.getIdentifier(), equipment);
+        list.add(equipment);
     }
     
     /** 
@@ -486,7 +483,13 @@ public class Registry {
         }
         
         expansion.addEquipment(eq);
-        this.equipment.put(eq.getIdentifier(), eq);
+
+        List<Equipment> list = equipment.get(eq.getIdentifier());
+        if (list == null) {
+            list = new ArrayList<>();
+            equipment.put(eq.getIdentifier(), list);
+        }
+        list.add(eq);
     }
     
     /**
@@ -656,7 +659,12 @@ public class Registry {
      * @return the list
      */
     public List<Equipment> getEquipment() {
-        return new ArrayList<>(equipment.values());
+        //return new ArrayList<>(equipment.values());
+        List<Equipment> all = new ArrayList<>();
+        for (List<Equipment> list: equipment.values()) {
+            all.addAll(list);
+        }
+        return all;
     }
     
     /**
@@ -665,7 +673,7 @@ public class Registry {
      * @return the list
      */
     public List<Equipment> getEquipmentByName() {
-        ArrayList<Equipment> result = new ArrayList<>(equipment.values());
+        ArrayList<Equipment> result = new ArrayList<>(getEquipment());
         Collections.sort(result, (t, t1) -> t.getName().compareTo(t1.getName()));
         return result;
     }
@@ -676,7 +684,11 @@ public class Registry {
      * @return the list
      */
     public List<Ship> getShips() {
-        return new ArrayList<>(ships.values());
+        List<Ship> all = new ArrayList<>();
+        for (List<Ship> list: ships.values()) {
+            all.addAll(list);
+        }
+        return all;
     }
 
     /**
@@ -685,7 +697,7 @@ public class Registry {
      * @return the list
      */
     public List<Ship> getShipsByName() {
-        ArrayList<Ship> result = new ArrayList<>(ships.values());
+        ArrayList<Ship> result = new ArrayList<>(getShips());
         Collections.sort(result, (t, t1) -> t.getName().compareTo(t1.getName()));
         return result;
     }
@@ -698,8 +710,8 @@ public class Registry {
     public List<Wikiworthy> getAllByIdentifier() {
         ArrayList<Wikiworthy> result = new ArrayList<>();
         result.addAll(expansions.values());
-        result.addAll(equipment.values());
-        result.addAll(ships.values());
+        result.addAll(getEquipment());
+        result.addAll(getShips());
         
         Collections.sort(result, (t, t1) -> t.getIdentifier().compareTo(t1.getIdentifier()));
         
