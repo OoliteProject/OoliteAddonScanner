@@ -504,6 +504,8 @@ public class ExpansionCache {
                     }
                 }
 
+            } catch (IOException e) {
+                throw new IOException("Could not check " + u, e);
             } finally {
                 con.disconnect();
             }

@@ -181,5 +181,5 @@ jobs:
           prerelease: false
           title: "OoliteAddonScanner v${{ needs.versioning.outputs.semVer }}"
           files: |
-            target/*.zip
-            target/*.tar.gz
+            artifacts/*.zip
+            artifacts/*.tar.gz
