@@ -9,7 +9,7 @@
     <body>
         <table border="0" width="100%">
             <tr>
-                <td>Back to <a href='../index.html'>Index</a></td>
+                <td>Back to <a href='../../index.html'>Index</a></td>
                 <td align="right"><small>Page generated: ${.now}</small></td>
             </tr>
         </table>

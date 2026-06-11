@@ -14,7 +14,8 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Genson converter to serialize ExpansionManifest.
- * @author hiran
+ * 
+ * @author oocube
  */
 public class ExpansionManifestConverter implements Converter<ExpansionManifest> {
     private static final Logger log = LogManager.getLogger();

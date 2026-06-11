@@ -2,6 +2,7 @@
  */
 package com.chaudhuri.ooliteaddonscanner2.plist;
 
+import com.chaudhuri.ooliteaddonscanner2.model.Expansion;
 import com.chaudhuri.plist.PlistLexer;
 import com.chaudhuri.plist.PlistParser;
 import java.io.IOException;
@@ -17,12 +18,14 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
+ * Wrapper for the ANTLR generated plist parser.
  *
- * @author hiran
+ * @author oocube
  */
 public class PlistParserUtil {
     private static final Logger log = LogManager.getLogger();
@@ -92,7 +95,34 @@ public class PlistParserUtil {
      * @throws IOException something went wrong
      */
     public static PlistParser.DictionaryContext parsePlistDictionary(InputStream data, String source) throws IOException {
-        return prepareParser(data, source).dictionary();
+        PlistParser parser = prepareParser(data, source);
+        PlistParser.DictionaryContext parseTree = parser.dictionary();
+        
+        return parseTree;
+    }
+
+    /**
+     * Parses a plist dictionary from the given inputstream and validates it.
+     * Warnings will be added to the expansion.
+     * 
+     * @param data the inputstream to read from
+     * @param source the source of the data for good error messages
+     * @param expansion
+     * @return the parsed dictionary
+     * @throws IOException something went wrong
+     */
+    public static PlistParser.DictionaryContext parsePlistDictionary(InputStream data, String source, Expansion expansion) throws IOException {
+        PlistParser.DictionaryContext parseTree = parsePlistDictionary(data, source);
+        
+        // validate the dictionary
+        ValidationListener vl = new ValidationListener();
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(vl, parseTree);
+        for (String warning: vl.getWarnings()) {
+            expansion.addWarning(warning);
+        }
+        
+        return parseTree;
     }
     
     /**

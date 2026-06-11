@@ -11,7 +11,7 @@
     <Logger level="warn" name="com.chaudhuri.cataloggenerator.ExpansionManifestConverter"/>
     <Logger level="warn" name="com.chaudhuri.cataloggenerator.Generator"/>
     <Logger level="warn" name="com.chaudhuri.cataloggenerator.GeneratorTest"/>
-    <Logger level="trace" name="com.chaudhuri.ooliteaddonscanner2.AddonsUtil"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.AddonsUtil"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.AddonsUtilTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCache"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.ExpansionCacheTest"/>
@@ -26,6 +26,7 @@
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.ThrowingErrorListenerTest"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParser"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.plist.XMLPlistParserTest"/>
+    <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.plist.ValidationListener"/>
     <Logger level="info" name="com.chaudhuri.ooliteaddonscanner2.Registry"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.RegistryTest"/>
     <Logger level="warn" name="com.chaudhuri.ooliteaddonscanner2.RegistryExceptionTest"/>
