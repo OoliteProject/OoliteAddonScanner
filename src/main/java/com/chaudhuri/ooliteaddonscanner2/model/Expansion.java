@@ -689,10 +689,20 @@ public class Expansion implements Wikiworthy, Comparable<Expansion>, Warnable {
         return identifier.compareTo(other.getIdentifier());
     }
     
+    /**
+     * Adds a dependent OXP to the list.
+     * 
+     * @param dependent the OXP
+     */
     public void addDependentOxp(Dependency dependent) {
         dependentOxps.add(dependent);
     }
-    
+
+    /**
+     * Returns the list of dependent OXPs.
+     * 
+     * @return the list
+     */
     public List<Dependency> getDependentOxps() {
         return dependentOxps;
     }

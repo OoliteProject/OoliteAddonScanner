@@ -9,8 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
- * @author hiran
+ * Comparator for expansion manifests.
+ * Helps sorting expansions.
+ * 
+ * @author oocube
  */
 public class ExpansionManifestComparator implements Comparator<ExpansionManifest> {
     private static final Logger log = LogManager.getLogger();
