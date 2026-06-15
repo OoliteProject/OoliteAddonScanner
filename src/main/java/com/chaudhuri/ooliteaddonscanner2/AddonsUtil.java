@@ -68,7 +68,7 @@ import org.xml.sax.SAXException;
 /**
  * Contains utility functions for handling the Oolite addons model.
  * 
- * @author hiran
+ * @author oocube
  */
 public class AddonsUtil {
     private static final Logger log = LogManager.getLogger();
@@ -241,7 +241,7 @@ public class AddonsUtil {
             registry.addShipList(expansion, shipList);
         } else {
             in.reset();
-            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, url);
+            PlistParser.DictionaryContext dc = PlistParserUtil.parsePlistDictionary(in, url, expansion);
             checkPlistKeys(dc, expansion);
             registry.addShipList(expansion, dc);
         }
@@ -476,7 +476,7 @@ public class AddonsUtil {
         
         for(Expansion oxp: registry.getExpansions()) {
             i++;
-            log.info("Reading expansions ({}/{})...", i, total);
+            log.info("Reading expansions... ({}/{} {})", i, total, oxp.getIdentifier());
             
             readOxp(cache, registry, oxp);
         }
@@ -505,7 +505,13 @@ public class AddonsUtil {
             ZipInputStream zin = new ZipInputStream(new BufferedInputStream(cache.getPluginInputStream(expansion.getDownloadUrl())));
             ZipEntry zentry = null;
             while ((zentry = zin.getNextEntry()) != null) {
-                readOxpEntry(zin, zentry, registry, expansion);
+                try {
+                    readOxpEntry(zin, zentry, registry, expansion);
+                } catch (Exception ex) {
+                    String message = String.format("Could not parse %s!%s", expansion.getDownloadUrl(), zentry.getName());
+                    log.error(message, ex);
+                    expansion.addWarning(message + "\n" + ex.getMessage());
+                }
             }
         } catch (EOFException e) {
             log.warn("Incomplete plugin archive for {}", expansion.getDownloadUrl(), e);

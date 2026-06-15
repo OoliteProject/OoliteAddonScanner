@@ -75,7 +75,7 @@ fragment NameStartChar
 
 // parser rules
 parse: dictionary | list;
-dictionary: LBRACE (keyvaluepair (SEMI keyvaluepair?)*)? RBRACE;
+dictionary: LBRACE (keyvaluepair (SEMI keyvaluepair)* SEMI?)? RBRACE;
 keyvaluepair: STRING EQUALS value;
 value: string | number | list | dictionary;
 string: STRING;

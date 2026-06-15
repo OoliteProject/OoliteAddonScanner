@@ -893,6 +893,12 @@ public class Registry {
         });
     }
     
+    /**
+     * Returns the list of expansions that match the given dependency.
+     * 
+     * @param dependency the dependency to search for
+     * @return the list of expansions
+     */
     public List<Expansion> getExpansionsByDependency(Expansion.Dependency dependency) {
         return expansions.values().stream()
             .filter((man) -> isMatch(man, dependency))
